@@ -21,7 +21,7 @@ public abstract class Either<A, B> {
         };
     }
 
-    public static <A, B> Left<A, B> lazyLeft(Supplier<A> supA) {
+    public static <A, B> Left<A, B> lazyLeft(Supplier<? extends A> supA) {
         if (supA == null) {
             throw new IllegalArgumentException("null value not allowed");
         }
@@ -46,7 +46,7 @@ public abstract class Either<A, B> {
         };
     }
 
-    public static <A, B> Right<A, B> lazyRight(Supplier<B> supB) {
+    public static <A, B> Right<A, B> lazyRight(Supplier<? extends B> supB) {
         if (supB == null) {
             throw new IllegalArgumentException("null value not allowed");
         }
@@ -75,13 +75,13 @@ public abstract class Either<A, B> {
 
     public abstract Optional<B> getRightOpt();
 
-    public abstract <A1> Either<A1, B> mapLeft(Function<A, A1> fn);
+    public abstract <A1> Either<A1, B> mapLeft(Function<? super A, ? extends A1> fn);
 
-    public abstract <B1> Either<A, B1> mapRight(Function<B, B1> fn);
+    public abstract <B1> Either<A, B1> mapRight(Function<? super B, ? extends B1> fn);
 
-    public abstract <A1, B1> Either<A1, B1> bimap(Function<A, A1> fnA, Function<B, B1> fnB);
+    public abstract <A1, B1> Either<A1, B1> bimap(Function<? super A, ? extends A1> fnA, Function<? super B, ? extends B1> fnB);
 
-    public abstract <C> C either(Function<A, C> fnA, Function<B, C> fnB);
+    public abstract <C> C either(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB);
 
     public abstract Either<B, A> swap();
 }
