@@ -1,5 +1,7 @@
 package org.neco4j.either;
 
+import org.neco4j.util.Assert;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -7,13 +9,12 @@ import java.util.function.Supplier;
 
 public abstract class Either<A, B> {
 
-    Either() {}
+    Either() {
+    }
 
     public static <A, B> Left<A, B> left(A a) {
-        if (a == null) {
-            throw new IllegalArgumentException("null value not allowed");
-        }
-        return new Left<A,B>() {
+        Assert.notNull(a);
+        return new Left<A, B>() {
             @Override
             public A getLeft() throws NoSuchElementException {
                 return a;
@@ -22,10 +23,8 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Left<A, B> lazyLeft(Supplier<? extends A> supA) {
-        if (supA == null) {
-            throw new IllegalArgumentException("null value not allowed");
-        }
-        return new Left<A,B>() {
+        Assert.notNull(supA);
+        return new Left<A, B>() {
             @Override
             public A getLeft() throws NoSuchElementException {
                 return supA.get();
@@ -34,11 +33,8 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Right<A, B> right(B b) {
-        if (b == null) {
-            throw new IllegalArgumentException("null value not allowed");
-        }
-        return new Right<A,B>() {
-
+        Assert.notNull(b);
+        return new Right<A, B>() {
             @Override
             public B getRight() throws NoSuchElementException {
                 return b;
@@ -47,11 +43,8 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Right<A, B> lazyRight(Supplier<? extends B> supB) {
-        if (supB == null) {
-            throw new IllegalArgumentException("null value not allowed");
-        }
-        return new Right<A,B>() {
-
+        Assert.notNull(supB);
+        return new Right<A, B>() {
             @Override
             public B getRight() throws NoSuchElementException {
                 return supB.get();
