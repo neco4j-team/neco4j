@@ -45,7 +45,6 @@ public abstract class Either<A, B> {
     public static <A, B> Right<A, B> lazyRight(Supplier<? extends B> supB) {
         Assert.notNull(supB);
         return new Right<A, B>() {
-
             @Override
             public B getRight() throws NoSuchElementException {
                 return supB.get();

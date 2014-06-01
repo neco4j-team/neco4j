@@ -66,26 +66,28 @@ public class EitherTest {
         assertTrue(right.isRight());
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testGetLeft() throws Exception {
-        //Left
+    @Test
+    public void testGetLeftOnLeft() throws Exception {
         Either<Integer, String> left = Either.left(42);
         assertEquals(Integer.valueOf(42), left.getLeft());
+    }
 
-        //Right
+    @Test(expected = NoSuchElementException.class)
+    public void testGetLeftOnRight() throws Exception {
         Either<Integer, String> right = Either.right("foo");
         right.getLeft();
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetRight() throws Exception {
-        //Right
-        Either<Integer, String> right = Either.right("foo");
-        assertEquals("foo", right.getRight());
-
-        //Left
+    public void testGetRightOnLeft() throws Exception {
         Either<Integer, String> left = Either.left(42);
         left.getRight();
+    }
+
+    @Test
+    public void testGetRightOnRight() throws Exception {
+        Either<Integer, String> right = Either.right("foo");
+        assertEquals("foo", right.getRight());
     }
 
     @Test
