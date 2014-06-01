@@ -45,22 +45,22 @@ public abstract class Left<A, B> extends Either<A, B> {
     }
 
     @Override
-    public <A1> Either<A1, B> mapLeft(Function<A, A1> fn) {
+    public <A1> Either<A1, B> mapLeft(Function<? super A, ? extends A1> fn) {
         return left(fn.apply(getLeft()));
     }
 
     @Override
-    public <B1> Either<A, B1> mapRight(Function<B, B1> fn) {
+    public <B1> Either<A, B1> mapRight(Function<? super B, ? extends B1> fn) {
         return left(getLeft());
     }
 
     @Override
-    public <A1, B1> Either<A1, B1> bimap(Function<A, A1> fnA, Function<B, B1> fnB) {
+    public <A1, B1> Either<A1, B1> bimap(Function<? super A, ? extends A1> fnA, Function<? super B, ? extends B1> fnB) {
         return left(fnA.apply(getLeft()));
     }
 
     @Override
-    public <C> C either(Function<A, C> fnA, Function<B, C> fnB) {
+    public <C> C either(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB) {
         return fnA.apply(getLeft());
     }
 
