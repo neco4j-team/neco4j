@@ -4,9 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class Right<A,B> extends Either<A,B> {
+public abstract class Right<A, B> extends Either<A, B> {
 
-    Right() {}
+    Right() {
+    }
 
     @Override
     public boolean isLeft() {
