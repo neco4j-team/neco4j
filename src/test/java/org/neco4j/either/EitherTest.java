@@ -16,14 +16,14 @@ public class EitherTest {
 
     @Test
     public void testLazyLeft() throws Exception {
-        int[] array = new int[1];
+        boolean[] array = {false};
         Left<Integer, String> left = Either.lazyLeft(() -> {
-            array[0] = 1;
+            array[0] = true;
             return 42;
         });
-        assertEquals(0, array[0]); //check that nothing was calculated yet
+        assertFalse(array[0]); //check that nothing was calculated yet
         assertEquals(Integer.valueOf(42), left.getLeft());
-        assertEquals(1, array[0]);
+        assertTrue(array[0]);
     }
 
     @Test
@@ -34,14 +34,14 @@ public class EitherTest {
 
     @Test
     public void testLazyRight() throws Exception {
-        int[] array = new int[1];
+        boolean[] array = {false};
         Right<Integer, String> right = Either.lazyRight(() -> {
-            array[0] = 1;
+            array[0] = true;
             return "foo";
         });
-        assertEquals(0, array[0]); //check that nothing was calculated yet
+        assertFalse(array[0]); //check that nothing was calculated yet
         assertEquals("foo", right.getRight());
-        assertEquals(1, array[0]);
+        assertTrue(array[0]);
     }
 
     @Test
