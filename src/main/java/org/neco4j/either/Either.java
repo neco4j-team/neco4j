@@ -1,8 +1,7 @@
 package org.neco4j.either;
 
-import org.neco4j.util.Assert;
-
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -13,7 +12,7 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Left<A, B> left(A a) {
-        Assert.notNull(a);
+        Objects.requireNonNull(a);
         return new Left<A, B>() {
             @Override
             public A getLeft() throws NoSuchElementException {
@@ -23,7 +22,7 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Left<A, B> lazyLeft(Supplier<? extends A> supA) {
-        Assert.notNull(supA);
+        Objects.requireNonNull(supA);
         return new Left<A, B>() {
             @Override
             public A getLeft() throws NoSuchElementException {
@@ -33,7 +32,7 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Right<A, B> right(B b) {
-        Assert.notNull(b);
+        Objects.requireNonNull(b);
         return new Right<A, B>() {
             @Override
             public B getRight() throws NoSuchElementException {
@@ -43,7 +42,7 @@ public abstract class Either<A, B> {
     }
 
     public static <A, B> Right<A, B> lazyRight(Supplier<? extends B> supB) {
-        Assert.notNull(supB);
+        Objects.requireNonNull(supB);
         return new Right<A, B>() {
             @Override
             public B getRight() throws NoSuchElementException {

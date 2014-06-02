@@ -85,8 +85,8 @@ public abstract class Right<A, B> extends Either<A, B> {
             return true;
         }
         if (obj instanceof Right) {
-            Object value = ((Right) obj).getRight();
-            return getRight().equals(value);
+            Right<?,?> that = (Right) obj;
+            return this.getRight().equals(that.getRight());
         }
         return false;
     }
