@@ -226,23 +226,14 @@ public class EitherTest {
         //between two Lefts
         Either<Integer, String> left42a = Either.leftOf(42);
         Either<Integer, String> left42b = Either.leftOf(42);
-        Either<Integer, String> left43 = Either.leftOf(43);
         assertTrue(left42a.hashCode() == left42a.hashCode());
         assertTrue(left42a.hashCode() == left42b.hashCode());
-        assertFalse(left42a.hashCode() == left43.hashCode());
 
         //between two Rights
         Either<Integer, String> rightFoo1 = Either.rightOf("foo");
         Either<Integer, String> rightFoo2 = Either.rightOf("foo");
-        Either<Integer, String> rightBar = Either.rightOf("bar");
         assertTrue(rightFoo1.hashCode() == rightFoo1.hashCode());
         assertTrue(rightFoo1.hashCode() == rightFoo2.hashCode());
-        assertFalse(rightFoo1.hashCode() == rightBar.hashCode());
-
-        //between a Left and a Right
-        assertFalse(left43.hashCode() == rightBar.hashCode());
-        Either<String, String> leftBar = Either.leftOf("bar");
-        assertFalse(leftBar.hashCode() == rightBar.hashCode());
     }
 
     @Test
@@ -252,5 +243,4 @@ public class EitherTest {
         Either<Integer, String> right = Either.rightOf("foo");
         assertEquals("Right(foo)", right.toString());
     }
-
 }
