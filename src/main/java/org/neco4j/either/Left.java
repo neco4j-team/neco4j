@@ -71,6 +71,7 @@ public final class Left<A, B> extends Either<A, B> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <B1> Either<A, B1> mapRight(Function<? super B, ? extends B1> fn) {
         return (Either<A, B1>) this;
     }
