@@ -1,13 +1,18 @@
 package org.neco4j.either;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class Left<A, B> extends Either<A, B> {
+public final class Left<A, B> extends Either<A, B> {
 
-    Left() {
+    private final A a;
+
+    Left(A a) {
+        this.a = requireNonNull(a);
     }
 
     @Override
@@ -21,13 +26,18 @@ public abstract class Left<A, B> extends Either<A, B> {
     }
 
     @Override
-    public B getRight() throws NoSuchElementException {
-        throw new NoSuchElementException("getRight() call on Left");
+    public A left() {
+        return a;
+    }
+
+    @Override
+    public B right() throws NoSuchElementException {
+        throw new NoSuchElementException("right() call on Left");
     }
 
     @Override
     public A leftOrElse(A defaultValue) {
-        return getLeft();
+        return left();
     }
 
     @Override
@@ -36,8 +46,8 @@ public abstract class Left<A, B> extends Either<A, B> {
     }
 
     @Override
-    public A leftOrElseGet(Supplier<A> defaultSupplier){
-        return getLeft();
+    public A leftOrElseGet(Supplier<A> defaultSupplier) {
+        return left();
     }
 
     @Override
@@ -46,48 +56,48 @@ public abstract class Left<A, B> extends Either<A, B> {
     }
 
     @Override
-    public Optional<A> getLeftOpt() {
-        return Optional.of(getLeft());
+    public Optional<A> leftOpt() {
+        return Optional.of(left());
     }
 
     @Override
-    public Optional<B> getRightOpt() {
+    public Optional<B> rightOpt() {
         return Optional.empty();
     }
 
     @Override
     public <A1> Either<A1, B> mapLeft(Function<? super A, ? extends A1> fn) {
-        return left(fn.apply(getLeft()));
+        return leftOf(fn.apply(left()));
     }
 
     @Override
     public <B1> Either<A, B1> mapRight(Function<? super B, ? extends B1> fn) {
-        return left(getLeft());
+        return (Either<A, B1>) this;
     }
 
     @Override
     public <A1, B1> Either<A1, B1> bimap(Function<? super A, ? extends A1> fnA, Function<? super B, ? extends B1> fnB) {
-        return left(fnA.apply(getLeft()));
+        return leftOf(fnA.apply(left()));
     }
 
     @Override
     public <C> C either(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB) {
-        return fnA.apply(getLeft());
+        return fnA.apply(left());
     }
 
     @Override
     public Either<B, A> swap() {
-        return right(getLeft());
+        return rightOf(left());
     }
 
     @Override
     public String toString() {
-        return String.format("Left(%s)", getLeft());
+        return String.format("Left(%s)", left());
     }
 
     @Override
     public int hashCode() {
-        return 29 * getLeft().hashCode();
+        return 29 * left().hashCode();
     }
 
     @Override
@@ -96,8 +106,8 @@ public abstract class Left<A, B> extends Either<A, B> {
             return true;
         }
         if (obj instanceof Left) {
-            Left<?,?> that = (Left) obj;
-            return this.getLeft().equals(that.getLeft());
+            Left<?, ?> that = (Left) obj;
+            return this.left().equals(that.left());
         }
         return false;
     }

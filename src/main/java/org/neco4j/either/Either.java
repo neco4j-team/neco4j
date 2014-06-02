@@ -1,7 +1,6 @@
 package org.neco4j.either;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -11,53 +10,21 @@ public abstract class Either<A, B> {
     Either() {
     }
 
-    public static <A, B> Left<A, B> left(A a) {
-        Objects.requireNonNull(a);
-        return new Left<A, B>() {
-            @Override
-            public A getLeft() throws NoSuchElementException {
-                return a;
-            }
-        };
+    public static <A, B> Left<A, B> leftOf(A a) {
+        return new Left<>(a);
     }
 
-    public static <A, B> Left<A, B> lazyLeft(Supplier<? extends A> supA) {
-        Objects.requireNonNull(supA);
-        return new Left<A, B>() {
-            @Override
-            public A getLeft() throws NoSuchElementException {
-                return supA.get();
-            }
-        };
-    }
-
-    public static <A, B> Right<A, B> right(B b) {
-        Objects.requireNonNull(b);
-        return new Right<A, B>() {
-            @Override
-            public B getRight() throws NoSuchElementException {
-                return b;
-            }
-        };
-    }
-
-    public static <A, B> Right<A, B> lazyRight(Supplier<? extends B> supB) {
-        Objects.requireNonNull(supB);
-        return new Right<A, B>() {
-            @Override
-            public B getRight() throws NoSuchElementException {
-                return supB.get();
-            }
-        };
+    public static <A, B> Right<A, B> rightOf(B b) {
+        return new Right<>(b);
     }
 
     public abstract boolean isLeft();
 
     public abstract boolean isRight();
 
-    public abstract A getLeft() throws NoSuchElementException;
+    public abstract A left() throws NoSuchElementException;
 
-    public abstract B getRight() throws NoSuchElementException;
+    public abstract B right() throws NoSuchElementException;
 
     public abstract A leftOrElse(A defaultValue);
 
@@ -67,9 +34,9 @@ public abstract class Either<A, B> {
 
     public abstract B rightOrElseGet(Supplier<B> defaultSupplier);
 
-    public abstract Optional<A> getLeftOpt();
+    public abstract Optional<A> leftOpt();
 
-    public abstract Optional<B> getRightOpt();
+    public abstract Optional<B> rightOpt();
 
     public abstract <A1> Either<A1, B> mapLeft(Function<? super A, ? extends A1> fn);
 
