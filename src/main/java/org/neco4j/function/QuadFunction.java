@@ -3,6 +3,7 @@ package org.neco4j.function;
 import java.util.Objects;
 import java.util.function.Function;
 
+@FunctionalInterface
 public interface QuadFunction<T, U, V, W, R> {
 
     public R apply(T t, U u, V v, W w);
