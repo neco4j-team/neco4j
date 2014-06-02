@@ -3,6 +3,7 @@ package org.neco4j.either;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class Right<A, B> extends Either<A, B> {
 
@@ -25,12 +26,22 @@ public abstract class Right<A, B> extends Either<A, B> {
     }
 
     @Override
-    public A getLeftOrElse(A defaultValue) {
+    public A leftOrElse(A defaultValue) {
         return defaultValue;
     }
 
     @Override
-    public B getRightOrElse(B defaultValue) {
+    public B rightOrElse(B defaultValue) {
+        return getRight();
+    }
+
+    @Override
+    public A leftOrElseGet(Supplier<A> defaultSupplier){
+        return defaultSupplier.get();
+    }
+
+    @Override
+    public B rightOrElseGet(Supplier<B> defaultSupplier) {
         return getRight();
     }
 

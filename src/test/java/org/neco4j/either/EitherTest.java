@@ -91,25 +91,47 @@ public class EitherTest {
     }
 
     @Test
-    public void testGetLeftOrElse() throws Exception {
+    public void testLeftOrElse() throws Exception {
         //Left
         Either<Integer, String> left = Either.left(42);
-        assertEquals(Integer.valueOf(42), left.getLeftOrElse(4711));
+        assertEquals(Integer.valueOf(42), left.leftOrElse(4711));
 
         //Right
         Either<Integer, String> right = Either.right("foo");
-        assertEquals(Integer.valueOf(4711), right.getLeftOrElse(4711));
+        assertEquals(Integer.valueOf(4711), right.leftOrElse(4711));
     }
 
     @Test
-    public void testGetRightOrElse() throws Exception {
+    public void testRightOrElse() throws Exception {
         //Left
         Either<Integer, String> left = Either.left(42);
-        assertEquals("bar", left.getRightOrElse("bar"));
+        assertEquals("bar", left.rightOrElse("bar"));
 
         //Right
         Either<Integer, String> right = Either.right("foo");
-        assertEquals("foo", right.getRightOrElse("bar"));
+        assertEquals("foo", right.rightOrElse("bar"));
+    }
+
+    @Test
+    public void testLeftOrElseGet() throws Exception {
+        //Left
+        Either<Integer, String> left = Either.left(42);
+        assertEquals(Integer.valueOf(42), left.leftOrElseGet(() -> 4711));
+
+        //Right
+        Either<Integer, String> right = Either.right("foo");
+        assertEquals(Integer.valueOf(4711), right.leftOrElseGet(() -> 4711));
+    }
+
+    @Test
+    public void testRightOrElseGet() throws Exception {
+        //Left
+        Either<Integer, String> left = Either.left(42);
+        assertEquals("bar", left.rightOrElseGet(() -> "bar"));
+
+        //Right
+        Either<Integer, String> right = Either.right("foo");
+        assertEquals("foo", right.rightOrElseGet(() -> "bar"));
     }
 
     @Test

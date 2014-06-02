@@ -59,9 +59,13 @@ public abstract class Either<A, B> {
 
     public abstract B getRight() throws NoSuchElementException;
 
-    public abstract A getLeftOrElse(A defaultValue);
+    public abstract A leftOrElse(A defaultValue);
 
-    public abstract B getRightOrElse(B defaultValue);
+    public abstract B rightOrElse(B defaultValue);
+
+    public abstract A leftOrElseGet(Supplier<A> defaultSupplier);
+
+    public abstract B rightOrElseGet(Supplier<B> defaultSupplier);
 
     public abstract Optional<A> getLeftOpt();
 
