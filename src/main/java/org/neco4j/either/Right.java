@@ -1,11 +1,11 @@
 package org.neco4j.either;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static java.util.Objects.requireNonNull;
 
 public final class Right<A, B> extends Either<A, B> {
 
@@ -111,5 +111,4 @@ public final class Right<A, B> extends Either<A, B> {
         }
         return false;
     }
-
 }
