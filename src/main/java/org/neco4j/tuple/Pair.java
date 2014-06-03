@@ -60,6 +60,7 @@ public final class Pair<A, B> {
         return String.format("(%s,%s)", get1(), get2());
     }
 
+    @Override
     public int hashCode() {
         return 37 * get1().hashCode() + 73 * get2().hashCode();
     }
