@@ -1,8 +1,8 @@
 package org.neco4j.tuple;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TripleTest {
 
@@ -54,10 +54,10 @@ public class TripleTest {
     @Test
     public void testMap1() throws Exception {
         Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
-        Triple<Integer, Integer, Double> tripleMap = triple.map1(s -> s.length());
+        Triple<Integer, Integer, Double> tripleMap = triple.map1(String::length);
         assertEquals(Integer.valueOf(3), tripleMap.get1());
         assertEquals(Integer.valueOf(42), tripleMap.get2());
-        assertEquals(Double.valueOf(Math.PI), triple.get3());
+        assertEquals(Double.valueOf(Math.PI), tripleMap.get3());
     }
 
     @Test
@@ -66,7 +66,16 @@ public class TripleTest {
         Triple<String, String, Double> tripleMap = triple.map2(n -> "number " + n);
         assertEquals("foo", tripleMap.get1());
         assertEquals("number 42", tripleMap.get2());
-        assertEquals(Double.valueOf(Math.PI), triple.get3());
+        assertEquals(Double.valueOf(Math.PI), tripleMap.get3());
+    }
+
+    @Test
+    public void testMap3() throws Exception {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+        Triple<String, Integer, Double> tripleMap = triple.map3(d -> -d);
+        assertEquals("foo", tripleMap.get1());
+        assertEquals(Integer.valueOf(42), tripleMap.get2());
+        assertEquals(Double.valueOf(-Math.PI), tripleMap.get3());
     }
 
     @Test

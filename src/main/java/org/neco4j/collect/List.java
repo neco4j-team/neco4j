@@ -25,7 +25,9 @@ public interface List<A> extends Iterable<A> {
 
     public int size();
 
-    public boolean isEmpty();
+    public default boolean isEmpty() {
+        return size() == 0;
+    }
 
     public List<A> with(int index, A value);
 
@@ -39,5 +41,5 @@ public interface List<A> extends Iterable<A> {
 
     public <B> List<B> flatMap(Function<? super A, ? extends Iterable<? extends A>> fn);
 
-    public <A> List<A> filter(Predicate<? super A> predicate);
+    public List<A> filter(Predicate<? super A> predicate);
 }

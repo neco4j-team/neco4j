@@ -3,7 +3,6 @@ package org.neco4j.tuple;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 public class PairTest {
 
@@ -38,7 +37,7 @@ public class PairTest {
     @Test
     public void testMap1() throws Exception {
         Pair<String, Integer> pair = Pair.of("foo", 42);
-        Pair<Integer, Integer> pairMap = pair.map1(s -> s.length());
+        Pair<Integer, Integer> pairMap = pair.map1(String::length);
         assertEquals(Integer.valueOf(3), pairMap.get1());
         assertEquals(Integer.valueOf(42), pairMap.get2());
     }
@@ -62,7 +61,7 @@ public class PairTest {
     @Test
     public void testCollapse() throws Exception {
         Pair<String, Integer> pair = Pair.of("foobar", 3);
-        String collapsed = pair.collapse((s,n) -> s.substring(n));
+        String collapsed = pair.collapse(String::substring);
         assertEquals("bar", collapsed);
     }
 
