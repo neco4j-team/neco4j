@@ -9,15 +9,19 @@ public interface List<A> extends Iterable<A> {
 
     public A head() throws NoSuchElementException;
 
+    public Optional<A> headOpt();
+
     public List<A> tail() throws NoSuchElementException;
+
+    public Optional<List<A>> tailOpt();
 
     public A last() throws NoSuchElementException;
 
+    public Optional<A> lastOpt();
+
     public List<A> init() throws NoSuchElementException;
 
-    public Optional<A> headOpt();
-
-    public Optional<List<A>> tailOpt();
+    public Optional<List<A>> initOpt();
 
     public A get(int index) throws IndexOutOfBoundsException;
 
