@@ -59,10 +59,28 @@ public class PairTest {
     }
 
     @Test
-    public void testCollapse() throws Exception {
+    public void testFold() throws Exception {
         Pair<String, Integer> pair = Pair.of("foobar", 3);
-        String collapsed = pair.collapse(String::substring);
-        assertEquals("bar", collapsed);
+        String folded = pair.fold(String::substring);
+        assertEquals("bar", folded);
+    }
+
+    @Test
+    public void testTestAnd() throws Exception {
+        Pair<String, Integer> pair = Pair.of("foo", 42);
+        assertTrue(pair.testAnd(s -> s.startsWith("f"), n -> n % 2 == 0));
+        assertFalse(pair.testAnd(s -> s.startsWith("f"), n -> n % 2 == 1));
+        assertFalse(pair.testAnd(s -> s.startsWith("b"), n -> n % 2 == 0));
+        assertFalse(pair.testAnd(s -> s.startsWith("b"), n -> n % 2 == 1));
+    }
+
+    @Test
+    public void testTestOr() throws Exception {
+        Pair<String, Integer> pair = Pair.of("foo", 42);
+        assertTrue(pair.testOr(s -> s.startsWith("f"), n -> n % 2 == 0));
+        assertTrue(pair.testOr(s -> s.startsWith("f"), n -> n % 2 == 1));
+        assertTrue(pair.testOr(s -> s.startsWith("b"), n -> n % 2 == 0));
+        assertFalse(pair.testOr(s -> s.startsWith("b"), n -> n % 2 == 1));
     }
 
     @Test

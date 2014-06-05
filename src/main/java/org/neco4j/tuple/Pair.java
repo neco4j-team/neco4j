@@ -2,6 +2,7 @@ package org.neco4j.tuple;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -47,8 +48,16 @@ public final class Pair<A, B> {
         return of(fnA.apply(get1()), fnB.apply(get2()));
     }
 
-    public <C> C collapse(BiFunction<? super A, ? super B, ? extends C> fn) {
+    public <C> C fold(BiFunction<? super A, ? super B, ? extends C> fn) {
         return fn.apply(get1(), get2());
+    }
+
+    public boolean testAnd(Predicate<A> predicateA, Predicate<B> predicateB) {
+        return predicateA.test(get1()) && predicateB.test(get2());
+    }
+
+    public boolean testOr(Predicate<A> predicateA, Predicate<B> predicateB) {
+        return predicateA.test(get1()) || predicateB.test(get2());
     }
 
     public Pair<B, A> swap() {

@@ -172,16 +172,31 @@ public class EitherTest {
     }
 
     @Test
-    public void testEither() throws Exception {
+    public void testFold() throws Exception {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        int valueLeft = left.either(x -> x / 2, String::length);
+        int valueLeft = left.fold(x -> x / 2, String::length);
         assertEquals(21, valueLeft);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        int valueRight = right.either(x -> x / 2, String::length);
+        int valueRight = right.fold(x -> x / 2, String::length);
         assertEquals(3, valueRight);
+    }
+
+    @Test
+    public void testTest() throws Exception {
+        //Left
+        Either<Integer, String> left1 = Either.leftOf(42);
+        assertTrue(left1.test(x -> x % 2 == 0, s -> s.length() == 3));
+        Either<Integer, String> left2 = Either.leftOf(43);
+        assertFalse(left2.test(x -> x % 2 == 0, s -> s.length() == 3));
+
+        //Right
+        Either<Integer, String> right1 = Either.rightOf("foo");
+        assertTrue(right1.test(x -> x % 2 == 0, s -> s.length() == 3));
+        Either<Integer, String> right2 = Either.rightOf("foobar");
+        assertFalse(right2.test(x -> x % 2 == 0, s -> s.length() == 3));
     }
 
     @Test

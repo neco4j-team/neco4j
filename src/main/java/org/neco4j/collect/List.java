@@ -2,6 +2,7 @@ package org.neco4j.collect;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -46,4 +47,8 @@ public interface List<A> extends Iterable<A> {
     public <B> List<B> flatMap(Function<? super A, ? extends Iterable<? extends A>> fn);
 
     public List<A> filter(Predicate<? super A> predicate);
+
+    public <B> B foldLeft(B start, BiFunction<? super A, ? super A, ? extends B> fn);
+
+    public <B> B foldRight(BiFunction<? super A, ? super A, ? extends B> fn, B start);
 }

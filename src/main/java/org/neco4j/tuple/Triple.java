@@ -3,6 +3,7 @@ package org.neco4j.tuple;
 import static java.util.Objects.requireNonNull;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.neco4j.function.TriFunction;
 
@@ -66,8 +67,16 @@ public final class Triple<A, B, C> {
         return of(fnA.apply(get1()), fnB.apply(get2()), fnC.apply(get3()));
     }
 
-    public <D> D collapse(TriFunction<? super A, ? super B, ? super C, ? extends D> fn) {
+    public <D> D fold(TriFunction<? super A, ? super B, ? super C, ? extends D> fn) {
         return fn.apply(get1(), get2(), get3());
+    }
+
+    public boolean testAnd(Predicate<A> predicateA, Predicate<B> predicateB, Predicate<C> predicateC) {
+        return predicateA.test(get1()) && predicateB.test(get2()) && predicateC.test(get3());
+    }
+
+    public boolean testOr(Predicate<A> predicateA, Predicate<B> predicateB, Predicate<C> predicateC) {
+        return predicateA.test(get1()) || predicateB.test(get2()) || predicateC.test(get3());
     }
 
     @Override

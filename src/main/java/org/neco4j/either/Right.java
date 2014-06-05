@@ -3,6 +3,7 @@ package org.neco4j.either;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -82,8 +83,13 @@ public final class Right<A, B> extends Either<A, B> {
     }
 
     @Override
-    public <C> C either(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB) {
+    public <C> C fold(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB) {
         return fnB.apply(right());
+    }
+
+    @Override
+    public boolean test(Predicate<A> predicateA, Predicate<B> predicateB) {
+        return predicateB.test(b);
     }
 
     @Override

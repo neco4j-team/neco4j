@@ -89,10 +89,36 @@ public class TripleTest {
     }
 
     @Test
-    public void testCollapse() throws Exception {
+    public void testFold() throws Exception {
         Triple<String, Integer, Double> triple = Triple.of("foobar", 3, 0.5);
-        String collapsed = triple.collapse((s,n,d) -> s.substring(n) + d);
-        assertEquals("bar0.5", collapsed);
+        String folded = triple.fold((s, n, d) -> s.substring(n) + d);
+        assertEquals("bar0.5", folded);
+    }
+
+    @Test
+    public void testTestAnd() throws Exception {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+        assertTrue(triple.testAnd(s -> s.startsWith("f"), n -> n % 2 == 0, d -> d > 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("f"), n -> n % 2 == 1, d -> d > 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("b"), n -> n % 2 == 0, d -> d > 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("b"), n -> n % 2 == 1, d -> d > 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("f"), n -> n % 2 == 0, d -> d < 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("f"), n -> n % 2 == 1, d -> d < 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("b"), n -> n % 2 == 0, d -> d < 3));
+        assertFalse(triple.testAnd(s -> s.startsWith("b"), n -> n % 2 == 1, d -> d < 3));
+    }
+
+    @Test
+    public void testTestOr() throws Exception {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+        assertTrue(triple.testOr(s -> s.startsWith("f"), n -> n % 2 == 0, d -> d > 3));
+        assertTrue(triple.testOr(s -> s.startsWith("f"), n -> n % 2 == 1, d -> d > 3));
+        assertTrue(triple.testOr(s -> s.startsWith("b"), n -> n % 2 == 0, d -> d > 3));
+        assertTrue(triple.testOr(s -> s.startsWith("b"), n -> n % 2 == 1, d -> d > 3));
+        assertTrue(triple.testOr(s -> s.startsWith("f"), n -> n % 2 == 0, d -> d < 3));
+        assertTrue(triple.testOr(s -> s.startsWith("f"), n -> n % 2 == 1, d -> d < 3));
+        assertTrue(triple.testOr(s -> s.startsWith("b"), n -> n % 2 == 0, d -> d < 3));
+        assertFalse(triple.testOr(s -> s.startsWith("b"), n -> n % 2 == 1, d -> d < 3));
     }
 
     @Test

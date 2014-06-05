@@ -3,6 +3,7 @@ package org.neco4j.either;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class Either<A, B> {
@@ -44,7 +45,9 @@ public abstract class Either<A, B> {
 
     public abstract <A1, B1> Either<A1, B1> bimap(Function<? super A, ? extends A1> fnA, Function<? super B, ? extends B1> fnB);
 
-    public abstract <C> C either(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB);
+    public abstract <C> C fold(Function<? super A, ? extends C> fnA, Function<? super B, ? extends C> fnB);
+
+    public abstract boolean test(Predicate<A> predicateA, Predicate<B> predicateB);
 
     public abstract Either<B, A> swap();
 }
