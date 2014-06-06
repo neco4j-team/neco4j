@@ -221,4 +221,10 @@ public class ListTest {
         assertFalse(it.hasNext());
         assertFalse(List.empty().iterator().hasNext());
     }
+
+    @Test
+    public void testToString() throws Exception {
+        assertEquals("[a,b,c,d]", sut.toString());
+        assertEquals("[]", List.empty().toString());
+    }
 }
