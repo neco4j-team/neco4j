@@ -35,6 +35,10 @@ public abstract class Either<A, B> {
 
     public abstract B rightOrElseGet(Supplier<B> defaultSupplier);
 
+    public abstract <X extends Exception> A leftOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+
+    public abstract <X extends Exception> B rightOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+
     public abstract Optional<A> leftOpt();
 
     public abstract Optional<B> rightOpt();

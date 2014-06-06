@@ -57,6 +57,16 @@ public final class Left<A, B> extends Either<A, B> {
     }
 
     @Override
+    public <X extends Exception> A leftOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        return left();
+    }
+
+    @Override
+    public <X extends Exception> B rightOrElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        throw exceptionSupplier.get();
+    }
+
+    @Override
     public Optional<A> leftOpt() {
         return Optional.of(left());
     }

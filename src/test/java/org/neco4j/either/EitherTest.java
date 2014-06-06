@@ -111,6 +111,30 @@ public class EitherTest {
     }
 
     @Test
+    public void testLeftOrElseThrowOnLeft() throws Exception {
+        Either<Integer, String> left = Either.leftOf(42);
+        assertEquals(Integer.valueOf(42), left.leftOrElseThrow(IllegalArgumentException::new));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLeftOrElseThrowOnRight() throws Exception {
+        Either<Integer, String> right = Either.rightOf("foo");
+        right.leftOrElseThrow(IllegalArgumentException::new);
+    }
+
+    @Test
+    public void testRightOrElseThrowOnRight() throws Exception {
+        Either<Integer, String> right = Either.rightOf("foo");
+        assertEquals("foo", right.rightOrElseThrow(IllegalArgumentException::new));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRightOrElseThrowOnLeft() throws Exception {
+        Either<Integer, String> left = Either.leftOf(42);
+        left.rightOrElseThrow(IllegalArgumentException::new);
+    }
+
+    @Test
     public void testLeftOpt() throws Exception {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
