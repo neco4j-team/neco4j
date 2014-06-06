@@ -2,9 +2,9 @@ package org.neco4j.function;
 
 import org.junit.Test;
 
-import junit.framework.TestCase;
+import static junit.framework.TestCase.assertEquals;
 
-public class TriFunctionTest extends TestCase {
+public class TriFunctionTest {
     @Test
     public void testAndThen() throws Exception {
         TriFunction<String, String, String, String> fn = (t, u, v) -> t + u + v;

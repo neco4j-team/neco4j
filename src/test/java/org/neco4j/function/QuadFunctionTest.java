@@ -2,9 +2,9 @@ package org.neco4j.function;
 
 import org.junit.Test;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
 
-public class QuadFunctionTest extends TestCase {
+public class QuadFunctionTest {
     @Test
     public void testAndThen() throws Exception {
         QuadFunction<String, String, String, String, String> fn = (t, u, v, w) -> t + u + v + w;
