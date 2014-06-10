@@ -199,7 +199,7 @@ public interface List<A> extends Iterable<A> {
         return result.reverse();
     }
 
-    public default <B> List<Pair<A, B>> strictZip(List<B> other) {
+    public default <B> List<Pair<A, B>> strictZip(List<B> other) throws IllegalArgumentException {
         if (this.size() != other.size()) {
             throw new IllegalArgumentException("list sizes must match");
         }

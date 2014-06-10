@@ -1,8 +1,5 @@
 package org.neco4j.collect;
 
-import org.neco4j.tuple.Pair;
-
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,11 +35,7 @@ class Cons<A> implements List<A> {
 
     @Override
     public A last() {
-        A value = null;
-        for (A a : this) {
-            value = a;
-        }
-        return value;
+        return foldLeft(null, (a,b) -> b);
     }
 
     public Optional<A> lastOpt() {
@@ -75,8 +68,8 @@ class Cons<A> implements List<A> {
         }
         List<?> one = this;
         List<?> two = (List<?>) obj;
-        while(! one.isEmpty() && ! two.isEmpty()) {
-            if (! one.head().equals(two.head())) {
+        while (!one.isEmpty() && !two.isEmpty()) {
+            if (!one.head().equals(two.head())) {
                 return false;
             }
             one = one.tail();
