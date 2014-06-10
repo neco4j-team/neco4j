@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class ListTest {
@@ -15,7 +16,7 @@ public class ListTest {
 
     @Test
     public void testHeadOnCons() throws Exception {
-        assertEquals(Character.valueOf('a'), sut.head());
+        assertThat(sut.head(), is('a'));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -25,13 +26,13 @@ public class ListTest {
 
     @Test
     public void testHeadOpt() throws Exception {
-        assertEquals(Optional.of('a'), sut.headOpt());
-        assertEquals(Optional.empty(), List.empty().headOpt());
+        assertThat(sut.headOpt(), is(Optional.of('a')));
+        assertThat(List.empty().headOpt(), is(Optional.empty()));
     }
 
     @Test
     public void testTailOnCons() throws Exception {
-        assertEquals(List.of('b', 'c', 'd'), sut.tail());
+        assertThat(sut.tail(), is(List.of('b', 'c', 'd')));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -41,13 +42,13 @@ public class ListTest {
 
     @Test
     public void testTailOpt() throws Exception {
-        assertEquals(Optional.of(List.of('b', 'c', 'd')), sut.tailOpt());
-        assertEquals(Optional.<List<Character>>empty(), List.<Character>empty().tailOpt());
+        assertThat(sut.tailOpt(), is(Optional.of(List.of('b', 'c', 'd'))));
+        assertThat(List.<Character>empty().tailOpt(), is(Optional.<List<Character>>empty()));
     }
 
     @Test
     public void testLastOnCons() throws Exception {
-        assertEquals(Character.valueOf('d'), sut.last());
+        assertThat(sut.last(), is('d'));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -57,13 +58,13 @@ public class ListTest {
 
     @Test
     public void testLastOpt() throws Exception {
-        assertEquals(Optional.of('d'), sut.lastOpt());
-        assertEquals(Optional.empty(), List.empty().lastOpt());
+        assertThat(sut.lastOpt(), is(Optional.of('d')));
+        assertThat(List.empty().lastOpt(), is(Optional.empty()));
     }
 
     @Test
     public void testInitOnCons() throws Exception {
-        assertEquals(List.of('a', 'b', 'c'), sut.init());
+        assertThat(sut.init(), is(List.of('a', 'b', 'c')));
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -73,15 +74,15 @@ public class ListTest {
 
     @Test
     public void testInitOpt() throws Exception {
-        assertEquals(Optional.of(List.of('a', 'b', 'c')), sut.initOpt());
-        assertEquals(Optional.<List<Character>>empty(), List.<Character>empty().initOpt());
+        assertThat(sut.initOpt(), is(Optional.of(List.of('a', 'b', 'c'))));
+        assertThat(List.<Character>empty().initOpt(), is(Optional.<List<Character>>empty()));
     }
 
     @Test
     public void testGetOnCons() throws Exception {
-        assertEquals(Character.valueOf('a'), sut.get(0));
-        assertEquals(Character.valueOf('b'), sut.get(1));
-        assertEquals(Character.valueOf('d'), sut.get(3));
+        assertThat(sut.get(0), is('a'));
+        assertThat(sut.get(1), is('b'));
+        assertThat(sut.get(3), is('d'));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -101,30 +102,30 @@ public class ListTest {
 
     @Test
     public void testGetOptOnCons() throws Exception {
-        assertEquals(Optional.of('a'), sut.getOpt(0));
-        assertEquals(Optional.of('b'), sut.getOpt(1));
-        assertEquals(Optional.of('d'), sut.getOpt(3));
+        assertThat(sut.getOpt(0), is(Optional.of('a')));
+        assertThat(sut.getOpt(1), is(Optional.of('b')));
+        assertThat(sut.getOpt(3), is(Optional.of('d')));
     }
 
     @Test
     public void testGetOptOnConsWithNegativeIndex() throws Exception {
-        assertEquals(Optional.<Character>empty(), sut.getOpt(-1));
+        assertThat(sut.getOpt(-1), is(Optional.<Character>empty()));
     }
 
     @Test
     public void testGetOptOnConsOutOfBounds() throws Exception {
-        assertEquals(Optional.<Character>empty(), sut.getOpt(4));
+        assertThat(sut.getOpt(4), is(Optional.<Character>empty()));
     }
 
     @Test
     public void testGetOptOnNil() throws Exception {
-        assertEquals(Optional.empty(), List.empty().getOpt(0));
+        assertThat(List.empty().getOpt(0), is(Optional.empty()));
     }
 
     @Test
     public void testSize() throws Exception {
-        assertEquals(4, sut.size());
-        assertEquals(0, List.empty().size());
+        assertThat(sut.size(), is(4));
+        assertThat(List.empty().size(), is(0));
     }
 
     @Test
@@ -135,7 +136,7 @@ public class ListTest {
 
     @Test
     public void testWithOnCons() throws Exception {
-        assertEquals(List.of('a', 'b', 'x', 'd'), sut.with(2, 'x'));
+        assertThat(sut.with(2, 'x'), is(List.of('a', 'b', 'x', 'd')));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -155,121 +156,121 @@ public class ListTest {
 
     @Test
     public void testConcat() throws Exception {
-        assertEquals(List.of('a', 'b', 'c', 'd', 'e', 'f'), sut.concat(List.of('e', 'f')));
-        assertEquals(sut, List.<Character>empty().concat(sut));
-        assertEquals(sut, sut.concat(List.empty()));
-        assertEquals(List.empty(), List.empty().concat(List.empty()));
+        assertThat(sut.concat(List.of('e', 'f')), is(List.of('a', 'b', 'c', 'd', 'e', 'f')));
+        assertThat(List.<Character>empty().concat(sut), is(sut));
+        assertThat(sut.concat(List.empty()), is(sut));
+        assertThat(List.empty().concat(List.empty()), is(List.empty()));
     }
 
     @Test
     public void testTake() throws Exception {
-        assertEquals(List.of('a', 'b'), sut.take(2));
+        assertThat(sut.take(2), is(List.of('a', 'b')));
     }
 
     @Test
     public void testTakeMoreThanInList() throws Exception {
-        assertEquals(List.of('a', 'b', 'c', 'd'), sut.take(10));
-        assertEquals(List.empty(), List.empty().take(1));
+        assertThat(sut.take(10), is(List.of('a', 'b', 'c', 'd')));
+        assertThat(List.empty().take(1), is(List.empty()));
     }
 
     @Test
     public void testTakeWhile() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
-        assertEquals(List.of(5, 8, 6), intList.takeWhile(i -> i < 10));
+        assertThat(intList.takeWhile(i -> i < 10), is(List.of(5, 8, 6)));
     }
 
     @Test
     public void testDrop() throws Exception {
-        assertEquals(List.of('c', 'd'), sut.drop(2));
+        assertThat(sut.drop(2), is(List.of('c', 'd')));
     }
 
     @Test
     public void testDropMoreThanInList() throws Exception {
-        assertEquals(List.<Character>empty(), sut.drop(10));
-        assertEquals(List.empty(), List.empty().drop(1));
+        assertThat(sut.drop(10), is(List.<Character>empty()));
+        assertThat(List.empty().drop(1), is(List.empty()));
     }
 
     @Test
     public void testDropWhile() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
-        assertEquals(List.of(13, 9), intList.dropWhile(i -> i < 10));
+        assertThat(intList.dropWhile(i -> i < 10), is(List.of(13, 9)));
     }
 
     @Test
     public void testReverse() throws Exception {
-        assertEquals(List.of('d', 'c', 'b', 'a'), sut.reverse());
-        assertEquals(List.empty(), List.empty().reverse());
+        assertThat(sut.reverse(), is(List.of('d', 'c', 'b', 'a')));
+        assertThat(List.empty().reverse(), is(List.empty()));
     }
 
     @Test
     public void testMap() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
-        assertEquals(List.of(6, 9, 7, 14, 10), intList.map(i -> i + 1));
+        assertThat(intList.map(i -> i + 1), is(List.of(6, 9, 7, 14, 10)));
     }
 
     @Test
     public void testFlatMap() throws Exception {
         List<Integer> intList = List.of(2, 4, 5);
-        assertEquals(List.of(1, 2, 3, 3, 4, 5, 4, 5, 6), intList.flatMap(x -> List.of(x - 1, x, x + 1)));
+        assertThat(intList.flatMap(x -> List.<Integer>of(x - 1, x, x + 1)), is(List.of(1, 2, 3, 3, 4, 5, 4, 5, 6)));
     }
 
     @Test
     public void testFilter() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
-        assertEquals(List.of(5, 6), intList.filter(i -> i < 7));
+        assertThat(intList.filter(i -> i < 7), is(List.of(5, 6)));
     }
 
     @Test
     public void testFoldLeft() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
         // (((((((((2 + 1) * 5) + 1) * 8) + 1) * 6) + 1) * 13) + 1) * 9 = 90.684
-        assertEquals(Integer.valueOf(90684), intList.foldLeft(2, (a, b) -> (a + 1) * b));
+        assertThat(intList.foldLeft(2, (a, b) -> (a + 1) * b), is(90684));
     }
 
     @Test
     public void testFoldRight() throws Exception {
         List<Integer> intList = List.of(5, 8, 6, 13, 9);
         // (5 + 1) * ((8 + 1) * ((6 + 1) * ((13 + 1) * ((9 + 1) * 2)))) = 105.840
-        assertEquals(Integer.valueOf(105840), intList.foldRight((a, b) -> (a + 1) * b, 2));
+        assertThat(intList.foldRight((a, b) -> (a + 1) * b, 2), is(105840));
     }
 
     @Test
     public void testIterator() throws Exception {
         Iterator<Character> it = sut.iterator();
-        assertEquals(Character.valueOf('a'), it.next());
-        assertEquals(Character.valueOf('b'), it.next());
-        assertEquals(Character.valueOf('c'), it.next());
-        assertEquals(Character.valueOf('d'), it.next());
+        assertThat(it.next(), is('a'));
+        assertThat(it.next(), is('b'));
+        assertThat(it.next(), is('c'));
+        assertThat(it.next(), is('d'));
         assertFalse(it.hasNext());
         assertFalse(List.empty().iterator().hasNext());
     }
 
     @Test
     public void testZip() throws Exception {
-        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+        List<Pair<Character, Integer>> expectedList = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3), Pair.of('d', 4));
-        assertEquals(expected, sut.zip(List.of(1, 2, 3, 4)));
-        assertEquals(List.<Pair<Object, Object>>empty(), List.empty().zip(List.empty()));
+        assertThat(sut.zip(List.of(1, 2, 3, 4)), is(expectedList));
+        assertThat(List.empty().zip(List.empty()), is(List.<Pair<Object, Object>>empty()));
     }
 
     @Test
     public void testZipWithDifferentLengths() throws Exception {
-        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+        List<Pair<Character, Integer>> expectedList = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3));
-        assertEquals(expected, sut.zip(List.of(1, 2, 3)));
-        expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+        assertThat(sut.zip(List.of(1, 2, 3)), is(expectedList));
+        expectedList = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3), Pair.of('d', 4));
-        assertEquals(expected, sut.zip(List.of(1, 2, 3, 4, 5)));
-        assertEquals(List.<Pair<Object, Character>>empty(), List.empty().zip(sut));
-        assertEquals(List.<Pair<Character, Object>>empty(), sut.zip(List.empty()));
+        assertThat(sut.zip(List.of(1, 2, 3, 4, 5)), is(expectedList));
+        assertThat(List.empty().zip(sut), is(List.<Pair<Object, Character>>empty()));
+        assertThat(sut.zip(List.empty()), is(List.<Pair<Character, Object>>empty()));
     }
 
     @Test
     public void testStrictZip() throws Exception {
-        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+        List<Pair<Character, Integer>> expectedList = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3), Pair.of('d', 4));
-        assertEquals(expected, sut.strictZip(List.of(1, 2, 3, 4)));
-        assertEquals(List.<Pair<Object, Object>>empty(), List.empty().strictZip(List.empty()));
+        assertThat(sut.strictZip(List.of(1, 2, 3, 4)), is(expectedList));
+        assertThat(List.empty().strictZip(List.empty()), is(List.<Pair<Object, Object>>empty()));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -289,8 +290,8 @@ public class ListTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals("[a,b,c,d]", sut.toString());
-        assertEquals("[]", List.empty().toString());
+        assertThat(sut.toString(), is("[a,b,c,d]"));
+        assertThat(List.empty().toString(), is("[]"));
     }
 
     @Test
@@ -310,19 +311,19 @@ public class ListTest {
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>rightOf("bar"),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(List.of(2, 5), List.lefts(mixed));
+        assertThat(List.lefts(mixed), is(List.of(2, 5)));
 
         List<Either<Integer, String>> leftsOnly = List.of(
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(List.of(2, 5), List.lefts(leftsOnly));
+        assertThat(List.lefts(leftsOnly), is(List.of(2, 5)));
 
         List<Either<Integer, String>> rightsOnly = List.of(
                 Either.<Integer, String>rightOf("foo"),
                 Either.<Integer, String>rightOf("bar"));
-        assertEquals(List.<Integer>empty(), List.lefts(rightsOnly));
+        assertThat(List.lefts(rightsOnly), is(List.empty()));
 
-        assertEquals(List.empty(), List.lefts(List.empty()));
+        assertThat(List.lefts(List.empty()), is(List.empty()));
     }
 
     @Test
@@ -332,19 +333,19 @@ public class ListTest {
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>rightOf("bar"),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(List.of("foo", "bar"), List.rights(mixed));
+        assertThat(List.rights(mixed), is(List.of("foo", "bar")));
 
         List<Either<Integer, String>> leftsOnly = List.of(
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(List.<String>empty(), List.rights(leftsOnly));
+        assertThat(List.rights(leftsOnly), is(List.empty()));
 
         List<Either<Integer, String>> rightsOnly = List.of(
                 Either.<Integer, String>rightOf("foo"),
                 Either.<Integer, String>rightOf("bar"));
-        assertEquals(List.of("foo", "bar"), List.rights(rightsOnly));
+        assertThat(List.rights(rightsOnly), is(List.of("foo", "bar")));
 
-        assertEquals(List.empty(), List.rights(List.empty()));
+        assertThat(List.rights(List.empty()), is(List.empty()));
     }
 
     @Test
@@ -354,26 +355,26 @@ public class ListTest {
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>rightOf("bar"),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>of("foo", "bar")), List.leftsRights(mixed));
+        assertThat(List.leftsRights(mixed), is(Pair.of(List.of(2, 5), List.of("foo", "bar"))));
 
         List<Either<Integer, String>> leftsOnly = List.of(
                 Either.<Integer, String>leftOf(2),
                 Either.<Integer, String>leftOf(5));
-        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>empty()), List.leftsRights(leftsOnly));
+        assertThat(List.leftsRights(leftsOnly), is(Pair.of(List.of(2, 5), List.<String>empty())));
 
         List<Either<Integer, String>> rightsOnly = List.of(
                 Either.<Integer, String>rightOf("foo"),
                 Either.<Integer, String>rightOf("bar"));
-        assertEquals(Pair.of(List.<Integer>empty(), List.<String>of("foo", "bar")), List.leftsRights(rightsOnly));
+        assertThat(List.leftsRights(rightsOnly), is(Pair.of(List.empty(), List.<String>of("foo", "bar"))));
 
-        assertEquals(Pair.of(List.empty(), List.empty()), List.leftsRights(List.empty()));
+        assertThat(List.leftsRights(List.empty()), is(Pair.of(List.empty(), List.empty())));
     }
 
     @Test
     public void testUnzip() {
         List<Pair<Integer, String>> list = List.of(Pair.of(2, "foo"), Pair.of(5, "bar"));
-        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>of("foo", "bar")), List.unzip(list));
+        assertThat(List.unzip(list), is(Pair.of(List.of(2, 5), List.of("foo", "bar"))));
 
-        assertEquals(Pair.of(List.empty(), List.empty()), List.unzip(List.empty()));
+        assertThat(List.unzip(List.empty()), is(Pair.of(List.empty(), List.empty())));
     }
 }
