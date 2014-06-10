@@ -1,6 +1,7 @@
 package org.neco4j.collect;
 
 import org.junit.Test;
+import org.neco4j.either.Either;
 import org.neco4j.tuple.Pair;
 
 import java.util.Iterator;
@@ -40,7 +41,7 @@ public class ListTest {
 
     @Test
     public void testTailOpt() throws Exception {
-        assertEquals(Optional.of(List.of('b','c','d')), sut.tailOpt());
+        assertEquals(Optional.of(List.of('b', 'c', 'd')), sut.tailOpt());
         assertEquals(Optional.<List<Character>>empty(), List.<Character>empty().tailOpt());
     }
 
@@ -255,7 +256,8 @@ public class ListTest {
     public void testZipWithDifferentLengths() throws Exception {
         List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3));
-        assertEquals(expected, sut.zip(List.of(1, 2, 3)));expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+        assertEquals(expected, sut.zip(List.of(1, 2, 3)));
+        expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
                 Pair.of('c', 3), Pair.of('d', 4));
         assertEquals(expected, sut.zip(List.of(1, 2, 3, 4, 5)));
         assertEquals(List.<Pair<Object, Character>>empty(), List.empty().zip(sut));
@@ -299,5 +301,79 @@ public class ListTest {
         assertFalse(List.empty().equals(sut));
         assertFalse(sut.equals(List.empty()));
         assertTrue(List.empty().equals(List.empty()));
+    }
+
+    @Test
+    public void testLefts() {
+        List<Either<Integer, String>> mixed = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>rightOf("bar"),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(List.of(2, 5), List.lefts(mixed));
+
+        List<Either<Integer, String>> leftsOnly = List.of(
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(List.of(2, 5), List.lefts(leftsOnly));
+
+        List<Either<Integer, String>> rightsOnly = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>rightOf("bar"));
+        assertEquals(List.<Integer>empty(), List.lefts(rightsOnly));
+
+        assertEquals(List.empty(), List.lefts(List.empty()));
+    }
+
+    @Test
+    public void testRights() {
+        List<Either<Integer, String>> mixed = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>rightOf("bar"),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(List.of("foo", "bar"), List.rights(mixed));
+
+        List<Either<Integer, String>> leftsOnly = List.of(
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(List.<String>empty(), List.rights(leftsOnly));
+
+        List<Either<Integer, String>> rightsOnly = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>rightOf("bar"));
+        assertEquals(List.of("foo", "bar"), List.rights(rightsOnly));
+
+        assertEquals(List.empty(), List.rights(List.empty()));
+    }
+
+    @Test
+    public void testLeftsRights() {
+        List<Either<Integer, String>> mixed = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>rightOf("bar"),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>of("foo", "bar")), List.leftsRights(mixed));
+
+        List<Either<Integer, String>> leftsOnly = List.of(
+                Either.<Integer, String>leftOf(2),
+                Either.<Integer, String>leftOf(5));
+        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>empty()), List.leftsRights(leftsOnly));
+
+        List<Either<Integer, String>> rightsOnly = List.of(
+                Either.<Integer, String>rightOf("foo"),
+                Either.<Integer, String>rightOf("bar"));
+        assertEquals(Pair.of(List.<Integer>empty(), List.<String>of("foo", "bar")), List.leftsRights(rightsOnly));
+
+        assertEquals(Pair.of(List.empty(), List.empty()), List.leftsRights(List.empty()));
+    }
+
+    @Test
+    public void testUnzip() {
+        List<Pair<Integer, String>> list = List.of(Pair.of(2, "foo"), Pair.of(5, "bar"));
+        assertEquals(Pair.of(List.<Integer>of(2, 5), List.<String>of("foo", "bar")), List.unzip(list));
+
+        assertEquals(Pair.of(List.empty(), List.empty()), List.unzip(List.empty()));
     }
 }

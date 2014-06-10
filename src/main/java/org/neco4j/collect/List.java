@@ -1,7 +1,9 @@
 package org.neco4j.collect;
 
+import org.neco4j.either.Either;
 import org.neco4j.tuple.Pair;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -191,7 +193,7 @@ public interface List<A> extends Iterable<A> {
         List<A> aList = this;
         List<B> bList = that;
         List<Pair<A, B>> result = List.empty();
-        while(! aList.isEmpty() && ! bList.isEmpty()) {
+        while (!aList.isEmpty() && !bList.isEmpty()) {
             result = cons(Pair.of(aList.head(), bList.head()), result);
             aList = aList.tail();
             bList = bList.tail();
@@ -227,5 +229,25 @@ public interface List<A> extends Iterable<A> {
                 return value;
             }
         };
+    }
+
+    public static <A, B> List<A> lefts(List<Either<A, B>> list) {
+        return list.flatMap(e -> e.fold(Collections::singleton, b -> Collections.emptyList()));
+    }
+
+    public static <A, B> List<B> rights(List<Either<A, B>> list) {
+        return list.flatMap(e -> e.fold(a -> Collections.emptyList(), Collections::singleton));
+    }
+
+    public static <A, B> Pair<List<A>, List<B>> leftsRights(List<Either<A, B>> list) {
+        return list.foldRight((e, ps) -> e.fold(
+                        left -> Pair.of(cons(left, ps.get1()), ps.get2()),
+                        right -> Pair.of(ps.get1(), cons(right, ps.get2()))),
+                Pair.of(List.<A>empty(), List.<B>empty()));
+    }
+
+    public static <A, B> Pair<List<A>, List<B>> unzip(List<Pair<A, B>> list) {
+        return list.foldRight((p, ps) -> Pair.<List<A>, List<B>>of(cons(p.get1(), ps.get1()), cons(p.get2(), ps.get2())),
+                Pair.of(List.<A>empty(), List.<B>empty()));
     }
 }
