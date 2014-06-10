@@ -99,7 +99,7 @@ public final class Left<A, B> extends Either<A, B> {
 
     @Override
     public boolean test(Predicate<A> predicateA, Predicate<B> predicateB) {
-        return predicateA.test(a);
+        return predicateA.test(left());
     }
 
     @Override

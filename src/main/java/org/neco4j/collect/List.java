@@ -31,27 +31,19 @@ public interface List<A> extends Iterable<A> {
 
     public A head() throws NoSuchElementException;
 
-    public default Optional<A> headOpt() {
-        return Optional.of(head());
-    }
+    public Optional<A> headOpt();
 
-    public List<A> tail();
+    public List<A> tail() throws NoSuchElementException;
 
-    public default A last() throws NoSuchElementException {
-        return lastOpt().get();
-    }
+    public Optional<List<A>> tailOpt();
 
-    public default Optional<A> lastOpt() {
-        A value = null;
-        for (A a : this) {
-            value = a;
-        }
-        return Optional.of(value);
-    }
+    public A last() throws NoSuchElementException;
 
-    public default List<A> init() {
-        return reverse().tail().reverse();
-    }
+    public Optional<A> lastOpt();
+
+    public List<A> init() throws NoSuchElementException;
+
+    public Optional<List<A>> initOpt();
 
     public default A get(int index) throws IndexOutOfBoundsException {
         return getOpt(index).orElseThrow(IndexOutOfBoundsException::new);
@@ -195,14 +187,14 @@ public interface List<A> extends Iterable<A> {
         return value;
     }
 
-    public default <B> List<Pair<A, B>> zip(List<B> other) {
-        if (this.size() != other.size()) {
-            throw new IllegalArgumentException("list sizes must match");
-        }
+    public default <B> List<Pair<A, B>> zip(List<B> that) {
+        List<A> aList = this;
+        List<B> bList = that;
         List<Pair<A, B>> result = List.empty();
-        Iterator<B> otherIterator = other.iterator();
-        for (A a : this) {
-            result = cons(Pair.of(a, otherIterator.next()), result);
+        while(! aList.isEmpty() && ! bList.isEmpty()) {
+            result = cons(Pair.of(aList.head(), bList.head()), result);
+            aList = aList.tail();
+            bList = bList.tail();
         }
         return result.reverse();
     }

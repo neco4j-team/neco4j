@@ -6,6 +6,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * <code>Either</code> is a wrapper, which can hold either a value of one or another type (the "left" and "right" type).
+ * E.g. <code>Either</code> is often used to return a result of calculation which may fail: If the calculation succeeds,
+ * the "right" value is returned as result, else the "left" value contains some description of the problem.
+ *
+ * In this implementation, there are two subtypes <code>Left</code> and <code>Right</code> holding the actual value.
+ * @param <A> the "left" value type
+ * @param <B> the "right" value type.
+ */
 public abstract class Either<A, B> {
 
     Either() {

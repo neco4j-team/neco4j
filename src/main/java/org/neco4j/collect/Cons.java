@@ -2,7 +2,9 @@ package org.neco4j.collect;
 
 import org.neco4j.tuple.Pair;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 class Cons<A> implements List<A> {
 
@@ -14,12 +16,45 @@ class Cons<A> implements List<A> {
         this.tail = Objects.requireNonNull(tail);
     }
 
+    @Override
     public A head() {
         return head;
     }
 
+    @Override
+    public Optional<A> headOpt() {
+        return Optional.of(head());
+    }
+
+    @Override
     public List<A> tail() {
         return tail;
+    }
+
+    @Override
+    public Optional<List<A>> tailOpt() {
+        return Optional.of(tail());
+    }
+
+    @Override
+    public A last() {
+        A value = null;
+        for (A a : this) {
+            value = a;
+        }
+        return value;
+    }
+
+    public Optional<A> lastOpt() {
+        return Optional.of(last());
+    }
+
+    public List<A> init() {
+        return reverse().tail().reverse();
+    }
+
+    public Optional<List<A>> initOpt() {
+        return Optional.of(init());
     }
 
     public String toString() {
@@ -38,17 +73,20 @@ class Cons<A> implements List<A> {
         if (!(obj instanceof List<?>)) {
             return false;
         }
-        List<?> that = (List<?>) obj;
-        for (Pair<A, ?> pair : this.zip(that)) {
-            if (!pair.get1().equals(pair.get2())) {
+        List<?> one = this;
+        List<?> two = (List<?>) obj;
+        while(! one.isEmpty() && ! two.isEmpty()) {
+            if (! one.head().equals(two.head())) {
                 return false;
             }
+            one = one.tail();
+            two = two.tail();
         }
-        return true;
+        return one.isEmpty() && two.isEmpty();
     }
 
     @Override
     public int hashCode() {
-        return this.foldLeft(0, (a, b) -> 31 * a.hashCode() + b.hashCode());
+        return this.foldLeft(0, (a, b) -> 31 * a + b.hashCode());
     }
 }

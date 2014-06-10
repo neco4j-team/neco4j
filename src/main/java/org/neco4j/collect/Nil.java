@@ -24,7 +24,12 @@ public class Nil<A> implements List<A> {
 
     @Override
     public List<A> tail() throws NoSuchElementException {
-        return this;
+        throw new NoSuchElementException("tail() call on empty list");
+    }
+
+    @Override
+    public Optional<List<A>> tailOpt(){
+        return Optional.empty();
     }
 
     @Override
@@ -39,7 +44,12 @@ public class Nil<A> implements List<A> {
 
     @Override
     public List<A> init() throws NoSuchElementException {
-        return this;
+        throw new NoSuchElementException("init() call on empty list");
+    }
+
+    @Override
+    public Optional<List<A>> initOpt() {
+        return Optional.empty();
     }
 
     @Override

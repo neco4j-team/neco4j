@@ -28,9 +28,19 @@ public class ListTest {
     }
 
     @Test
-    public void testTail() throws Exception {
+    public void testTailOnCons() throws Exception {
         assertEquals(List.of('b', 'c', 'd'), sut.tail());
-        assertEquals(List.empty(), List.empty().tail());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testTailOnNil() throws Exception {
+        List.empty().tail();
+    }
+
+    @Test
+    public void testTailOpt() throws Exception {
+        assertEquals(Optional.of(List.of('b','c','d')), sut.tailOpt());
+        assertEquals(Optional.<List<Character>>empty(), List.<Character>empty().tailOpt());
     }
 
     @Test
@@ -50,9 +60,19 @@ public class ListTest {
     }
 
     @Test
-    public void testInit() throws Exception {
+    public void testInitOnCons() throws Exception {
         assertEquals(List.of('a', 'b', 'c'), sut.init());
-        assertEquals(List.empty(), List.empty().init());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testInitOnNil() throws Exception {
+        List.empty().init();
+    }
+
+    @Test
+    public void testInitOpt() throws Exception {
+        assertEquals(Optional.of(List.of('a', 'b', 'c')), sut.initOpt());
+        assertEquals(Optional.<List<Character>>empty(), List.<Character>empty().initOpt());
     }
 
     @Test
@@ -176,7 +196,7 @@ public class ListTest {
     @Test
     public void testReverse() throws Exception {
         assertEquals(List.of('d', 'c', 'b', 'a'), sut.reverse());
-        assertEquals(List.empty(), List.empty());
+        assertEquals(List.empty(), List.empty().reverse());
     }
 
     @Test

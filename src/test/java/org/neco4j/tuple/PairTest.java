@@ -2,6 +2,8 @@ package org.neco4j.tuple;
 
 import org.junit.Test;
 
+import java.util.function.Predicate;
+
 import static org.junit.Assert.*;
 
 public class PairTest {
