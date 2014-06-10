@@ -1,6 +1,7 @@
 package org.neco4j.collect;
 
 import org.junit.Test;
+import org.neco4j.tuple.Pair;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -223,8 +224,60 @@ public class ListTest {
     }
 
     @Test
+    public void testZip() throws Exception {
+        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+                Pair.of('c', 3), Pair.of('d', 4));
+        assertEquals(expected, sut.zip(List.of(1, 2, 3, 4)));
+        assertEquals(List.<Pair<Object, Object>>empty(), List.empty().zip(List.empty()));
+    }
+
+    @Test
+    public void testZipWithDifferentLengths() throws Exception {
+        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+                Pair.of('c', 3));
+        assertEquals(expected, sut.zip(List.of(1, 2, 3)));expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+                Pair.of('c', 3), Pair.of('d', 4));
+        assertEquals(expected, sut.zip(List.of(1, 2, 3, 4, 5)));
+        assertEquals(List.<Pair<Object, Character>>empty(), List.empty().zip(sut));
+        assertEquals(List.<Pair<Character, Object>>empty(), sut.zip(List.empty()));
+    }
+
+    @Test
+    public void testStrictZip() throws Exception {
+        List<Pair<Character, Integer>> expected = List.of(Pair.of('a', 1), Pair.of('b', 2),
+                Pair.of('c', 3), Pair.of('d', 4));
+        assertEquals(expected, sut.strictZip(List.of(1, 2, 3, 4)));
+        assertEquals(List.<Pair<Object, Object>>empty(), List.empty().strictZip(List.empty()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStrictZipOnNilAndCons() throws Exception {
+        List.empty().strictZip(sut);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStrictZipOnConsAndNil() throws Exception {
+        sut.strictZip(List.empty());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStrictZipWithDifferentLengths() throws Exception {
+        sut.strictZip(List.of(1, 2, 3));
+    }
+
+    @Test
     public void testToString() throws Exception {
         assertEquals("[a,b,c,d]", sut.toString());
         assertEquals("[]", List.empty().toString());
+    }
+
+    @Test
+    public void testEquals() throws Exception {
+        assertTrue(sut.equals(List.of('a', 'b', 'c', 'd')));
+        assertFalse(sut.equals(List.of('a', 'b', 'c')));
+        assertFalse(List.of('a', 'b', 'c').equals(sut));
+        assertFalse(List.empty().equals(sut));
+        assertFalse(sut.equals(List.empty()));
+        assertTrue(List.empty().equals(List.empty()));
     }
 }

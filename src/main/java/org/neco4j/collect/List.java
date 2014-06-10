@@ -196,15 +196,22 @@ public interface List<A> extends Iterable<A> {
     }
 
     public default <B> List<Pair<A, B>> zip(List<B> other) {
-        if (this.size() != other.size()) {
-            throw new IllegalArgumentException("list sizes must match");
-        }
         List<Pair<A, B>> result = List.empty();
         Iterator<B> otherIterator = other.iterator();
         for (A a : this) {
+            if (!otherIterator.hasNext()) {
+                break;
+            }
             result = cons(Pair.of(a, otherIterator.next()), result);
         }
         return result.reverse();
+    }
+
+    public default <B> List<Pair<A, B>> strictZip(List<B> other) {
+        if (this.size() != other.size()) {
+            throw new IllegalArgumentException("list sizes must match");
+        }
+        return zip(other);
     }
 
     @Override

@@ -39,6 +39,9 @@ class Cons<A> implements List<A> {
             return false;
         }
         List<?> that = (List<?>) obj;
+        if (this.size() != that.size()) {
+            return false;
+        }
         for (Pair<A, ?> pair : this.zip(that)) {
             if (!pair.get1().equals(pair.get2())) {
                 return false;
