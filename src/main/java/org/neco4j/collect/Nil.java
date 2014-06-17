@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class Nil<A> implements List<A> {
+public class Nil<A> implements NecoList<A> {
 
     final static Nil<?> NIL = new Nil<>();
 
@@ -23,12 +23,12 @@ public class Nil<A> implements List<A> {
     }
 
     @Override
-    public List<A> tail() throws NoSuchElementException {
+    public NecoList<A> tail() throws NoSuchElementException {
         throw new NoSuchElementException("tail() call on empty list");
     }
 
     @Override
-    public Optional<List<A>> tailOpt(){
+    public Optional<NecoList<A>> tailOpt(){
         return Optional.empty();
     }
 
@@ -43,12 +43,12 @@ public class Nil<A> implements List<A> {
     }
 
     @Override
-    public List<A> init() throws NoSuchElementException {
+    public NecoList<A> init() throws NoSuchElementException {
         throw new NoSuchElementException("init() call on empty list");
     }
 
     @Override
-    public Optional<List<A>> initOpt() {
+    public Optional<NecoList<A>> initOpt() {
         return Optional.empty();
     }
 
@@ -68,7 +68,7 @@ public class Nil<A> implements List<A> {
     }
 
     @Override
-    public List<A> with(int index, A value) throws IndexOutOfBoundsException {
+    public NecoList<A> with(int index, A value) throws IndexOutOfBoundsException {
         throw new IndexOutOfBoundsException("with() call on empty list");
     }
 
