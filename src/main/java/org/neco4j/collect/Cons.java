@@ -3,12 +3,12 @@ package org.neco4j.collect;
 import java.util.Objects;
 import java.util.Optional;
 
-class Cons<A> implements List<A> {
+class Cons<A> implements NecoList<A> {
 
     private final A head;
-    private final List<A> tail;
+    private final NecoList<A> tail;
 
-    Cons(A head, List<A> tail) {
+    Cons(A head, NecoList<A> tail) {
         this.head = Objects.requireNonNull(head);
         this.tail = Objects.requireNonNull(tail);
     }
@@ -24,12 +24,12 @@ class Cons<A> implements List<A> {
     }
 
     @Override
-    public List<A> tail() {
+    public NecoList<A> tail() {
         return tail;
     }
 
     @Override
-    public Optional<List<A>> tailOpt() {
+    public Optional<NecoList<A>> tailOpt() {
         return Optional.of(tail());
     }
 
@@ -42,11 +42,11 @@ class Cons<A> implements List<A> {
         return Optional.of(last());
     }
 
-    public List<A> init() {
+    public NecoList<A> init() {
         return reverse().tail().reverse();
     }
 
-    public Optional<List<A>> initOpt() {
+    public Optional<NecoList<A>> initOpt() {
         return Optional.of(init());
     }
 
@@ -63,11 +63,11 @@ class Cons<A> implements List<A> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof List<?>)) {
+        if (!(obj instanceof NecoList<?>)) {
             return false;
         }
-        List<?> one = this;
-        List<?> two = (List<?>) obj;
+        NecoList<?> one = this;
+        NecoList<?> two = (NecoList<?>) obj;
         while (!one.isEmpty() && !two.isEmpty()) {
             if (!one.head().equals(two.head())) {
                 return false;
