@@ -1,8 +1,6 @@
 package org.neco4j.collect;
 
 import org.junit.Test;
-import org.neco4j.either.Either;
-import org.neco4j.tuple.Pair;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -221,6 +219,20 @@ public class NecoListTest {
     }
 
     @Test
+    public void testAll() throws Exception {
+        NecoList<Integer> intList = NecoList.of(5, 8, 6, 13, 9);
+        assertTrue(intList.all(i -> i >= 5 && i <= 13));
+        assertFalse(intList.all(i -> i % 2 == 0));
+    }
+
+    @Test
+    public void testAny() throws Exception {
+        NecoList<Integer> intList = NecoList.of(5, 8, 6, 13, 9);
+        assertFalse(intList.any(i -> i < 5));
+        assertTrue(intList.any(i -> i % 2 == 0));
+    }
+
+    @Test
     public void testFoldLeft() throws Exception {
         NecoList<Integer> intList = NecoList.of(5, 8, 6, 13, 9);
         // (((((((((2 + 1) * 5) + 1) * 8) + 1) * 6) + 1) * 13) + 1) * 9 = 90.684
@@ -243,49 +255,6 @@ public class NecoListTest {
         assertThat(it.next(), is('d'));
         assertFalse(it.hasNext());
         assertFalse(NecoList.empty().iterator().hasNext());
-    }
-
-    @Test
-    public void testZip() throws Exception {
-        NecoList<Pair<Character, Integer>> expectedList = NecoList.of(Pair.of('a', 1), Pair.of('b', 2),
-                Pair.of('c', 3), Pair.of('d', 4));
-        assertThat(sut.zip(NecoList.of(1, 2, 3, 4)), is(expectedList));
-        assertThat(NecoList.empty().zip(NecoList.empty()), is(NecoList.<Pair<Object, Object>>empty()));
-    }
-
-    @Test
-    public void testZipWithDifferentLengths() throws Exception {
-        NecoList<Pair<Character, Integer>> expectedList = NecoList.of(Pair.of('a', 1), Pair.of('b', 2),
-                Pair.of('c', 3));
-        assertThat(sut.zip(NecoList.of(1, 2, 3)), is(expectedList));
-        expectedList = NecoList.of(Pair.of('a', 1), Pair.of('b', 2),
-                Pair.of('c', 3), Pair.of('d', 4));
-        assertThat(sut.zip(NecoList.of(1, 2, 3, 4, 5)), is(expectedList));
-        assertThat(NecoList.empty().zip(sut), is(NecoList.<Pair<Object, Character>>empty()));
-        assertThat(sut.zip(NecoList.empty()), is(NecoList.<Pair<Character, Object>>empty()));
-    }
-
-    @Test
-    public void testStrictZip() throws Exception {
-        NecoList<Pair<Character, Integer>> expectedList = NecoList.of(Pair.of('a', 1), Pair.of('b', 2),
-                Pair.of('c', 3), Pair.of('d', 4));
-        assertThat(sut.strictZip(NecoList.of(1, 2, 3, 4)), is(expectedList));
-        assertThat(NecoList.empty().strictZip(NecoList.empty()), is(NecoList.<Pair<Object, Object>>empty()));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testStrictZipOnNilAndCons() throws Exception {
-        NecoList.empty().strictZip(sut);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testStrictZipOnConsAndNil() throws Exception {
-        sut.strictZip(NecoList.empty());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testStrictZipWithDifferentLengths() throws Exception {
-        sut.strictZip(NecoList.of(1, 2, 3));
     }
 
     @Test

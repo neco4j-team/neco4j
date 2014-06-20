@@ -1,8 +1,5 @@
 package org.neco4j.collect;
 
-import org.neco4j.either.Either;
-import org.neco4j.tuple.Pair;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -172,6 +169,24 @@ public interface NecoList<A> extends Iterable<A> {
         return result.reverse();
     }
 
+    public default boolean all(Predicate<? super A> predicate) {
+        for (A a : this) {
+            if (!predicate.test(a)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public default boolean any(Predicate<? super A> predicate) {
+        for (A a : this) {
+            if (predicate.test(a)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public default <B> B foldLeft(B start, BiFunction<? super B, ? super A, ? extends B> fn) {
         B value = start;
         for (A a : this) {
@@ -186,36 +201,6 @@ public interface NecoList<A> extends Iterable<A> {
             value = fn.apply(a, value);
         }
         return value;
-    }
-
-    public default <B, C> NecoList<C> zipWith(NecoList<B> that, BiFunction<? super A, ? super B, ? extends C> fn) {
-        NecoList<A> aList = this;
-        NecoList<B> bList = that;
-        NecoList<C> result = NecoList.empty();
-        while (!aList.isEmpty() && !bList.isEmpty()) {
-            result = cons(fn.apply(aList.head(), bList.head()), result);
-            aList = aList.tail();
-            bList = bList.tail();
-        }
-        return result.reverse();
-    }
-
-    public default <B, C> NecoList<C> strictZipWith(NecoList<B> that, BiFunction<? super A, ? super B, ? extends C> fn) {
-        if (this.size() != that.size()) {
-            throw new IllegalArgumentException("list sizes must match");
-        }
-        return zipWith(that, fn);
-    }
-
-    public default <B> NecoList<Pair<A, B>> zip(NecoList<B> that) {
-        return zipWith(that, Pair::of);
-    }
-
-    public default <B> NecoList<Pair<A, B>> strictZip(NecoList<B> that) throws IllegalArgumentException {
-        if (this.size() != that.size()) {
-            throw new IllegalArgumentException("list sizes must match");
-        }
-        return zip(that);
     }
 
     @Override
@@ -240,5 +225,4 @@ public interface NecoList<A> extends Iterable<A> {
             }
         };
     }
-
 }

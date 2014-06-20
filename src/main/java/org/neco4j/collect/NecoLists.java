@@ -3,58 +3,48 @@ package org.neco4j.collect;
 import org.neco4j.either.Either;
 import org.neco4j.tuple.Pair;
 
-import static org.neco4j.collect.NecoList.cons;
+public class NecoLists {
 
-public final class NecoLists {
-
-    private NecoLists(){
+    private NecoLists() {
     }
 
-    public static <A, B> NecoList<A> lefts(NecoList<Either<A, B>> list) {
-        return list.foldRight((e, ls) -> e.fold((A left) -> cons(left, ls), (B right) -> ls), NecoList.empty());
+    public static <A> NecoList<A> fromIterable(Iterable<A> iterable) throws NullPointerException {
+        NecoList<A> result = NecoList.empty();
+        for (A a : iterable) {
+            result = NecoList.cons(a, result);
+        }
+        return result.reverse();
     }
 
-    public static <A, B> NecoList<B> rights(NecoList<Either<A, B>> list) {
-        return list.foldRight((e, rs) -> e.fold((A left) -> rs, (B right) -> cons(right, rs)), NecoList.empty());
-    }
-
-    public static <A, B> Pair<NecoList<A>, NecoList<B>> leftsRights(NecoList<Either<A, B>> list) {
+    public static <A, B> Pair<NecoList<A>, NecoList<B>> eithers(NecoList<Either<A, B>> list) {
         return list.foldRight((e, ps) -> e.fold(
-                        left -> Pair.of(cons(left, ps.get1()), ps.get2()),
-                        right -> Pair.of(ps.get1(), cons(right, ps.get2()))),
+                        left -> Pair.of(NecoList.cons(left, ps.get1()), ps.get2()),
+                        right -> Pair.of(ps.get1(), NecoList.cons(right, ps.get2()))),
                 Pair.of(NecoList.<A>empty(), NecoList.<B>empty()));
     }
 
     public static <A, B> Pair<NecoList<A>, NecoList<B>> unzip(NecoList<Pair<A, B>> list) {
-        return list.foldRight((p, ps) -> Pair.<NecoList<A>, NecoList<B>>of(cons(p.get1(), ps.get1()), cons(p.get2(), ps.get2())),
+        return list.foldRight((p, ps) -> Pair.<NecoList<A>, NecoList<B>>of(
+                        NecoList.cons(p.get1(), ps.get1()), NecoList.cons(p.get2(), ps.get2())),
                 Pair.of(NecoList.<A>empty(), NecoList.<B>empty()));
     }
 
-    /*
-    public static <A> NecoList<A> iterateN(A start, int length, Function<? super A, ? extends A> fn) throws IndexOutOfBoundsException {
-        if (length < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-        A value = start;
-        NecoList<A> result = NecoList.empty();
-        for (int i = 0; i < length; i++) {
-            result = NecoList.cons(value, result);
-            if (i + 1 < length) {
-                value = fn.apply(value);
-            }
+    public static <A, B> NecoList<Pair<A, B>> zip(NecoList<A> first, NecoList<B> second) {
+        NecoList<A> aList = first;
+        NecoList<B> bList = second;
+        NecoList<Pair<A, B>> result = NecoList.empty();
+        while (!aList.isEmpty() && !bList.isEmpty()) {
+            result = NecoList.cons(Pair.of(aList.head(), bList.head()), result);
+            aList = aList.tail();
+            bList = bList.tail();
         }
         return result.reverse();
     }
 
-    public static <A> NecoList<A> iterateWhile(A start, Predicate<? super A> predicate, Function<? super A, ? extends A> fn) {
-        A value = start;
-        NecoList<A> result = NecoList.empty();
-        while (predicate.test(value)) {
-            result = NecoList.cons(value, result);
-            value = fn.apply(value);
+    public static <A, B> NecoList<Pair<A, B>> strictZip(NecoList<A> first, NecoList<B> second) throws IllegalArgumentException {
+        if (first.size() != second.size()) {
+            throw new IllegalArgumentException("list sizes must match");
         }
-        return result.reverse();
+        return zip(first, second);
     }
-    */
-
 }
