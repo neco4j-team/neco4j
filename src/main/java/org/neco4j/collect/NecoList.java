@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public interface NecoList<A> extends Iterable<A> {
 
@@ -18,6 +19,10 @@ public interface NecoList<A> extends Iterable<A> {
         return new Cons<>(head, tail);
     }
 
+    public static <A> NecoList<A> cons(A head, Supplier<NecoList<A>> tailSupplier) {
+        return new LazyCons<>(head, tailSupplier);
+    }
+
     @SafeVarargs
     public static <A> NecoList<A> of(A... values) {
         NecoList<A> result = empty();
@@ -25,6 +30,16 @@ public interface NecoList<A> extends Iterable<A> {
             result = cons(values[i], result);
         }
         return result;
+    }
+
+    public static <A> NecoList<A> from(Iterable<A> iterable) {
+        return from(iterable.iterator());
+    }
+
+    public static <A> NecoList<A> from(Iterator<A> iterator) {
+        return iterator.hasNext()
+                ? NecoList.<A>cons(iterator.next(), () -> from(iterator))
+                : NecoList.empty();
     }
 
     public A head() throws NoSuchElementException;
@@ -73,48 +88,28 @@ public interface NecoList<A> extends Iterable<A> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("with() call with negative index");
         }
-        int i = 0;
-        NecoList<A> result = empty();
-        for (A a : this) {
-            result = cons(i == index ? value : a, result);
-            i++;
-        }
-        if (i < index) {
+        if (isEmpty()) {
             throw new IndexOutOfBoundsException();
         }
-        return result.reverse();
+        return index == 0
+                ? cons(value, tail())
+                : cons(head(), () -> tail().with(index - 1, value));
     }
 
     public default NecoList<A> concat(NecoList<A> that) {
-        NecoList<A> result = that;
-        for (A a : this.reverse()) {
-            result = cons(a, result);
-        }
-        return result;
+        return isEmpty() ? that : cons(head(), () -> tail().concat(that));
     }
 
     public default NecoList<A> take(int count) {
-        NecoList<A> result = empty();
-        int index = 0;
-        for (A a : this) {
-            if (index >= count) {
-                break;
-            }
-            index++;
-            result = cons(a, result);
-        }
-        return result.reverse();
+        return isEmpty() || count <= 0
+                ? empty()
+                : cons(head(), () -> tail().take(count - 1));
     }
 
     public default NecoList<A> takeWhile(Predicate<A> predicate) {
-        NecoList<A> result = empty();
-        for (A a : this) {
-            if (!predicate.test(a)) {
-                break;
-            }
-            result = cons(a, result);
-        }
-        return result.reverse();
+        return isEmpty() || !predicate.test(head())
+                ? empty()
+                : cons(head(), () -> tail().takeWhile(predicate));
     }
 
     public default NecoList<A> drop(int count) {
@@ -142,31 +137,21 @@ public interface NecoList<A> extends Iterable<A> {
     }
 
     public default <B> NecoList<B> map(Function<? super A, ? extends B> fn) {
-        NecoList<B> result = empty();
-        for (A a : this) {
-            result = cons(fn.apply(a), result);
-        }
-        return result.reverse();
+        return isEmpty()
+                ? NecoList.empty()
+                : NecoList.<B>cons(fn.apply(head()), () -> tail().map(fn));
     }
 
-    public default <B> NecoList<B> flatMap(Function<? super A, ? extends Iterable<? extends B>> fn) {
-        NecoList<B> result = empty();
-        for (A a : this) {
-            for (B b : fn.apply(a)) {
-                result = cons(b, result);
-            }
-        }
-        return result.reverse();
+    public default <B> NecoList<B> flatMap(Function<? super A, ? extends Iterable<B>> fn) {
+        return isEmpty()
+                ? NecoList.<B>empty()
+                : from(fn.apply(head())).concat(tail().flatMap(fn));
     }
 
     public default NecoList<A> filter(Predicate<? super A> predicate) {
-        NecoList<A> result = empty();
-        for (A a : this) {
-            if (predicate.test(a)) {
-                result = cons(a, result);
-            }
-        }
-        return result.reverse();
+        return isEmpty()
+                ? empty()
+                : predicate.test(head()) ? cons(head(), () -> tail().filter(predicate)) : tail().filter(predicate);
     }
 
     public default boolean all(Predicate<? super A> predicate) {
@@ -202,6 +187,11 @@ public interface NecoList<A> extends Iterable<A> {
         }
         return value;
     }
+
+    public default void force() {
+        for(A a : this);
+    }
+
 
     @Override
     public default Iterator<A> iterator() {

@@ -139,7 +139,7 @@ public class NecoListTest {
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testWithOnConsOutOfBounds() throws Exception {
-        sut.with(5, 'x');
+        sut.with(5, 'x').force();
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
