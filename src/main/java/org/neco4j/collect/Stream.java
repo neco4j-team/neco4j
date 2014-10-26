@@ -1,35 +1,38 @@
 package org.neco4j.collect;
 
-import org.neco4j.tuple.Pair;
+import org.neco4j.collect.memo.Evaluated;
+import org.neco4j.collect.memo.Memoized;
+import org.neco4j.collect.memo.Unevaluated;
 
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Stream<A> implements Iterable<A> {
+public final class Stream<A> implements Iterable<A> {
 
-    private Memo<A> head;
-    private Memo<Stream<A>> tail;
+    private Memoized<A> head;
+    private Memoized<Stream<A>> tail;
 
-    public Stream(A head, Stream<A> tail) {
-        this.head = new Evaluated<>(head);
-        this.tail = new Evaluated<>(tail);
+    private Stream(Memoized<A> head, Memoized<Stream<A>> tail) {
+        this.head = head;
+        this.tail = tail;
     }
 
-    public Stream(A head, Supplier<Stream<A>> tailSupplier) {
-        this.head = new Evaluated<>(head);
-        this.tail = new UnEvaluated<>(tailSupplier);
+    public static <A> Stream<A> of(A head, Stream<A> tail) {
+        return new Stream<A>(new Evaluated<A>(head), new Evaluated<Stream<A>>(tail));
     }
 
-    public Stream(Supplier<A> headSupplier, Stream<A> tail) {
-        this.head = new UnEvaluated<>(headSupplier);
-        this.tail = new Evaluated<>(tail);
+    public static <A> Stream<A> of(A head, Supplier<Stream<A>> tailSupplier) {
+        return new Stream<A>(new Evaluated<A>(head), new Unevaluated<Stream<A>>(tailSupplier));
     }
 
-    public Stream(Supplier<A> headSupplier, Supplier<Stream<A>> tailSupplier) {
-        this.head = new UnEvaluated<>(headSupplier);
-        this.tail = new UnEvaluated<>(tailSupplier);
+    public static <A> Stream<A> of(Supplier<A> headSupplier, Stream<A> tail) {
+        return new Stream<A>(new Unevaluated<A>(headSupplier), new Evaluated<Stream<A>>(tail));
+    }
+
+    public static <A> Stream<A> of(Supplier<A> headSupplier, Supplier<Stream<A>> tailSupplier) {
+        return new Stream<A>(new Unevaluated<A>(headSupplier), new Unevaluated<Stream<A>>(tailSupplier));
     }
 
     public A head() {
@@ -43,6 +46,57 @@ public class Stream<A> implements Iterable<A> {
         tail = evaluated;
         return evaluated.get();
     }
+
+    //all prefixes of the current stream
+    public Stream<NecoList<A>> inits() {
+        return Stream.<NecoList<A>>of(NecoList.<A>empty(), () -> tail().inits().map(list -> NecoList.cons(head(), list)));
+    }
+
+    //all suffixes of the current stream
+    public Stream<Stream<A>> tails() {
+        return Stream.<Stream<A>>of(this, () -> tail().tails());
+    }
+
+    public <B> Stream<B> map(Function<? super A, ? extends B> fn) {
+        return Stream.<B>of(() -> fn.apply(head()), () -> tail().map(fn));
+    }
+
+    public Stream<A> dropWhile(Predicate<? super A> predicate) {
+        return dropUntil(predicate.negate());
+    }
+
+    public Stream<A> dropUntil(Predicate<? super A> predicate) {
+        for (Stream<A> stream = this; ; stream = stream.tail()) {
+            if (predicate.test(stream.head())) {
+                return stream;
+            }
+        }
+    }
+
+    public NecoList<A> take(int n) {
+        NecoList<A> result = NecoList.empty();
+        for (A a : this) {
+            if (n-- <= 0) {
+                break;
+            }
+            result = NecoList.cons(a, result);
+        }
+        return result.reverse();
+    }
+
+    public Stream<A> drop(int n) {
+        Stream<A> result = this;
+        while (n-- > 0) {
+            result = result.tail();
+        }
+        return result;
+    }
+
+    public Stream<A> filter(Predicate<? super A> predicate) {
+        Stream<A> stream = this.dropUntil(predicate);
+        return Stream.<A>of(stream.head(), () -> stream.tail().filter(predicate));
+    }
+
 
     @Override
     public Iterator<A> iterator() {
@@ -64,72 +118,15 @@ public class Stream<A> implements Iterable<A> {
         };
     }
 
-    public <B> Stream<B> map(Function<? super A, ? extends B> fn) {
-        return new Stream<B>(() -> fn.apply(head()), () -> tail().map(fn));
-    }
 
-    public Stream<A> dropWhile(Predicate<? super A> predicate) {
-        return dropUntil(predicate.negate());
-    }
-
-    public Stream<A> dropUntil(Predicate<? super A> predicate) {
-        for(Stream<A> stream = this; ; stream = stream.tail()) {
-            if (predicate.test(stream.head())) {
-                return stream;
-            }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Stream(");
+        int i = 10;
+        for (Stream<A> stream = this; i-- > 0; stream = stream.tail()) {
+            sb.append(stream.head()).append(i > 0 ? "," : "...)");
         }
+        return sb.toString();
     }
 
-    public Stream<A> filter(Predicate<? super A> predicate) {
-        Stream<A> stream = this.dropUntil(predicate);
-        return new Stream<>(stream.head(), () -> stream.tail().filter(predicate));
-    }
-
-    private static interface Memo<T> {
-        Evaluated<T> evaluate();
-    }
-
-    private static class Evaluated<T> implements Memo<T> {
-        private final T t;
-
-        private Evaluated(T t) {
-            this.t = t;
-        }
-
-        @Override
-        public Evaluated<T> evaluate() {
-            return this;
-        }
-
-        public T get() {
-            return t;
-        }
-    }
-
-    private static class UnEvaluated<T> implements Memo<T> {
-
-        private final Supplier<T> supplier;
-
-        private UnEvaluated(Supplier<T> supplier) {
-            this.supplier = supplier;
-        }
-
-        @Override
-        public Evaluated<T> evaluate() {
-            return new Evaluated<>(supplier.get());
-        }
-    }
-
-    public static <S,T> Stream<T> unfold(S seed, Function<S,Pair<S,T>> fn) {
-        Pair<S,T> pair = fn.apply(seed);
-        return new Stream<T>(pair.get2(), () -> unfold(pair.get1(), fn));
-    }
-
-    public static void main(String[] args) {
-        Stream<Integer> stream = unfold(new int[]{0,1}, p -> Pair.of(new int[]{p[1], p[0]+p[1]}, p[0]));
-        for(int i : stream) {
-            System.out.println(i);
-            if (i > 10000) break;
-        }
-    }
 }
