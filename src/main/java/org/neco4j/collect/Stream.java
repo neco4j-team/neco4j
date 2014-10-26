@@ -1,9 +1,5 @@
 package org.neco4j.collect;
 
-import org.neco4j.collect.memo.Evaluated;
-import org.neco4j.collect.memo.Memoized;
-import org.neco4j.collect.memo.Unevaluated;
-
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -11,40 +7,44 @@ import java.util.function.Supplier;
 
 public final class Stream<A> implements Iterable<A> {
 
-    private Memoized<A> head;
-    private Memoized<Stream<A>> tail;
+    private Supplier<A> head;
+    private Supplier<Stream<A>> tail;
 
-    private Stream(Memoized<A> head, Memoized<Stream<A>> tail) {
+    private Stream(Supplier<A> head, Supplier<Stream<A>> tail) {
         this.head = head;
         this.tail = tail;
     }
 
     public static <A> Stream<A> of(A head, Stream<A> tail) {
-        return new Stream<A>(new Evaluated<A>(head), new Evaluated<Stream<A>>(tail));
+        return new Stream<>(new Evaluated<>(head), new Evaluated<Stream<A>>(tail));
     }
 
     public static <A> Stream<A> of(A head, Supplier<Stream<A>> tailSupplier) {
-        return new Stream<A>(new Evaluated<A>(head), new Unevaluated<Stream<A>>(tailSupplier));
+        return new Stream<>(new Evaluated<>(head), tailSupplier);
     }
 
     public static <A> Stream<A> of(Supplier<A> headSupplier, Stream<A> tail) {
-        return new Stream<A>(new Unevaluated<A>(headSupplier), new Evaluated<Stream<A>>(tail));
+        return new Stream<>(headSupplier, new Evaluated<>(tail));
     }
 
     public static <A> Stream<A> of(Supplier<A> headSupplier, Supplier<Stream<A>> tailSupplier) {
-        return new Stream<A>(new Unevaluated<A>(headSupplier), new Unevaluated<Stream<A>>(tailSupplier));
+        return new Stream<>(headSupplier, tailSupplier);
     }
 
     public A head() {
-        Evaluated<A> evaluated = head.evaluate();
-        head = evaluated;
-        return evaluated.get();
+        A result = head.get();
+        if (! (head instanceof Evaluated)) {
+            head = new Evaluated<>(result);
+        }
+        return result;
     }
 
     public Stream<A> tail() {
-        Evaluated<Stream<A>> evaluated = tail.evaluate();
-        tail = evaluated;
-        return evaluated.get();
+        Stream<A> result = tail.get();
+        if (! (tail instanceof Evaluated)) {
+            tail = new Evaluated<>(result);
+        }
+        return result;
     }
 
     //all prefixes of the current stream
@@ -129,4 +129,17 @@ public final class Stream<A> implements Iterable<A> {
         return sb.toString();
     }
 
+    private static class Evaluated<A> implements Supplier<A> {
+
+        private final A a;
+
+        private Evaluated(A a) {
+            this.a = a;
+        }
+
+        @Override
+        public A get() {
+            return a;
+        }
+    }
 }

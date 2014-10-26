@@ -19,9 +19,13 @@ public final class Streams {
     }
 
     public static <A> Stream<A> repeat(A a) {
-        return iterate(a, Function.<A>identity());
+        Stream<?>[] ref = new Stream<?>[1];
+        Stream<A> result = Stream.<A>of(a, () -> (Stream<A>) ref[0]);
+        ref[0] = result;
+        return result;
     }
 
+    @SafeVarargs
     public static <A> Stream<A> cycle(A... as) {
         switch (as.length) {
             case 0:
@@ -29,10 +33,12 @@ public final class Streams {
             case 1:
                 return repeat(as[0]);
             default:
-                Stream<A> result = Stream.<A>of(as[as.length - 1], () -> cycle(as));
+                Stream<?>[] ref = new Stream<?>[1];
+                Stream<A> result = Stream.<A>of(as[as.length - 1], () -> (Stream<A>) ref[0]);
                 for (int i = as.length - 2; i >= 0; i--) {
                     result = Stream.of(as[i], result);
                 }
+                ref[0] = result;
                 return result;
         }
     }
@@ -53,4 +59,5 @@ public final class Streams {
     public static <A, B> Stream<Pair<A, B>> zip(Stream<A> streamA, Stream<B> streamB) {
         return zipWith(streamA, streamB, Pair::of);
     }
+
 }
