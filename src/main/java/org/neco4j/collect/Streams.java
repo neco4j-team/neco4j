@@ -9,12 +9,12 @@ public final class Streams {
     private Streams() {
     }
 
-    public static <S, T> Stream<T> unfold(S seed, Function<S, Pair<S, T>> fn) {
+    public static <S, T> Stream<T> unfold(S seed, Function<? super S, Pair<S, T>> fn) {
         Pair<S, T> pair = fn.apply(seed);
         return Stream.<T>of(pair.get2(), () -> unfold(pair.get1(), fn));
     }
 
-    public static <A> Stream<A> iterate(A a, Function<A, A> fn) {
+    public static <A> Stream<A> iterate(A a, Function<? super A, ? extends A> fn) {
         return Stream.<A>of(a, () -> Streams.<A>iterate(fn.apply(a), fn));
     }
 
@@ -51,7 +51,7 @@ public final class Streams {
         return Stream.<A>of(first::head, () -> interleave(second, first.tail()));
     }
 
-    public static <A, B, C> Stream<C> zipWith(Stream<A> streamA, Stream<B> streamB, BiFunction<A, B, C> fn) {
+    public static <A, B, C> Stream<C> zipWith(Stream<A> streamA, Stream<B> streamB, BiFunction<? super A, ? super B, ? extends C> fn) {
         return Stream.<C>of(() -> fn.apply(streamA.head(), streamB.head()),
                 () -> zipWith(streamA.tail(), streamB.tail(), fn));
     }

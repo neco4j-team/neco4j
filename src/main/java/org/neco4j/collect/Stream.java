@@ -1,6 +1,7 @@
 package org.neco4j.collect;
 
 import java.util.Iterator;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -16,11 +17,11 @@ public final class Stream<A> implements Iterable<A> {
     }
 
     public static <A> Stream<A> of(A head, Stream<A> tail) {
-        return new Stream<>(new Evaluated<>(head), new Evaluated<Stream<A>>(tail));
+        return new Stream<A>(new Evaluated<A>(head), new Evaluated<Stream<A>>(tail));
     }
 
     public static <A> Stream<A> of(A head, Supplier<Stream<A>> tailSupplier) {
-        return new Stream<>(new Evaluated<>(head), tailSupplier);
+        return new Stream<A>(new Evaluated<A>(head), tailSupplier);
     }
 
     public static <A> Stream<A> of(Supplier<A> headSupplier, Stream<A> tail) {
@@ -97,6 +98,13 @@ public final class Stream<A> implements Iterable<A> {
         return Stream.<A>of(stream.head(), () -> stream.tail().filter(predicate));
     }
 
+    public <B> Stream<B> scan(B seed, BiFunction<? super B, ? super A, ? extends B> fn) {
+         return Stream.<B>of(seed, () -> tail().scan(fn.apply(seed, head()), fn));
+    }
+
+    public Stream<A> scan1(BiFunction<? super A, ? super A, ? extends A> fn) {
+        return tail().scan(head(), fn);
+    }
 
     @Override
     public Iterator<A> iterator() {
@@ -117,7 +125,6 @@ public final class Stream<A> implements Iterable<A> {
             }
         };
     }
-
 
     @Override
     public String toString() {
@@ -142,4 +149,5 @@ public final class Stream<A> implements Iterable<A> {
             return a;
         }
     }
+
 }
