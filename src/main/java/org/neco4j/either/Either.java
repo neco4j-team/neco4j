@@ -20,11 +20,11 @@ public abstract class Either<A, B> {
     Either() {
     }
 
-    public static <A, B> Left<A, B> leftOf(A a) {
+    public static <A, B> Either<A, B> leftOf(A a) {
         return new Left<>(a);
     }
 
-    public static <A, B> Right<A, B> rightOf(B b) {
+    public static <A, B> Either<A, B> rightOf(B b) {
         return new Right<>(b);
     }
 

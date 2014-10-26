@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public final class Right<A, B> extends Either<A, B> {
+final class Right<A, B> extends Either<A, B> {
 
     private final B b;
 

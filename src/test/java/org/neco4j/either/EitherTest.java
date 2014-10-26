@@ -10,13 +10,13 @@ public class EitherTest {
 
     @Test
     public void testLeftOf() throws Exception {
-        Left<Integer, String> left = Either.leftOf(42);
+        Either<Integer, String> left = Either.leftOf(42);
         assertEquals(Integer.valueOf(42), left.left());
     }
 
     @Test
     public void testRightOf() throws Exception {
-        Right<Integer, String> right = Either.rightOf("foo");
+        Either<Integer, String> right = Either.rightOf("foo");
         assertEquals("foo", right.right());
     }
 
