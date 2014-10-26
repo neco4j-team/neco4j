@@ -62,6 +62,16 @@ public final class Stream<A> implements Iterable<A> {
         return Stream.<B>of(() -> fn.apply(head()), () -> tail().map(fn));
     }
 
+    //takes the "main diagonal" when the generated stream of streams is written as 2D table
+    public <B> Stream<B> flatMap(Function<A, Stream<B>> fn) {
+        return flatten(map(fn));
+    }
+
+    //takes the "main diagonal" when the stream of stream is written as 2D table
+    public static <A> Stream<A> flatten(Stream<Stream<A>> nested) {
+        return Stream.<A>of(() -> nested.head().head(), () -> flatten(nested.tail().map(a -> a.tail())));
+    }
+
     public Stream<A> dropWhile(Predicate<? super A> predicate) {
         return dropUntil(predicate.negate());
     }
