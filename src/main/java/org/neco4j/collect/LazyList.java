@@ -2,6 +2,7 @@ package org.neco4j.collect;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -76,6 +77,27 @@ public class LazyList<A> implements Iterable<A> {
         return result;
     }
 
+    public A last() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("last() call on NIL");
+        }
+        LazyList<A> resultList = this;
+        while(! resultList.tail().isEmpty()) {
+            resultList = resultList.tail();
+        }
+        return resultList.head();
+    }
+
+    public LazyList<A> init() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("init() call on NIL");
+        }
+        if (tail().isEmpty()) {
+            return empty();
+        }
+        return of(head, () -> tail().init());
+    }
+
     public boolean isEmpty() {
         return false;
     }
@@ -106,16 +128,18 @@ public class LazyList<A> implements Iterable<A> {
         return isEmpty() ? empty() : LazyList.<B>of(() -> fn.apply(head()), () -> tail().map(fn));
     }
 
-    //takes the "main diagonal" when the generated stream of streams is written as 2D table
     public <B> LazyList<B> flatMap(Function<A, LazyList<B>> fn) {
         return flatten(map(fn));
     }
 
-    //takes the "main diagonal" when the stream of stream is written as 2D table
     public static <A> LazyList<A> flatten(LazyList<LazyList<A>> nested) {
-        return nested.isEmpty()
-                ? empty()
-                : LazyList.<A>of(() -> nested.head().head(), () -> flatten(nested.tail().map(a -> a.tail())));
+        if (nested.isEmpty()) {
+            return empty();
+        }
+        if (nested.head().isEmpty()) {
+           return flatten(nested.tail());
+        }
+        return LazyList.<A>of(nested.head().head, () -> LazyList.flatten(LazyList.<LazyList<A>>of(nested.head().tail, nested.tail)));
     }
 
     public LazyList<A> dropWhile(Predicate<? super A> predicate) {

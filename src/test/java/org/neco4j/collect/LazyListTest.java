@@ -134,6 +134,41 @@ public class LazyListTest {
     }
 
     @Test
+    public void testLast() throws Exception {
+        LazyList<String> list1 = LazyList.of("foo");
+        assertEquals("foo", list1.last());
+        LazyList<String> list2 = LazyList.of("foo","bar","baz");
+        assertEquals("baz", list2.last());
+    }
+
+    @Test
+    public void testInit() throws Exception {
+        LazyList<String> list1 = LazyList.of("foo");
+        assertTrue(list1.init().isEmpty());
+        LazyList<String> list2 = LazyList.of("foo","bar");
+        assertEquals("foo", list2.init().head());
+        assertTrue(list2.init().tail().isEmpty());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testInitException() throws Exception {
+        LazyList<String> list = LazyList.<String>empty();
+        list.init();
+    }
+
+    @Test
+    public void testInitLaziness() throws Exception {
+        LazyList<String> list = LazyList.of("foo", () -> LazyList.<String>of("bar", () -> {throw new RuntimeException();} ));
+        list.init().head();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testLastException() throws Exception {
+        LazyList<String> list = LazyList.<String>empty();
+        list.last();
+    }
+
+    @Test
     public void testIsEmpty() throws Exception {
         LazyList<String> list0 = LazyList.<String>empty();
         assertTrue(list0.isEmpty());
@@ -168,7 +203,12 @@ public class LazyListTest {
 
     @Test
     public void testFlatten() throws Exception {
-
+        LazyList<LazyList<String>> list = LazyList.of(LazyList.of("a", "b"), LazyList.<String>empty(), LazyList.of("c"));
+        LazyList<String> flattenedList = LazyList.flatten(list);
+        assertEquals(3, flattenedList.size());
+        assertEquals("a", flattenedList.head());
+        assertEquals("b", flattenedList.tail().head());
+        assertEquals("c", flattenedList.tail().tail().head());
     }
 
     @Test
