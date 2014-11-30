@@ -1,4 +1,4 @@
-package org.neco4j.collect;
+package org.neco4j.collect.old;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -1,18 +1,16 @@
-package org.neco4j.collect;
+package org.neco4j.collect.old;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-class LazyCons<A> implements NecoList<A> {
+class Cons<A> implements NecoList<A> {
 
     private final A head;
-    private NecoList<A> tail = null;
-    private Supplier<NecoList<A>> tailSupplier;
+    private final NecoList<A> tail;
 
-    LazyCons(A head, Supplier<NecoList<A>> tailSupplier) {
+    Cons(A head, NecoList<A> tail) {
         this.head = Objects.requireNonNull(head);
-        this.tailSupplier = Objects.requireNonNull(tailSupplier);
+        this.tail = Objects.requireNonNull(tail);
     }
 
     @Override
@@ -27,10 +25,6 @@ class LazyCons<A> implements NecoList<A> {
 
     @Override
     public NecoList<A> tail() {
-        if (tail == null) {
-            tail = Objects.requireNonNull(tailSupplier.get());
-            tailSupplier = null;
-        }
         return tail;
     }
 

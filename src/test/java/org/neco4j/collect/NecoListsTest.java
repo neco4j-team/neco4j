@@ -1,6 +1,8 @@
 package org.neco4j.collect;
 
 import org.junit.Test;
+import org.neco4j.collect.old.NecoList;
+import org.neco4j.collect.old.NecoLists;
 import org.neco4j.either.Either;
 import org.neco4j.tuple.Pair;
 

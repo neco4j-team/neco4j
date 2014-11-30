@@ -1,6 +1,7 @@
 package org.neco4j.collect;
 
 import org.junit.Test;
+import org.neco4j.collect.old.NecoList;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

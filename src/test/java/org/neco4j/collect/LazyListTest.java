@@ -9,27 +9,32 @@ import static org.junit.Assert.*;
 public class LazyListTest {
 
     @Test
-    public void testOfHeadTail() throws Exception {
-        LazyList<String> list = LazyList.of("foo", LazyList.<String>of("bar"));
+    public void testConsHeadTail() throws Exception {
+        LazyList<String> list = LazyList.cons("foo", LazyList.<String>of("bar"));
         assertEquals("foo", list.head());
         assertEquals("bar", list.tail().head());
         assertTrue(list.tail().tail().isEmpty());
     }
 
     @Test
-    public void testOfHeadTailSupplier() throws Exception {
-        LazyList<String> list = LazyList.of("foo", () -> LazyList.of("bar"));
+    public void testConsHeadTailSupplier() throws Exception {
+        LazyList<String> list = LazyList.cons("foo", () -> LazyList.of("bar"));
         assertEquals("foo", list.head());
         assertEquals("bar", list.tail().head());
         assertTrue(list.tail().tail().isEmpty());
 
         //test laziness
-        LazyList<String> lazyList = LazyList.of("foo", () -> { throw new RuntimeException(); });
+        LazyList<String> lazyList = LazyList.cons("foo", () -> {
+            throw new RuntimeException();
+        });
         assertEquals("foo", lazyList.head());
 
         //test memoization
         int[] count = {0};
-        LazyList<String> memoList = LazyList.of("foo", () -> { count[0] ++;  return LazyList.of("bar"); });
+        LazyList<String> memoList = LazyList.cons("foo", () -> {
+            count[0]++;
+            return LazyList.of("bar");
+        });
         assertEquals("bar", memoList.tail().head());
         assertEquals("bar", memoList.tail().head());
         assertEquals("bar", memoList.tail().head());
@@ -37,19 +42,24 @@ public class LazyListTest {
     }
 
     @Test
-    public void testOfHeadSupplierTail() throws Exception {
-        LazyList<String> list = LazyList.<String>of(() -> "foo", LazyList.of("bar"));
+    public void testConsHeadSupplierTail() throws Exception {
+        LazyList<String> list = LazyList.<String>cons(() -> "foo", LazyList.of("bar"));
         assertEquals("foo", list.head());
         assertEquals("bar", list.tail().head());
         assertTrue(list.tail().tail().isEmpty());
 
         //test laziness
-        LazyList<String> lazyList = LazyList.<String>of(() -> { throw new RuntimeException(); }, LazyList.of("bar"));
+        LazyList<String> lazyList = LazyList.<String>cons(() -> {
+            throw new RuntimeException();
+        }, LazyList.of("bar"));
         assertEquals("bar", lazyList.tail().head());
 
         //test memoization
         int[] count = {0};
-        LazyList<String> memoList = LazyList.<String>of(() -> { count[0] ++;  return "foo"; }, LazyList.of("bar"));
+        LazyList<String> memoList = LazyList.<String>cons(() -> {
+            count[0]++;
+            return "foo";
+        }, LazyList.of("bar"));
         assertEquals("foo", memoList.head());
         assertEquals("foo", memoList.head());
         assertEquals("foo", memoList.head());
@@ -58,29 +68,39 @@ public class LazyListTest {
     }
 
     @Test
-    public void testOfHeadSupplierTailSupplier() throws Exception {
-        LazyList<String> list = LazyList.<String>of(() -> "foo", () -> LazyList.of("bar"));
+    public void testConsHeadSupplierTailSupplier() throws Exception {
+        LazyList<String> list = LazyList.<String>cons(() -> "foo", () -> LazyList.of("bar"));
         assertEquals("foo", list.head());
         assertEquals("bar", list.tail().head());
         assertTrue(list.tail().tail().isEmpty());
 
         //test laziness
-        LazyList<String> lazyTailList = LazyList.<String>of(() -> "foo", () -> { throw new RuntimeException(); });
+        LazyList<String> lazyTailList = LazyList.<String>cons(() -> "foo", () -> {
+            throw new RuntimeException();
+        });
         assertEquals("foo", lazyTailList.head());
-        LazyList<String> lazyHeadList = LazyList.<String>of(() -> { throw new RuntimeException(); }, () -> LazyList.of("bar"));
+        LazyList<String> lazyHeadList = LazyList.<String>cons(() -> {
+            throw new RuntimeException();
+        }, () -> LazyList.of("bar"));
         assertEquals("bar", lazyHeadList.tail().head());
 
         //test memoization
 
         int[] headCount = {0};
-        LazyList<String> memoHeadList = LazyList.<String>of(() -> { headCount[0] ++;  return "foo"; }, LazyList.of("bar"));
+        LazyList<String> memoHeadList = LazyList.<String>cons(() -> {
+            headCount[0]++;
+            return "foo";
+        }, LazyList.of("bar"));
         assertEquals("foo", memoHeadList.head());
         assertEquals("foo", memoHeadList.head());
         assertEquals("foo", memoHeadList.head());
         assertEquals(1, headCount[0]);
 
         int[] tailCount = {0};
-        LazyList<String> memoTailList = LazyList.<String>of(() -> "foo", () -> { tailCount[0] ++;  return LazyList.of("bar"); });
+        LazyList<String> memoTailList = LazyList.<String>cons(() -> "foo", () -> {
+            tailCount[0]++;
+            return LazyList.of("bar");
+        });
         assertEquals("bar", memoTailList.tail().head());
         assertEquals("bar", memoTailList.tail().head());
         assertEquals("bar", memoTailList.tail().head());
@@ -92,7 +112,7 @@ public class LazyListTest {
         LazyList<String> list0 = LazyList.<String>of();
         assertTrue(list0.isEmpty());
 
-        LazyList<String> list3 = LazyList.of("foo","bar","baz");
+        LazyList<String> list3 = LazyList.of("foo", "bar", "baz");
         assertEquals("foo", list3.head());
         assertEquals("bar", list3.tail().head());
         assertEquals("baz", list3.tail().tail().head());
@@ -109,7 +129,7 @@ public class LazyListTest {
     public void testHead() throws Exception {
         LazyList<String> list1 = LazyList.of("foo");
         assertEquals("foo", list1.head());
-        LazyList<String> list2 = LazyList.of("foo","bar");
+        LazyList<String> list2 = LazyList.of("foo", "bar");
         assertEquals("foo", list2.head());
     }
 
@@ -123,7 +143,7 @@ public class LazyListTest {
     public void testTail() throws Exception {
         LazyList<String> list1 = LazyList.of("foo");
         assertTrue(list1.tail().isEmpty());
-        LazyList<String> list2 = LazyList.of("foo","bar");
+        LazyList<String> list2 = LazyList.of("foo", "bar");
         assertEquals("bar", list2.tail().head());
     }
 
@@ -137,7 +157,7 @@ public class LazyListTest {
     public void testLast() throws Exception {
         LazyList<String> list1 = LazyList.of("foo");
         assertEquals("foo", list1.last());
-        LazyList<String> list2 = LazyList.of("foo","bar","baz");
+        LazyList<String> list2 = LazyList.of("foo", "bar", "baz");
         assertEquals("baz", list2.last());
     }
 
@@ -145,7 +165,7 @@ public class LazyListTest {
     public void testInit() throws Exception {
         LazyList<String> list1 = LazyList.of("foo");
         assertTrue(list1.init().isEmpty());
-        LazyList<String> list2 = LazyList.of("foo","bar");
+        LazyList<String> list2 = LazyList.of("foo", "bar");
         assertEquals("foo", list2.init().head());
         assertTrue(list2.init().tail().isEmpty());
     }
@@ -158,7 +178,9 @@ public class LazyListTest {
 
     @Test
     public void testInitLaziness() throws Exception {
-        LazyList<String> list = LazyList.of("foo", () -> LazyList.<String>of("bar", () -> {throw new RuntimeException();} ));
+        LazyList<String> list = LazyList.cons("foo", () -> LazyList.<String>cons("bar", () -> {
+            throw new RuntimeException();
+        }));
         list.init().head();
     }
 
@@ -172,23 +194,48 @@ public class LazyListTest {
     public void testIsEmpty() throws Exception {
         LazyList<String> list0 = LazyList.<String>empty();
         assertTrue(list0.isEmpty());
-        LazyList<String> list2 = LazyList.of("foo","bar");
+        LazyList<String> list2 = LazyList.of("foo", "bar");
         assertFalse(list2.isEmpty());
     }
 
     @Test
     public void testSize() throws Exception {
+        assertEquals(0, LazyList.<String>empty().size());
+        assertEquals(3, LazyList.<String>of("foo", "bar", "baz").size());
 
+        //test laziness
+        LazyList<String> errors = LazyList.<String>cons(
+                () -> {
+                    throw new RuntimeException();
+                },
+                () -> LazyList.<String>cons(() -> {
+                    throw new RuntimeException();
+                }, LazyList.<String>empty()));
+        assertEquals(2, errors.size());
     }
 
     @Test
     public void testInits() throws Exception {
-
+        LazyList<List<String>> emptyInits = LazyList.<String>empty().inits();
+        assertTrue(emptyInits.get(0).isEmpty());
+        LazyList<List<String>> inits = LazyList.of("foo", "bar", "baz").inits();
+        assertEquals(4, inits.size());
+        assertTrue(inits.get(0).isEmpty());
+        assertEquals(inits.get(1).foldLeft1((s, t) -> s + "#" + t), "foo");
+        assertEquals(inits.get(2).foldLeft1((s, t) -> s + "#" + t), "foo#bar");
+        assertEquals(inits.get(3).foldLeft1((s, t) -> s + "#" + t), "foo#bar#baz");
     }
 
     @Test
     public void testTails() throws Exception {
-
+        LazyList<List<String>> emptyInits = LazyList.<String>empty().tails();
+        assertTrue(emptyInits.get(0).isEmpty());
+        LazyList<List<String>> inits = LazyList.of("foo", "bar", "baz").tails();
+        assertEquals(4, inits.size());
+        assertEquals(inits.get(0).foldLeft1((s, t) -> s + "#" + t), "foo#bar#baz");
+        assertEquals(inits.get(1).foldLeft1((s, t) -> s + "#" + t), "bar#baz");
+        assertEquals(inits.get(2).foldLeft1((s, t) -> s + "#" + t), "baz");
+        assertTrue(inits.get(3).isEmpty());
     }
 
     @Test
@@ -202,22 +249,7 @@ public class LazyListTest {
     }
 
     @Test
-    public void testFlatten() throws Exception {
-        LazyList<LazyList<String>> list = LazyList.of(LazyList.of("a", "b"), LazyList.<String>empty(), LazyList.of("c"));
-        LazyList<String> flattenedList = LazyList.flatten(list);
-        assertEquals(3, flattenedList.size());
-        assertEquals("a", flattenedList.head());
-        assertEquals("b", flattenedList.tail().head());
-        assertEquals("c", flattenedList.tail().tail().head());
-    }
-
-    @Test
     public void testDropWhile() throws Exception {
-
-    }
-
-    @Test
-    public void testDropUntil() throws Exception {
 
     }
 

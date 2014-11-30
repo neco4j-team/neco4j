@@ -1,4 +1,4 @@
-package org.neco4j.collect;
+package org.neco4j.collect.old;
 
 import java.util.Collections;
 import java.util.Iterator;

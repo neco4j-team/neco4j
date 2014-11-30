@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class LazyList<A> implements Iterable<A> {
+public class LazyList<A> implements List<A> {
 
     private Supplier<A> head;
     private Supplier<LazyList<A>> tail;
@@ -25,19 +25,19 @@ public class LazyList<A> implements Iterable<A> {
         this.tail = tail;
     }
 
-    public static <A> LazyList<A> of(A head, LazyList<A> tail) {
+    public static <A> LazyList<A> cons(A head, LazyList<A> tail) {
         return new LazyList<A>(new Evaluated<A>(head), new Evaluated<LazyList<A>>(tail));
     }
 
-    public static <A> LazyList<A> of(A head, Supplier<LazyList<A>> tailSupplier) {
+    public static <A> LazyList<A> cons(A head, Supplier<LazyList<A>> tailSupplier) {
         return new LazyList<A>(new Evaluated<A>(head), tailSupplier);
     }
 
-    public static <A> LazyList<A> of(Supplier<A> headSupplier, LazyList<A> tail) {
+    public static <A> LazyList<A> cons(Supplier<A> headSupplier, LazyList<A> tail) {
         return new LazyList<A>(headSupplier, new Evaluated<>(tail));
     }
 
-    public static <A> LazyList<A> of(Supplier<A> headSupplier, Supplier<LazyList<A>> tailSupplier) {
+    public static <A> LazyList<A> cons(Supplier<A> headSupplier, Supplier<LazyList<A>> tailSupplier) {
         return new LazyList<>(headSupplier, tailSupplier);
     }
 
@@ -45,7 +45,7 @@ public class LazyList<A> implements Iterable<A> {
     public static <A> LazyList<A> of(A... elements) {
         LazyList<A> result = empty();
         for (int i = elements.length - 1; i >= 0; i--) {
-            result = of(elements[i], result);
+            result = cons(elements[i], result);
         }
         return result;
     }
@@ -66,6 +66,18 @@ public class LazyList<A> implements Iterable<A> {
         return result;
     }
 
+    public Optional<A> headOpt() {
+        if (isEmpty()) {
+            return Optional.empty();
+        }
+        A result = head.get();
+        if (!(head instanceof Evaluated)) {
+            head = new Evaluated<>(result);
+        }
+        return Optional.of(result);
+    }
+
+
     public LazyList<A> tail() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException("tail() call on NIL");
@@ -75,6 +87,17 @@ public class LazyList<A> implements Iterable<A> {
             tail = new Evaluated<>(result);
         }
         return result;
+    }
+
+    public Optional<LazyList<A>> tailOpt() {
+        if (isEmpty()) {
+            return Optional.empty();
+        }
+        LazyList<A> result = tail.get();
+        if (!(tail instanceof Evaluated)) {
+            tail = new Evaluated<>(result);
+        }
+        return Optional.of(result);
     }
 
     public A last() throws NoSuchElementException {
@@ -95,7 +118,7 @@ public class LazyList<A> implements Iterable<A> {
         if (tail().isEmpty()) {
             return empty();
         }
-        return of(head, () -> tail().init());
+        return cons(head, () -> tail().init());
     }
 
     public Optional<A> getOpt(long index) {
@@ -122,53 +145,49 @@ public class LazyList<A> implements Iterable<A> {
         return current.head();
     }
 
+    public LazyList<A> plus(A a) {
+        return cons(a, this);
+    }
+
     public boolean isEmpty() {
         return false;
     }
 
-    public int size() {
-        int length = 0;
-        for (LazyList<A> current = this; !current.isEmpty(); current = current.tail()) {
-            length++;
-        }
-        return length;
-    }
-
     //all prefixes of the current list, ordered from empty to full list
-    public LazyList<LazyList<A>> inits() {
-        return LazyList.of(empty(), () -> isEmpty() ? empty()
-                : tail().inits().map(list -> LazyList.<A>of(this::head, list)));
+    public LazyList<List<A>> inits() {
+        return LazyList.cons(empty(), () -> isEmpty() ? empty()
+                : tail().inits().map(list -> LazyList.<A>cons(this::head, (LazyList) list)));
     }
 
     //all suffixes of the current stream ordered from full list to empty
-    public LazyList<LazyList<A>> tails() {
-        return LazyList.of(this, () -> isEmpty() ? LazyList.empty() : tail().tails());
+    public LazyList<List<A>> tails() {
+        return LazyList.cons(this, () -> isEmpty() ? LazyList.empty() : tail().tails());
     }
 
     public <B> LazyList<B> map(Function<? super A, ? extends B> fn) {
-        return isEmpty() ? empty() : LazyList.<B>of(() -> fn.apply(head()), () -> tail().map(fn));
+        return isEmpty() ? empty() : LazyList.<B>cons(() -> fn.apply(head()), () -> tail().map(fn));
     }
 
-    public <B> LazyList<B> flatMap(Function<A, LazyList<B>> fn) {
-        return flatten(map(fn));
-    }
-
-    public static <A> LazyList<A> flatten(LazyList<LazyList<A>> nested) {
-        if (nested.isEmpty()) {
+    public <B> LazyList<B> flatMap(Function<A, ? extends List <B>> fn) {
+        if (isEmpty()) {
             return empty();
         }
-        if (nested.head().isEmpty()) {
-            return flatten(nested.tail());
+        List<B> headResult = fn.apply(head()).reverse();
+        if (headResult.isEmpty()) {
+            return tail().flatMap(fn);
+        }  else {
+            LazyList<B> result = LazyList.<B>cons(headResult::head, () -> tail().flatMap(fn));
+            for(B b : headResult.tail()) {
+                result = cons(b, result);
+            }
+            return result;
         }
-        return LazyList.<A>of(nested.head().head, () -> LazyList.flatten(LazyList.<LazyList<A>>of(nested.head().tail, nested.tail)));
     }
 
     public LazyList<A> reverse() {
         LazyList<A> result = empty();
-        LazyList<A> current = this;
-        while (!current.isEmpty()) {
-            result = of(current.head, result);
-            current = current.tail();
+        for(LazyList<A> current = this; ! current.isEmpty(); current = current.tail()) {
+            result = cons(current.head, result);
         }
         return result;
     }
@@ -179,68 +198,40 @@ public class LazyList<A> implements Iterable<A> {
             if (n-- <= 0) {
                 break;
             }
-            result = of(a, result);
+            result = cons(a, result);
         }
         return result.reverse();
     }
 
     public LazyList<A> takeWhile(Predicate<A> predicate) {
-        return predicate.test(head()) ? of(head(), () -> tail().takeWhile(predicate)) : empty();
-    }
-
-    public LazyList<A> drop(int n) {
-        LazyList<A> result = this;
-        while (n-- > 0 && !this.isEmpty()) {
-            result = result.tail();
-        }
-        return result;
-    }
-
-    public LazyList<A> dropWhile(Predicate<? super A> predicate) {
-        for (LazyList<A> list = this; !list.isEmpty(); list = list.tail()) {
-            if (!predicate.test(list.head())) {
-                return list;
-            }
-        }
-        return empty();
+        return predicate.test(head()) ? cons(head(), () -> tail().takeWhile(predicate)) : empty();
     }
 
     public LazyList<A> filter(Predicate<? super A> predicate) {
-        LazyList<A> list = this.dropWhile(predicate.negate());
+        List<A> list = this.dropWhile(predicate.negate());
         return list.isEmpty()
                 ? empty()
-                : LazyList.<A>of(list.head(), () -> list.tail().filter(predicate));
-    }
-
-    public <B> B foldLeft(B seed, BiFunction<? super B, ? super A, ? extends B> fn) {
-        B result = seed;
-        for (A a : this) {
-            result = fn.apply(result, a);
-        }
-        return result;
-    }
-
-    public A foldLeft1(BiFunction<? super A, ? super A, ? extends A> fn) {
-        if (isEmpty()) {
-            throw new NoSuchElementException("foldLeft1() call on NIL");
-        }
-        A result = head();
-        for (A a : this.tail()) {
-            result = fn.apply(result, a);
-        }
-        return result;
+                : LazyList.<A>cons(list.head(), () -> (LazyList) list.tail().filter(predicate));
     }
 
     public <B> LazyList<B> scanLeft(B seed, BiFunction<? super B, ? super A, ? extends B> fn) {
         return isEmpty()
                 ? empty()
-                : LazyList.<B>of(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
+                : LazyList.<B>cons(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
+    }
+
+    public <B> LazyList<B> scanRight(BiFunction<? super A, ? super B, ? extends B> fn, B seed) {
+         return reverse().scanLeft(seed, (b,a) -> fn.apply(a,b));
     }
 
     public LazyList<A> scanLeft1(BiFunction<? super A, ? super A, ? extends A> fn) {
         return isEmpty()
                 ? empty()
                 : tail().scanLeft(head(), fn);
+    }
+
+    public LazyList<A> scanRight1(BiFunction<? super A, ? super A, ? extends A> fn) {
+        return reverse().scanLeft1((a1,a2) -> fn.apply(a2,a1));
     }
 
     @Override
@@ -292,5 +283,22 @@ public class LazyList<A> implements Iterable<A> {
         }
     }
 
+    @Override
+    public boolean isLazy() {
+        return true;
+    }
 
+    @Override
+    public List<A> lazy() {
+        return this;
+    }
+
+    @Override
+    public List<A> strict() {
+        StrictList<A> result = StrictList.empty();
+        for(A a : this) {
+            result = StrictList.cons(a, result);
+        }
+        return result.reverse();
+    }
 }

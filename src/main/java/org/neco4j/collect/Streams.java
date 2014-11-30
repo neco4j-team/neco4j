@@ -11,16 +11,16 @@ public final class Streams {
 
     public static <S, T> Stream<T> unfold(S seed, Function<? super S, Pair<S, T>> fn) {
         Pair<S, T> pair = fn.apply(seed);
-        return Stream.<T>of(pair.get2(), () -> unfold(pair.get1(), fn));
+        return Stream.<T>cons(pair.get2(), () -> unfold(pair.get1(), fn));
     }
 
     public static <A> Stream<A> iterate(A a, Function<? super A, ? extends A> fn) {
-        return Stream.<A>of(a, () -> Streams.<A>iterate(fn.apply(a), fn));
+        return Stream.<A>cons(a, () -> Streams.<A>iterate(fn.apply(a), fn));
     }
 
     public static <A> Stream<A> repeat(A a) {
         Stream<?>[] ref = new Stream<?>[1];
-        Stream<A> result = Stream.<A>of(a, () -> (Stream<A>) ref[0]);
+        Stream<A> result = Stream.<A>cons(a, () -> (Stream<A>) ref[0]);
         ref[0] = result;
         return result;
     }
@@ -34,9 +34,9 @@ public final class Streams {
                 return repeat(as[0]);
             default:
                 Stream<?>[] ref = new Stream<?>[1];
-                Stream<A> result = Stream.<A>of(as[as.length - 1], () -> (Stream<A>) ref[0]);
+                Stream<A> result = Stream.<A>cons(as[as.length - 1], () -> (Stream<A>) ref[0]);
                 for (int i = as.length - 2; i >= 0; i--) {
-                    result = Stream.of(as[i], result);
+                    result = Stream.cons(as[i], result);
                 }
                 ref[0] = result;
                 return result;
@@ -44,15 +44,15 @@ public final class Streams {
     }
 
     public static <A> Stream<A> intersperse(Stream<A> stream, A a) {
-        return Stream.<A>of(stream::head, () -> Stream.<A>of(a, intersperse(stream.tail(), a)));
+        return Stream.<A>cons(stream::head, () -> Stream.<A>cons(a, intersperse(stream.tail(), a)));
     }
 
     public static <A> Stream<A> interleave(Stream<A> first, Stream<A> second) {
-        return Stream.<A>of(first::head, () -> interleave(second, first.tail()));
+        return Stream.<A>cons(first::head, () -> interleave(second, first.tail()));
     }
 
     public static <A, B, C> Stream<C> zipWith(Stream<A> streamA, Stream<B> streamB, BiFunction<? super A, ? super B, ? extends C> fn) {
-        return Stream.<C>of(() -> fn.apply(streamA.head(), streamB.head()),
+        return Stream.<C>cons(() -> fn.apply(streamA.head(), streamB.head()),
                 () -> zipWith(streamA.tail(), streamB.tail(), fn));
     }
 

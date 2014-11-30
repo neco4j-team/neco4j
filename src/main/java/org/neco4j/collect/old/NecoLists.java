@@ -1,4 +1,4 @@
-package org.neco4j.collect;
+package org.neco4j.collect.old;
 
 import org.neco4j.either.Either;
 import org.neco4j.tuple.Pair;
