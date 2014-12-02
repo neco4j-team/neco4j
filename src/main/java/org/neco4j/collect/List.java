@@ -8,17 +8,23 @@ import java.util.function.Predicate;
 
 public interface List<A> extends Sequence<A> {
 
+    @Override
     List<A> tail() throws NoSuchElementException;
 
+    @Override
     Optional<? extends List<A>> tailOpt();
 
     A last() throws NoSuchElementException;
 
     List<A> init() throws NoSuchElementException;
 
+    @Override
+    List<A> plus(A a);
+
+    @Override
     boolean isEmpty();
 
-    default  int size() {
+    default int size() {
         int length = 0;
         for (List<A> current = this; ! current.isEmpty(); current = current.tail()) {
             length++;
@@ -46,7 +52,7 @@ public interface List<A> extends Sequence<A> {
 
     default List<A> drop(int n) {
         List<A> result = this;
-        while (n-- > 0 && !this.isEmpty()) {
+        for (int index = 0; index < n && !this.isEmpty(); index++) {
             result = result.tail();
         }
         return result;

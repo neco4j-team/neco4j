@@ -138,11 +138,11 @@ public class StrictList<A> implements List<A> {
     //all prefixes of the current list, ordered from empty to full list
     @Override
     public StrictList<List<A>> inits() {
-        StrictList<StrictList<A>> result = of(empty());
+        StrictList<List<A>> result = of(StrictList.<A>empty());
         for(A a : this.reverse()) {
-            result = cons(empty(), result.map(partial -> cons(a, partial)));
+            result = cons(empty(), result.map(partial -> partial.plus(a)));
         }
-        return result.map(StrictList::reverse);
+        return result.map(list -> list.reverse());
     }
 
     //all suffixes of the current stream ordered from full list to empty

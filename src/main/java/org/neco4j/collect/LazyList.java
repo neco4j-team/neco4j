@@ -155,8 +155,11 @@ public class LazyList<A> implements List<A> {
 
     //all prefixes of the current list, ordered from empty to full list
     public LazyList<List<A>> inits() {
-        return LazyList.cons(empty(), () -> isEmpty() ? empty()
-                : tail().inits().map(list -> LazyList.<A>cons(this::head, (LazyList) list)));
+        if (isEmpty()) {
+            return LazyList.of(empty());
+        } else {
+            return tail().inits().map(list -> list.plus(this.head())).plus(empty());
+        }
     }
 
     //all suffixes of the current stream ordered from full list to empty
