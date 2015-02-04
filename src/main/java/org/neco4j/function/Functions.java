@@ -7,9 +7,6 @@ import org.neco4j.tuple.Pair;
 import org.neco4j.tuple.Quadruple;
 import org.neco4j.tuple.Triple;
 
-/**
- * @author Daniel Gronau <daniel.gronau@skillcert.de>
- */
 public final class Functions {
 
     private Functions() {
