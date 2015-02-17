@@ -7,7 +7,9 @@ import static org.neco4j.tuple.Comprehension.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -203,6 +205,17 @@ public class ComprehensionTest {
     }
 
     @Test
+    public void zipMapTest() throws Exception {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        List<Pair<String, Integer>> expected = Arrays.asList(Pair.of("one", 1), Pair.of("two", 2), Pair.of("three", 3));
+
+        assertEquals(expected, it2list(zip(map)));
+    }
+
+    @Test
     public void zipWith2Test() throws Exception {
         List<String> strings = Arrays.asList("a", "b", "c");
         List<Integer> ints = Arrays.asList(10, 20);
@@ -252,6 +265,18 @@ public class ComprehensionTest {
         assertTrue(it2list(zipWith(Collections.emptyList(), ints, Collections.emptyList(), Collections.emptyList(), fn)).isEmpty());
         assertTrue(it2list(zipWith(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), fn)).isEmpty());
     }
+
+    @Test
+    public void zipWithMapTest() throws Exception {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        List<String> expected = Arrays.asList("one=1", "two=2", "three=3");
+
+        assertEquals(expected, it2list(zipWith(map, (k, v) -> k + "=" + v)));
+    }
+
 
     @Test
     public void flattenTest() throws Exception {

@@ -42,7 +42,7 @@ public class EitherMonad<S> {
     }
 
     public <A, B> Either<S, B> flatMap(Function<? super A, Either<S, B>> fn, Either<S, A> either) {
-        return either.fold(Either::leftOf, fn::apply);
+        return either.fold(Either::<S, B>leftOf, fn::apply);
     }
 
     public <A, B> Function<Either<S, A>, Either<S, B>> lift(Function<A, B> fn) {

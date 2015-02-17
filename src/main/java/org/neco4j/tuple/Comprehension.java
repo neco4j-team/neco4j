@@ -2,6 +2,7 @@ package org.neco4j.tuple;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -201,6 +202,10 @@ public final class Comprehension {
         return zipWith(itA, itB, itC, itD, Quad::of);
     }
 
+    public static <K, V> Iterable<Pair<K, V>> zip(Map<K, V> map) {
+        return zipWith(map, Pair::of);
+    }
+
     public static <A, B, R> Iterable<R> zipWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
@@ -277,6 +282,12 @@ public final class Comprehension {
                 return fn.apply(iteratorA.next(), iteratorB.next(), iteratorC.next(), iteratorD.next());
             }
         };
+    }
+
+    public static <K, V, R> Iterable<R> zipWith(
+            Map<K, V> map,
+            BiFunction<? super K, ? super V, ? extends R> fn) {
+        return map(map.entrySet(), entry -> fn.apply(entry.getKey(), entry.getValue()));
     }
 
     //transformation functions
