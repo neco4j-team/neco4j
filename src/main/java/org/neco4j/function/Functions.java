@@ -4,13 +4,13 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.neco4j.tuple.Pair;
-import org.neco4j.tuple.Quadruple;
+import org.neco4j.tuple.Quad;
 import org.neco4j.tuple.Triple;
 
 public final class Functions {
 
     private Functions() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("do not instantiate");
     }
 
     public static <A, B, R> Function<Pair<A, B>, R> toFunction(
@@ -23,7 +23,7 @@ public final class Functions {
         return triple -> triFunction.apply(triple.get1(), triple.get2(), triple.get3());
     }
 
-    public static <A, B, C, D, R> Function<Quadruple<A, B, C, D>, R> toFunction(
+    public static <A, B, C, D, R> Function<Quad<A, B, C, D>, R> toFunction(
             QuadFunction<A, B, C, D, R> quadFunction) {
         return quad -> quadFunction.apply(quad.get1(), quad.get2(), quad.get3(), quad.get4());
     }
@@ -39,8 +39,8 @@ public final class Functions {
     }
 
     public static <A, B, C, D, R> QuadFunction<A, B, C, D, R> toQuadFunction(
-            Function<Quadruple<A, B, C, D>, R> function) {
-        return (a, b, c, d) -> function.apply(Quadruple.of(a, b, c, d));
+            Function<Quad<A, B, C, D>, R> function) {
+        return (a, b, c, d) -> function.apply(Quad.of(a, b, c, d));
     }
 
     public static <A, B, R> Function<A, Function<B, R>> curry(
@@ -87,11 +87,10 @@ public final class Functions {
      * a second parameter representing the lambda itself.
      * <p>
      * Example:
-     * <code>Function<Integer,Long> factorial = yCombinator(
-     * (n, self) -> n == 0 ? 1L : n * self.apply(n-1));</code>
+     * <code>Function<Integer,Long> factorial = yCombinator((n, self) -> n == 0 ? 1L : n * self.apply(n-1));</code>
      *
      * @param f   the BiFunction with an explicit self-reference
-     * @param <X> the original parameter type
+     * @param <X> the argument type
      * @param <Y> the result type
      * @return the recursive function
      */

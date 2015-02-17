@@ -58,19 +58,19 @@ public class ComprehensionTest {
         List<Integer> ints = Arrays.asList(10, 20);
         List<Long> longs = Arrays.asList(1L, 2L);
         List<String> foobars = Arrays.asList("foo", "bar");
-        List<Quadruple<String, Integer, Long, String>> expected = Arrays.asList(
-                Quadruple.of("a", 10, 1L, "foo"), Quadruple.of("a", 10, 1L, "bar"),
-                Quadruple.of("a", 10, 2L, "foo"), Quadruple.of("a", 10, 2L, "bar"),
-                Quadruple.of("a", 20, 1L, "foo"), Quadruple.of("a", 20, 1L, "bar"),
-                Quadruple.of("a", 20, 2L, "foo"), Quadruple.of("a", 20, 2L, "bar"),
-                Quadruple.of("b", 10, 1L, "foo"), Quadruple.of("b", 10, 1L, "bar"),
-                Quadruple.of("b", 10, 2L, "foo"), Quadruple.of("b", 10, 2L, "bar"),
-                Quadruple.of("b", 20, 1L, "foo"), Quadruple.of("b", 20, 1L, "bar"),
-                Quadruple.of("b", 20, 2L, "foo"), Quadruple.of("b", 20, 2L, "bar"),
-                Quadruple.of("c", 10, 1L, "foo"), Quadruple.of("c", 10, 1L, "bar"),
-                Quadruple.of("c", 10, 2L, "foo"), Quadruple.of("c", 10, 2L, "bar"),
-                Quadruple.of("c", 20, 1L, "foo"), Quadruple.of("c", 20, 1L, "bar"),
-                Quadruple.of("c", 20, 2L, "foo"), Quadruple.of("c", 20, 2L, "bar")
+        List<Quad<String, Integer, Long, String>> expected = Arrays.asList(
+                Quad.of("a", 10, 1L, "foo"), Quad.of("a", 10, 1L, "bar"),
+                Quad.of("a", 10, 2L, "foo"), Quad.of("a", 10, 2L, "bar"),
+                Quad.of("a", 20, 1L, "foo"), Quad.of("a", 20, 1L, "bar"),
+                Quad.of("a", 20, 2L, "foo"), Quad.of("a", 20, 2L, "bar"),
+                Quad.of("b", 10, 1L, "foo"), Quad.of("b", 10, 1L, "bar"),
+                Quad.of("b", 10, 2L, "foo"), Quad.of("b", 10, 2L, "bar"),
+                Quad.of("b", 20, 1L, "foo"), Quad.of("b", 20, 1L, "bar"),
+                Quad.of("b", 20, 2L, "foo"), Quad.of("b", 20, 2L, "bar"),
+                Quad.of("c", 10, 1L, "foo"), Quad.of("c", 10, 1L, "bar"),
+                Quad.of("c", 10, 2L, "foo"), Quad.of("c", 10, 2L, "bar"),
+                Quad.of("c", 20, 1L, "foo"), Quad.of("c", 20, 1L, "bar"),
+                Quad.of("c", 20, 2L, "foo"), Quad.of("c", 20, 2L, "bar")
         );
         assertEquals(expected, it2list(combine(strings, ints, longs, foobars)));
         assertTrue(it2list(combine(strings, Collections.emptyList(), longs, foobars)).isEmpty());
@@ -185,7 +185,7 @@ public class ComprehensionTest {
         List<Integer> ints = Arrays.asList(10, 20);
         List<Long> longs = Arrays.asList(1L, 2L);
         List<String> foobars = Arrays.asList("foo", "bar");
-        List<Quadruple<String, Integer, Long, String>> expected = Arrays.asList(Quadruple.of("a", 10, 1L, "foo"), Quadruple.of("b", 20, 2L, "bar"));
+        List<Quad<String, Integer, Long, String>> expected = Arrays.asList(Quad.of("a", 10, 1L, "foo"), Quad.of("b", 20, 2L, "bar"));
 
         assertEquals(expected, it2list(zip(strings, ints, longs, foobars)));
         assertTrue(it2list(zip(strings, Collections.emptyList(), longs, foobars)).isEmpty());

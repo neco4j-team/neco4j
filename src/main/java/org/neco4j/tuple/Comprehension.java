@@ -32,12 +32,12 @@ public final class Comprehension {
         return combineWith(itA, itB, itC, Triple::of);
     }
 
-    public static <A, B, C, D> Iterable<Quadruple<A, B, C, D>> combine(
+    public static <A, B, C, D> Iterable<Quad<A, B, C, D>> combine(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
             Iterable<? extends D> itD) {
-        return combineWith(itA, itB, itC, itD, Quadruple::of);
+        return combineWith(itA, itB, itC, itD, Quad::of);
     }
 
     public static <A, B, R> Iterable<R> combineWith(
@@ -193,12 +193,12 @@ public final class Comprehension {
         return zipWith(itA, itB, itC, Triple::of);
     }
 
-    public static <A, B, C, D> Iterable<Quadruple<A, B, C, D>> zip(
+    public static <A, B, C, D> Iterable<Quad<A, B, C, D>> zip(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
             Iterable<? extends D> itD) {
-        return zipWith(itA, itB, itC, itD, Quadruple::of);
+        return zipWith(itA, itB, itC, itD, Quad::of);
     }
 
     public static <A, B, R> Iterable<R> zipWith(
