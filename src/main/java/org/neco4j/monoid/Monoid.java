@@ -1,6 +1,7 @@
 package org.neco4j.monoid;
 
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 /**
  * A semigroup (<code>BinaryOperator<code/>) with an identity element:
@@ -8,28 +9,28 @@ import java.util.function.BinaryOperator;
  */
 public interface Monoid<A> extends BinaryOperator<A> {
 
-    public A identity();
+    A identity();
 
-    public default A fold(Iterable<A> as) {
-        return fold(identity(), as);
-    }
-
-    public default A fold(A seed, Iterable<A> as) {
-        A result = seed;
+    default A fold(Iterable<A> as) {
+        A result = identity();
         for (A a : as) {
             result = apply(result, a);
         }
         return result;
     }
 
-    public default A fold(A... as) {
-        return fold(identity(), as);
-    }
-
-    public default A fold(A seed, A... as) {
-        A result = seed;
+    default A fold(A... as) {
+        A result = identity();
         for (A a : as) {
             result = apply(result, a);
+        }
+        return result;
+    }
+
+    default <B> A foldMap(Iterable<B> bs, Function<B, A> fn) {
+        A result = identity();
+        for (B b : bs) {
+            result = apply(result, fn.apply(b));
         }
         return result;
     }

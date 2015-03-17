@@ -2,7 +2,7 @@ package org.neco4j.tuple;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.neco4j.tuple.Comprehension.*;
+import static org.neco4j.monoid.Foldables.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

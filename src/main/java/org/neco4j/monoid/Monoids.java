@@ -1,9 +1,15 @@
 package org.neco4j.monoid;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
@@ -111,6 +117,58 @@ public final class Monoids {
             }
         };
     }
+
+    public static <A> Monoid<List<A>> listMonoid() {
+        return new Monoid<List<A>>() {
+            @Override
+            public List<A> identity() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public List<A> apply(List<A> x, List<A> y) {
+                List<A> result = new ArrayList<>(x.size() + y.size());
+                result.addAll(x);
+                result.addAll(y);
+                return result;
+            }
+        };
+    }
+
+    public static <A> Monoid<Set<A>> setMonoid() {
+        return new Monoid<Set<A>>() {
+            @Override
+            public Set<A> identity() {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public Set<A> apply(Set<A> x, Set<A> y) {
+                Set<A> result = new HashSet<>(x);
+                result.addAll(y);
+                return result;
+            }
+        };
+    }
+
+    public static <K, V> Monoid<Map<K, V>> mapMonoid(BinaryOperator<V> op) {
+        return new Monoid<Map<K, V>>() {
+            @Override
+            public Map<K, V> identity() {
+                return Collections.emptyMap();
+            }
+
+            @Override
+            public Map<K, V> apply(Map<K, V> x, Map<K, V> y) {
+                Map<K, V> result = new HashMap<>(x);
+                for (Map.Entry<K, V> entry : y.entrySet()) {
+                    result.merge(entry.getKey(), entry.getValue(), op);
+                }
+                return result;
+            }
+        };
+    }
+
 
     public static Monoid<Integer> integerSum = new Monoid<Integer>() {
 
