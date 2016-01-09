@@ -9,6 +9,12 @@ import java.util.function.Predicate;
 public interface List<A> extends Sequence<A> {
 
     @Override
+    A head() throws NoSuchElementException;
+
+    @Override
+    Optional<A> headOpt();
+
+    @Override
     List<A> tail() throws NoSuchElementException;
 
     @Override
@@ -19,14 +25,14 @@ public interface List<A> extends Sequence<A> {
     List<A> init() throws NoSuchElementException;
 
     @Override
-    List<A> plus(A a);
+    List<A> plus(A... as);
 
     @Override
     boolean isEmpty();
 
     default int size() {
         int length = 0;
-        for (List<A> current = this; ! current.isEmpty(); current = current.tail()) {
+        for (List<A> current = this; !current.isEmpty(); current = current.tail()) {
             length++;
         }
         return length;
@@ -48,6 +54,9 @@ public interface List<A> extends Sequence<A> {
     List<A> reverse();
 
     @Override
+    List<A> take(int n);
+
+    @Override
     List<A> takeWhile(Predicate<A> predicate);
 
     default List<A> drop(int n) {
@@ -66,6 +75,7 @@ public interface List<A> extends Sequence<A> {
         }
         return StrictList.empty();
     }
+
     @Override
     List<A> filter(Predicate<? super A> predicate);
 
@@ -78,7 +88,7 @@ public interface List<A> extends Sequence<A> {
     }
 
     default <B> B foldRight(BiFunction<? super A, ? super B, ? extends B> fn, B seed) {
-        return reverse().foldLeft(seed, (b,a) -> fn.apply(a,b));
+        return reverse().foldLeft(seed, (b, a) -> fn.apply(a, b));
     }
 
 
@@ -106,7 +116,6 @@ public interface List<A> extends Sequence<A> {
         return result;
     }
 
-
     @Override
     <B> List<B> scanLeft(B seed, BiFunction<? super B, ? super A, ? extends B> fn);
 
@@ -120,4 +129,16 @@ public interface List<A> extends Sequence<A> {
     List<A> strict();
 
     List<A> lazy();
+
+    @Override
+    default boolean hasMinimumSize(int n) {
+        List<A> list = this;
+        for (int i = 0; i < n; i++) {
+            if (list.isEmpty()) {
+                return false;
+            }
+            list = list.tail();
+        }
+        return true;
+    }
 }

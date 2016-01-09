@@ -20,7 +20,7 @@ public interface Sequence<A> extends Foldable<A> {
 
     Optional<? extends Sequence<A>> tailOpt();
 
-    Sequence<A> plus(A a);
+    Sequence<A> plus(A ... as);
 
     Optional<A> getOpt(long index);
 
@@ -49,5 +49,7 @@ public interface Sequence<A> extends Foldable<A> {
     Sequence<A> scanLeft1(BiFunction<? super A, ? super A, ? extends A> fn);
 
     boolean isLazy();
+
+    boolean hasMinimumSize(int n);
 
 }

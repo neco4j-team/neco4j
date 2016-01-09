@@ -33,8 +33,12 @@ public final class Stream<A> implements Sequence<A> {
         return new Stream<>(headSupplier, tailSupplier);
     }
 
-    public Stream<A> plus(A a) {
-        return cons(a, this);
+    public Stream<A> plus(A ... as) {
+        Stream<A> result = this;
+        for(A a : new ReverseArray<>(as)) {
+            result = cons(a, result);
+        }
+        return result;
     }
 
     @Override
@@ -81,7 +85,7 @@ public final class Stream<A> implements Sequence<A> {
     //all prefixes of the current stream
     @Override
     public Stream<List<A>> inits() {
-        return Stream.cons(LazyList.<A>empty(), () -> tail().inits().map(list -> LazyList.cons(head(), (LazyList) list)));
+        return Stream.cons(LazyList.<A>empty(), () -> tail().inits().map(list -> list.plus(head())));
     }
 
     //all suffixes of the current stream
@@ -204,6 +208,11 @@ public final class Stream<A> implements Sequence<A> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public boolean hasMinimumSize(int n) {
+        return true;
     }
 
 }

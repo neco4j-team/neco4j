@@ -25,10 +25,6 @@ public class LazyList<A> implements List<A> {
         this.tail = tail;
     }
 
-    public static <A> LazyList<A> cons(A head, LazyList<A> tail) {
-        return new LazyList<A>(new Evaluated<A>(head), new Evaluated<LazyList<A>>(tail));
-    }
-
     public static <A> LazyList<A> cons(A head, Supplier<LazyList<A>> tailSupplier) {
         return new LazyList<A>(new Evaluated<A>(head), tailSupplier);
     }
@@ -45,7 +41,7 @@ public class LazyList<A> implements List<A> {
     public static <A> LazyList<A> of(A... elements) {
         LazyList<A> result = empty();
         for (int i = elements.length - 1; i >= 0; i--) {
-            result = cons(elements[i], result);
+            result = result.plus(elements[i]);
         }
         return result;
     }
@@ -145,8 +141,13 @@ public class LazyList<A> implements List<A> {
         return current.head();
     }
 
-    public LazyList<A> plus(A a) {
-        return cons(a, this);
+    @Override
+    public LazyList<A> plus(A ... as) {
+        LazyList<A> result = this;
+        for(A a : new ReverseArray<>(as)) {
+            result = new LazyList<>(new Evaluated<>(a), new Evaluated<>(result));
+        }
+        return result;
     }
 
     public boolean isEmpty() {
@@ -181,7 +182,7 @@ public class LazyList<A> implements List<A> {
         }  else {
             LazyList<B> result = LazyList.<B>cons(headResult::head, () -> tail().flatMap(fn));
             for(B b : headResult.tail()) {
-                result = cons(b, result);
+                result = result.plus(b);
             }
             return result;
         }
@@ -201,7 +202,7 @@ public class LazyList<A> implements List<A> {
             if (n-- <= 0) {
                 break;
             }
-            result = cons(a, result);
+            result = result.plus(a);
         }
         return result.reverse();
     }
@@ -298,9 +299,9 @@ public class LazyList<A> implements List<A> {
 
     @Override
     public List<A> strict() {
-        StrictList<A> result = StrictList.empty();
+        List<A> result = StrictList.empty();
         for(A a : this) {
-            result = StrictList.cons(a, result);
+            result = result.plus(a);
         }
         return result.reverse();
     }
