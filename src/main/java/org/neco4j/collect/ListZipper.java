@@ -30,7 +30,7 @@ public class ListZipper<A> {
     public List<A> toList() {
         List<A> result = end;
         for(A a : front) {
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result;
     }
@@ -38,7 +38,7 @@ public class ListZipper<A> {
     public List<A> toReverseList() {
         List<A> result = front;
         for(A a : end) {
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result;
     }
@@ -48,7 +48,7 @@ public class ListZipper<A> {
     }
 
     public ListZipper<A> insert(A ...  as) {
-        return new ListZipper<>(front, end.plus(as), position);
+        return new ListZipper<>(front, end.plusAll(as), position);
     }
 
     public ListZipper<A> remove(int n) throws NoSuchElementException {
@@ -56,14 +56,14 @@ public class ListZipper<A> {
     }
 
     public ListZipper<A> set(A ... as) throws NoSuchElementException {
-        return new ListZipper<>(front, end.drop(as.length).plus(as), position);
+        return new ListZipper<>(front, end.drop(as.length).plusAll(as), position);
     }
 
     public ListZipper<A> change(Function<? super A, ? extends A> fn) throws NoSuchElementException {
         if (end.isEmpty()) {
             throw new NoSuchElementException();
         }
-        return new ListZipper<>(front, end.tail().plus(fn.apply(end.head())), position);
+        return new ListZipper<>(front, end.tail().plusAll(fn.apply(end.head())), position);
     }
 
     public ListZipper<A> move(int n) throws IndexOutOfBoundsException {
@@ -74,7 +74,7 @@ public class ListZipper<A> {
                 if (newEnd.isEmpty()) {
                     throw new IndexOutOfBoundsException();
                 }
-                newFront = newFront.plus(newEnd.head());
+                newFront = newFront.plusAll(newEnd.head());
                 newEnd = newEnd.tail();
             }
         } else {
@@ -82,7 +82,7 @@ public class ListZipper<A> {
                 if (newFront.isEmpty()) {
                     throw new IndexOutOfBoundsException();
                 }
-                newEnd = newEnd.plus(newFront.head());
+                newEnd = newEnd.plusAll(newFront.head());
                 newFront = newFront.tail();
             }
         }

@@ -20,7 +20,9 @@ public interface Sequence<A> extends Foldable<A> {
 
     Optional<? extends Sequence<A>> tailOpt();
 
-    Sequence<A> plus(A ... as);
+    Sequence<A> plus(A a);
+
+    Sequence<A> plusAll(A ... as);
 
     Optional<A> getOpt(long index);
 

@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class StrictList<A> implements List<A> {
 
@@ -29,7 +28,7 @@ public class StrictList<A> implements List<A> {
     public static <A> StrictList<A> of(A... elements) {
         StrictList<A> result = empty();
         for (int i = elements.length - 1; i >= 0; i--) {
-            result = result.plus(elements[i]);
+            result = result.plusAll(elements[i]);
         }
         return result;
     }
@@ -91,7 +90,7 @@ public class StrictList<A> implements List<A> {
         }
         StrictList<A> result = empty();
         for(A a : this) {
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result.tail.reverse();
     }
@@ -123,12 +122,18 @@ public class StrictList<A> implements List<A> {
     }
 
     @Override
-    public StrictList<A> plus(A ... as) {
+    public final StrictList<A> plus(A a) {
+       return new StrictList<>(a, this);
+    }
+
+    @Override
+    @SafeVarargs
+    public final StrictList<A> plusAll(A ... as) {
         StrictList<A> result = this;
-        for(A a : new ReverseArray<>(as)) {
-            result = new StrictList<>(a, result);
+        for(A a : Iterables.reverse(as)) {
+            result = result.plus(a);
         }
-        return new StrictList<A>(head, this);
+        return result;
     }
 
     @Override
@@ -141,9 +146,9 @@ public class StrictList<A> implements List<A> {
     public StrictList<List<A>> inits() {
         StrictList<List<A>> result = of(StrictList.<A>empty());
         for(A a : this.reverse()) {
-            result = result.map(partial -> partial.plus(a)).plus(empty());
+            result = result.map(partial -> partial.plusAll(a)).plusAll(empty());
         }
-        return result.map(list -> list.reverse());
+        return result.map(List::reverse);
     }
 
     //all suffixes of the current stream ordered from full list to empty
@@ -151,9 +156,9 @@ public class StrictList<A> implements List<A> {
     public StrictList<List<A>> tails() {
         StrictList<List<A>> result = empty();
         for(StrictList<A> current = this; !current.isEmpty(); current = current.tail) {
-            result = result.plus(current);
+            result = result.plusAll(current);
         }
-        result = result.plus(empty());
+        result = result.plusAll(empty());
         return result.reverse();
     }
 
@@ -161,7 +166,7 @@ public class StrictList<A> implements List<A> {
     public <B> StrictList<B> map(Function<? super A, ? extends B> fn) {
         StrictList<B> result = empty();
         for(A a : this) {
-            result = result.plus(fn.apply(a));
+            result = result.plusAll(fn.apply(a));
         }
         return result.reverse();
     }
@@ -175,7 +180,7 @@ public class StrictList<A> implements List<A> {
         StrictList<A> result = empty();
         for(List<A> partial : nested.reverse()) {
              for(A a : partial.reverse()) {
-                 result = result.plus(a);
+                 result = result.plusAll(a);
              }
         }
         return result;
@@ -185,7 +190,7 @@ public class StrictList<A> implements List<A> {
     public StrictList<A> reverse() {
         StrictList<A> result = empty();
         for(StrictList<A> current = this; !current.isEmpty(); current = current.tail) {
-            result = result.plus(current.head);
+            result = result.plusAll(current.head);
         }
         return result;
     }
@@ -197,7 +202,7 @@ public class StrictList<A> implements List<A> {
             if (n-- <= 0) {
                 break;
             }
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result.reverse();
     }
@@ -209,7 +214,7 @@ public class StrictList<A> implements List<A> {
             if (! predicate.test(a)) {
                 break;
             }
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result.reverse();
     }
@@ -219,7 +224,7 @@ public class StrictList<A> implements List<A> {
         StrictList<A> result = empty();
         for(A a : this) {
             if (predicate.test(a)) {
-                result = result.plus(a);
+                result = result.plusAll(a);
             }
         }
         return result.reverse();
@@ -231,7 +236,7 @@ public class StrictList<A> implements List<A> {
         StrictList<B> result = of(b);
         for(A a : this) {
             b = fn.apply(b,a);
-            result = result.plus(b);
+            result = result.plusAll(b);
         }
         return result.reverse();
     }
@@ -242,7 +247,7 @@ public class StrictList<A> implements List<A> {
         StrictList<B> result = of(b);
         for(A a : this.reverse()) {
             b = fn.apply(a,b);
-            result = result.plus(b);
+            result = result.plusAll(b);
         }
         return result;
     }
@@ -303,7 +308,7 @@ public class StrictList<A> implements List<A> {
     public List<A> lazy() {
         List<A> result = LazyList.empty();
         for(A a : this.reverse()) {
-            result = result.plus(a);
+            result = result.plusAll(a);
         }
         return result;
     }

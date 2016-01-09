@@ -18,11 +18,11 @@ public final class Stream<A> implements Sequence<A> {
     }
 
     public static <A> Stream<A> cons(A head, Stream<A> tail) {
-        return new Stream<A>(new Evaluated<A>(head), new Evaluated<Stream<A>>(tail));
+        return new Stream<A>(new Evaluated<>(head), new Evaluated<>(tail));
     }
 
     public static <A> Stream<A> cons(A head, Supplier<Stream<A>> tailSupplier) {
-        return new Stream<A>(new Evaluated<A>(head), tailSupplier);
+        return new Stream<>(new Evaluated<A>(head), tailSupplier);
     }
 
     public static <A> Stream<A> cons(Supplier<A> headSupplier, Stream<A> tail) {
@@ -33,9 +33,15 @@ public final class Stream<A> implements Sequence<A> {
         return new Stream<>(headSupplier, tailSupplier);
     }
 
-    public Stream<A> plus(A ... as) {
+    @Override
+    public Stream<A> plus(A a) {
+        return cons(a, this);
+    }
+
+    @Override
+    public Stream<A> plusAll(A ... as) {
         Stream<A> result = this;
-        for(A a : new ReverseArray<>(as)) {
+        for(A a : Iterables.reverse(as)) {
             result = cons(a, result);
         }
         return result;
@@ -91,7 +97,7 @@ public final class Stream<A> implements Sequence<A> {
     //all suffixes of the current stream
     @Override
     public Stream<Stream<A>> tails() {
-        return Stream.<Stream<A>>cons(this, () -> tail().tails());
+        return Stream.cons(this, () -> tail().tails());
     }
 
     @Override
@@ -106,7 +112,7 @@ public final class Stream<A> implements Sequence<A> {
 
     //takes the "main diagonal" when the stream of stream is written as 2D table
     public static <A> Stream<A> flatten(Stream<Sequence<A>> nested) {
-        return Stream.<A>cons(() -> nested.head().head(), () -> flatten(nested.tail().map(a -> a.tail())));
+        return Stream.<A>cons(() -> nested.head().head(), () -> flatten(nested.tail().map(Sequence::tail)));
     }
 
     @Override
@@ -121,13 +127,13 @@ public final class Stream<A> implements Sequence<A> {
 
     @Override
     public List<A> take(int n) {
-        return n <= 0 ? LazyList.empty() : LazyList.<A>cons(() -> head(), () -> (LazyList) (tail().take(n - 1)));
+        return n <= 0 ? LazyList.empty() : tail().take(n - 1).plus(head());
     }
 
     @Override
     public List<A> takeWhile(Predicate<A> predicate) {
         return predicate.test(head())
-                ? LazyList.<A>cons(() -> head(), () -> (LazyList) (tail().takeWhile(predicate)))
+                ? LazyList.<A>cons(this::head, () -> (LazyList) (tail().takeWhile(predicate)))
                 : LazyList.empty();
     }
 
@@ -143,12 +149,12 @@ public final class Stream<A> implements Sequence<A> {
     @Override
     public Stream<A> filter(Predicate<? super A> predicate) {
         Stream<A> stream = this.dropWhile(predicate.negate());
-        return Stream.<A>cons(stream.head(), () -> stream.tail().filter(predicate));
+        return Stream.cons(stream.head(), () -> stream.tail().filter(predicate));
     }
 
     @Override
     public <B> Stream<B> scanLeft(B seed, BiFunction<? super B, ? super A, ? extends B> fn) {
-        return Stream.<B>cons(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
+        return Stream.cons(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
     }
 
     @Override

@@ -3,17 +3,15 @@ package org.neco4j.collect;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ReverseArray<A> implements Iterable<A> {
+public class Iterables {
 
-    private final A[] array;
-
-    public ReverseArray(A[] array) {
-        this.array = array;
+    private Iterables() {
+        throw new UnsupportedOperationException("do not instantiate");
     }
 
-    @Override
-    public Iterator<A> iterator() {
-        return new Iterator<A>() {
+    @SafeVarargs
+    public static <A> Iterable<A> reverse(A... array) {
+        return () -> new Iterator<A>() {
 
             private int last = array.length;
 
@@ -24,7 +22,7 @@ public class ReverseArray<A> implements Iterable<A> {
 
             @Override
             public A next() {
-                if (! hasNext()) {
+                if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
                 return array[--last];

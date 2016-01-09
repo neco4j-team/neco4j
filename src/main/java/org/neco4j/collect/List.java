@@ -25,7 +25,10 @@ public interface List<A> extends Sequence<A> {
     List<A> init() throws NoSuchElementException;
 
     @Override
-    List<A> plus(A... as);
+    List<A> plus(A a);
+
+    @Override
+    List<A> plusAll(A... as);
 
     @Override
     boolean isEmpty();

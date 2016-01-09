@@ -26,11 +26,11 @@ public class LazyList<A> implements List<A> {
     }
 
     public static <A> LazyList<A> cons(A head, Supplier<LazyList<A>> tailSupplier) {
-        return new LazyList<A>(new Evaluated<A>(head), tailSupplier);
+        return new LazyList<>(new Evaluated<>(head), tailSupplier);
     }
 
     public static <A> LazyList<A> cons(Supplier<A> headSupplier, LazyList<A> tail) {
-        return new LazyList<A>(headSupplier, new Evaluated<>(tail));
+        return new LazyList<>(headSupplier, new Evaluated<>(tail));
     }
 
     public static <A> LazyList<A> cons(Supplier<A> headSupplier, Supplier<LazyList<A>> tailSupplier) {
@@ -142,9 +142,15 @@ public class LazyList<A> implements List<A> {
     }
 
     @Override
-    public LazyList<A> plus(A ... as) {
+    public LazyList<A> plus(A a) {
+        return new LazyList<>(new Evaluated<>(a), new Evaluated<>(this));
+    }
+
+    @Override
+    @SafeVarargs
+    public final LazyList<A> plusAll(A ... as) {
         LazyList<A> result = this;
-        for(A a : new ReverseArray<>(as)) {
+        for(A a : Iterables.reverse(as)) {
             result = new LazyList<>(new Evaluated<>(a), new Evaluated<>(result));
         }
         return result;
@@ -215,13 +221,13 @@ public class LazyList<A> implements List<A> {
         List<A> list = this.dropWhile(predicate.negate());
         return list.isEmpty()
                 ? empty()
-                : LazyList.<A>cons(list.head(), () -> (LazyList) list.tail().filter(predicate));
+                : LazyList.cons(list.head(), () -> (LazyList) list.tail().filter(predicate));
     }
 
     public <B> LazyList<B> scanLeft(B seed, BiFunction<? super B, ? super A, ? extends B> fn) {
         return isEmpty()
                 ? empty()
-                : LazyList.<B>cons(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
+                : LazyList.cons(seed, () -> tail().scanLeft(fn.apply(seed, head()), fn));
     }
 
     public <B> LazyList<B> scanRight(BiFunction<? super A, ? super B, ? extends B> fn, B seed) {

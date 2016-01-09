@@ -10,7 +10,7 @@ public class LazyListTest {
 
     @Test
     public void testConsHeadTail() throws Exception {
-        LazyList<String> list = LazyList.<String>of("bar").plus("foo");
+        LazyList<String> list = LazyList.<String>of("bar").plusAll("foo");
         assertEquals("foo", list.head());
         assertEquals("bar", list.tail().head());
         assertTrue(list.tail().tail().isEmpty());

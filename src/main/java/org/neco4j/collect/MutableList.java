@@ -2,7 +2,6 @@ package org.neco4j.collect;
 
 import java.util.AbstractList;
 import java.util.Iterator;
-import java.util.OptionalInt;
 
 public class MutableList<A> extends AbstractList<A> {
 
@@ -39,7 +38,7 @@ public class MutableList<A> extends AbstractList<A> {
 
     @Override
     public boolean add(A a) {
-        wrapped = wrapped.plus(a);
+        wrapped = wrapped.plusAll(a);
         return true;
     }
 

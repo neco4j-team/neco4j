@@ -39,17 +39,17 @@ public interface Foldable<A> extends Iterable<A> {
     default <B> B foldRight(BiFunction<? super A, ? super B, ? extends B> fn, B seed) {
         List<A> list = StrictList.empty();
         for (A a : this) {
-            list = list.plus(a);
+            list = list.plusAll(a);
         }
         return list.foldLeft(seed, Functions.swap(fn));
     }
 
     default boolean any(Predicate<? super A> predicate) {
-        return foldMap(Monoids.booleanOr, a -> predicate.test(a));
+        return foldMap(Monoids.booleanOr, predicate::test);
     }
 
     default boolean all(Predicate<? super A> predicate) {
-        return foldMap(Monoids.booleanAnd, a -> predicate.test(a));
+        return foldMap(Monoids.booleanAnd, predicate::test);
     }
 
     default <B> Foldable<B> map(Function<? super A, ? extends B> fn) {
