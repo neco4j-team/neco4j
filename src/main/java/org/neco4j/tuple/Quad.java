@@ -7,25 +7,22 @@ import java.util.function.Predicate;
 
 import org.neco4j.function.QuadFunction;
 
-/**
- * @author Daniel Gronau <daniel.gronau@skillcert.de>
- */
-public class Quadruple<A, B, C, D> {
+public class Quad<A, B, C, D> {
 
     private final A a;
     private final B b;
     private final C c;
     private final D d;
 
-    private Quadruple(A a, B b, C c, D d) {
+    private Quad(A a, B b, C c, D d) {
         this.a = requireNonNull(a);
         this.b = requireNonNull(b);
         this.c = requireNonNull(c);
         this.d = requireNonNull(d);
     }
 
-    public static <A, B, C, D> Quadruple<A, B, C, D> of(A a, B b, C c, D d) {
-        return new Quadruple<>(a, b, c, d);
+    public static <A, B, C, D> Quad<A, B, C, D> of(A a, B b, C c, D d) {
+        return new Quad<>(a, b, c, d);
     }
 
     public A get1() {
@@ -44,39 +41,39 @@ public class Quadruple<A, B, C, D> {
         return d;
     }
 
-    public <A1> Quadruple<A1, B, C, D> with1(A1 a1) {
+    public <A1> Quad<A1, B, C, D> with1(A1 a1) {
         return of(a1, get2(), get3(), get4());
     }
 
-    public <B1> Quadruple<A, B1, C, D> with2(B1 b1) {
+    public <B1> Quad<A, B1, C, D> with2(B1 b1) {
         return of(get1(), b1, get3(), get4());
     }
 
-    public <C1> Quadruple<A, B, C1, D> with3(C1 c1) {
+    public <C1> Quad<A, B, C1, D> with3(C1 c1) {
         return of(get1(), get2(), c1, get4());
     }
 
-    public <D1> Quadruple<A, B, C, D1> with4(D1 d1) {
+    public <D1> Quad<A, B, C, D1> with4(D1 d1) {
         return of(get1(), get2(), get3(), d1);
     }
 
-    public <A1> Quadruple<A1, B, C, D> map1(Function<? super A, ? extends A1> fn) {
+    public <A1> Quad<A1, B, C, D> map1(Function<? super A, ? extends A1> fn) {
         return of(fn.apply(get1()), get2(), get3(), get4());
     }
 
-    public <B1> Quadruple<A, B1, C, D> map2(Function<? super B, ? extends B1> fn) {
+    public <B1> Quad<A, B1, C, D> map2(Function<? super B, ? extends B1> fn) {
         return of(get1(), fn.apply(get2()), get3(), get4());
     }
 
-    public <C1> Quadruple<A, B, C1, D> map3(Function<? super C, ? extends C1> fn) {
+    public <C1> Quad<A, B, C1, D> map3(Function<? super C, ? extends C1> fn) {
         return of(get1(), get2(), fn.apply(get3()), get4());
     }
 
-    public <D1> Quadruple<A, B, C, D1> map4(Function<? super D, ? extends D1> fn) {
+    public <D1> Quad<A, B, C, D1> map4(Function<? super D, ? extends D1> fn) {
         return of(get1(), get2(), get3(), fn.apply(get4()));
     }
 
-    public <A1, B1, C1, D1> Quadruple<A1, B1, C1, D1> quadmap(
+    public <A1, B1, C1, D1> Quad<A1, B1, C1, D1> quadmap(
             Function<? super A, ? extends A1> fnA,
             Function<? super B, ? extends B1> fnB,
             Function<? super C, ? extends C1> fnC,
@@ -125,8 +122,8 @@ public class Quadruple<A, B, C, D> {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof Quadruple) {
-            Quadruple<?, ?, ?, ?> that = (Quadruple) obj;
+        if (obj instanceof Quad) {
+            Quad<?, ?, ?, ?> that = (Quad) obj;
             return this.get1().equals(that.get1()) &&
                     this.get2().equals(that.get2()) &&
                     this.get3().equals(that.get3()) &&

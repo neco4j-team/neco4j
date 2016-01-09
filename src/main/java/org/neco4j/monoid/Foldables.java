@@ -1,46 +1,51 @@
-package org.neco4j.tuple;
+package org.neco4j.monoid;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.neco4j.collect.StrictList;
 import org.neco4j.function.QuadFunction;
 import org.neco4j.function.TriFunction;
+import org.neco4j.tuple.Pair;
+import org.neco4j.tuple.Quad;
+import org.neco4j.tuple.Triple;
 
-public final class Comprehension {
+public final class Foldables {
 
-    private Comprehension() {
+    private Foldables() {
         throw new UnsupportedOperationException();
     }
 
     //cross product
 
-    public static <A, B> Iterable<Pair<A, B>> combine(
+    public static <A, B> Foldable<Pair<A, B>> combine(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB) {
         return combineWith(itA, itB, Pair::of);
     }
 
-    public static <A, B, C> Iterable<Triple<A, B, C>> combine(
+    public static <A, B, C> Foldable<Triple<A, B, C>> combine(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC) {
         return combineWith(itA, itB, itC, Triple::of);
     }
 
-    public static <A, B, C, D> Iterable<Quadruple<A, B, C, D>> combine(
+    public static <A, B, C, D> Foldable<Quad<A, B, C, D>> combine(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
             Iterable<? extends D> itD) {
-        return combineWith(itA, itB, itC, itD, Quadruple::of);
+        return combineWith(itA, itB, itC, itD, Quad::of);
     }
 
-    public static <A, B, R> Iterable<R> combineWith(
+    public static <A, B, R> Foldable<R> combineWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             BiFunction<? super A, ? super B, ? extends R> fn) {
@@ -74,7 +79,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B, C, R> Iterable<R> combineWith(
+    public static <A, B, C, R> Foldable<R> combineWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
@@ -120,7 +125,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B, C, D, R> Iterable<R> combineWith(
+    public static <A, B, C, D, R> Foldable<R> combineWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
@@ -180,28 +185,32 @@ public final class Comprehension {
 
     //parallel consumption (with the length of the shortest iterable)
 
-    public static <A, B> Iterable<Pair<A, B>> zip(
+    public static <A, B> Foldable<Pair<A, B>> zip(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB) {
         return zipWith(itA, itB, Pair::of);
     }
 
-    public static <A, B, C> Iterable<Triple<A, B, C>> zip(
+    public static <A, B, C> Foldable<Triple<A, B, C>> zip(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC) {
         return zipWith(itA, itB, itC, Triple::of);
     }
 
-    public static <A, B, C, D> Iterable<Quadruple<A, B, C, D>> zip(
+    public static <A, B, C, D> Foldable<Quad<A, B, C, D>> zip(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
             Iterable<? extends D> itD) {
-        return zipWith(itA, itB, itC, itD, Quadruple::of);
+        return zipWith(itA, itB, itC, itD, Quad::of);
     }
 
-    public static <A, B, R> Iterable<R> zipWith(
+    public static <K, V> Foldable<Pair<K, V>> zip(Map<K, V> map) {
+        return zipWith(map, Pair::of);
+    }
+
+    public static <A, B, R> Foldable<R> zipWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             BiFunction<? super A, ? super B, ? extends R> fn) {
@@ -225,7 +234,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B, C, R> Iterable<R> zipWith(
+    public static <A, B, C, R> Foldable<R> zipWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
@@ -251,7 +260,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B, C, D, R> Iterable<R> zipWith(
+    public static <A, B, C, D, R> Foldable<R> zipWith(
             Iterable<? extends A> itA,
             Iterable<? extends B> itB,
             Iterable<? extends C> itC,
@@ -279,9 +288,15 @@ public final class Comprehension {
         };
     }
 
+    public static <K, V, R> Foldable<R> zipWith(
+            Map<K, V> map,
+            BiFunction<? super K, ? super V, ? extends R> fn) {
+        return map(map.entrySet(), entry -> fn.apply(entry.getKey(), entry.getValue()));
+    }
+
     //transformation functions
 
-    public static <A> Iterable<A> filter(Iterable<? extends A> itA, Predicate<? super A> predA) {
+    public static <A> Foldable<A> filter(Iterable<? extends A> itA, Predicate<? super A> predA) {
         return () -> new Iterator<A>() {
 
             private Iterator<? extends A> iteratorA = itA.iterator();
@@ -310,7 +325,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A> Iterable<A> limit(Iterable<? extends A> itA, int atMost) {
+    public static <A> Foldable<A> limit(Iterable<? extends A> itA, int atMost) {
         return () -> new Iterator<A>() {
 
             private Iterator<? extends A> iteratorA = itA.iterator();
@@ -332,7 +347,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B> Iterable<B> map(Iterable<? extends A> itA, Function<? super A, ? extends B> fn) {
+    public static <A, B> Foldable<B> map(Iterable<? extends A> itA, Function<? super A, ? extends B> fn) {
         return () -> new Iterator<B>() {
             private Iterator<? extends A> iterator = itA.iterator();
 
@@ -348,7 +363,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A> Iterable<A> flatten(Iterable<? extends Iterable<A>> itItA) {
+    public static <A> Foldable<A> flatten(Iterable<? extends Iterable<A>> itItA) {
         return () -> new Iterator<A>() {
 
             private Iterator<? extends Iterable<A>> nestedIterator = itItA.iterator();
@@ -372,7 +387,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A, B> Iterable<B> flatMap(Iterable<A> itA, Function<A, ? extends Iterable<B>> fn) {
+    public static <A, B> Foldable<B> flatMap(Iterable<A> itA, Function<A, ? extends Iterable<B>> fn) {
         //We could use simply flatten(map(itA, fn)), however this causes some object creation overhead
         return () -> new Iterator<B>() {
 
@@ -397,7 +412,7 @@ public final class Comprehension {
         };
     }
 
-    public static <A> Iterable<Pair<A, Integer>> indexed(Iterable<? extends A> itA) {
+    public static <A> Foldable<Pair<A, Integer>> indexed(Iterable<? extends A> itA) {
         return () -> new Iterator<Pair<A, Integer>>() {
             private Iterator<? extends A> iterator = itA.iterator();
             private int index = 0;
@@ -416,13 +431,13 @@ public final class Comprehension {
 
     //useful converters to iterable
 
-    public static <A> Iterable<A> optional(Optional<? extends A> optA) {
+    public static <A> Foldable<A> optional(Optional<? extends A> optA) {
         return optA.isPresent()
-                ? Collections.singletonList(optA.get())
-                : Collections.emptyList();
+                ? singleton(optA.get())
+                : empty();
     }
 
-    public static <A> Iterable<A> array(A... as) {
+    public static <A> Foldable<A> array(A... as) {
         //an own implementation should be cheaper than Arrays.asList()
         return () -> new Iterator<A>() {
             private int index = 0;
@@ -442,5 +457,12 @@ public final class Comprehension {
         };
     }
 
+    public static <A> Foldable<A> empty() {
+        return StrictList.empty();
+    }
+
+    public static <A> Foldable<A> singleton(A a) {
+        return StrictList.of(a);
+    }
 
 }

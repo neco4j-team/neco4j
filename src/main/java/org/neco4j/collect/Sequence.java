@@ -6,7 +6,9 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface Sequence<A> extends Iterable<A> {
+import org.neco4j.monoid.Foldable;
+
+public interface Sequence<A> extends Foldable<A> {
 
     boolean isEmpty();
 

@@ -2,12 +2,14 @@ package org.neco4j.tuple;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.neco4j.tuple.Comprehension.*;
+import static org.neco4j.monoid.Foldables.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -58,19 +60,19 @@ public class ComprehensionTest {
         List<Integer> ints = Arrays.asList(10, 20);
         List<Long> longs = Arrays.asList(1L, 2L);
         List<String> foobars = Arrays.asList("foo", "bar");
-        List<Quadruple<String, Integer, Long, String>> expected = Arrays.asList(
-                Quadruple.of("a", 10, 1L, "foo"), Quadruple.of("a", 10, 1L, "bar"),
-                Quadruple.of("a", 10, 2L, "foo"), Quadruple.of("a", 10, 2L, "bar"),
-                Quadruple.of("a", 20, 1L, "foo"), Quadruple.of("a", 20, 1L, "bar"),
-                Quadruple.of("a", 20, 2L, "foo"), Quadruple.of("a", 20, 2L, "bar"),
-                Quadruple.of("b", 10, 1L, "foo"), Quadruple.of("b", 10, 1L, "bar"),
-                Quadruple.of("b", 10, 2L, "foo"), Quadruple.of("b", 10, 2L, "bar"),
-                Quadruple.of("b", 20, 1L, "foo"), Quadruple.of("b", 20, 1L, "bar"),
-                Quadruple.of("b", 20, 2L, "foo"), Quadruple.of("b", 20, 2L, "bar"),
-                Quadruple.of("c", 10, 1L, "foo"), Quadruple.of("c", 10, 1L, "bar"),
-                Quadruple.of("c", 10, 2L, "foo"), Quadruple.of("c", 10, 2L, "bar"),
-                Quadruple.of("c", 20, 1L, "foo"), Quadruple.of("c", 20, 1L, "bar"),
-                Quadruple.of("c", 20, 2L, "foo"), Quadruple.of("c", 20, 2L, "bar")
+        List<Quad<String, Integer, Long, String>> expected = Arrays.asList(
+                Quad.of("a", 10, 1L, "foo"), Quad.of("a", 10, 1L, "bar"),
+                Quad.of("a", 10, 2L, "foo"), Quad.of("a", 10, 2L, "bar"),
+                Quad.of("a", 20, 1L, "foo"), Quad.of("a", 20, 1L, "bar"),
+                Quad.of("a", 20, 2L, "foo"), Quad.of("a", 20, 2L, "bar"),
+                Quad.of("b", 10, 1L, "foo"), Quad.of("b", 10, 1L, "bar"),
+                Quad.of("b", 10, 2L, "foo"), Quad.of("b", 10, 2L, "bar"),
+                Quad.of("b", 20, 1L, "foo"), Quad.of("b", 20, 1L, "bar"),
+                Quad.of("b", 20, 2L, "foo"), Quad.of("b", 20, 2L, "bar"),
+                Quad.of("c", 10, 1L, "foo"), Quad.of("c", 10, 1L, "bar"),
+                Quad.of("c", 10, 2L, "foo"), Quad.of("c", 10, 2L, "bar"),
+                Quad.of("c", 20, 1L, "foo"), Quad.of("c", 20, 1L, "bar"),
+                Quad.of("c", 20, 2L, "foo"), Quad.of("c", 20, 2L, "bar")
         );
         assertEquals(expected, it2list(combine(strings, ints, longs, foobars)));
         assertTrue(it2list(combine(strings, Collections.emptyList(), longs, foobars)).isEmpty());
@@ -185,7 +187,7 @@ public class ComprehensionTest {
         List<Integer> ints = Arrays.asList(10, 20);
         List<Long> longs = Arrays.asList(1L, 2L);
         List<String> foobars = Arrays.asList("foo", "bar");
-        List<Quadruple<String, Integer, Long, String>> expected = Arrays.asList(Quadruple.of("a", 10, 1L, "foo"), Quadruple.of("b", 20, 2L, "bar"));
+        List<Quad<String, Integer, Long, String>> expected = Arrays.asList(Quad.of("a", 10, 1L, "foo"), Quad.of("b", 20, 2L, "bar"));
 
         assertEquals(expected, it2list(zip(strings, ints, longs, foobars)));
         assertTrue(it2list(zip(strings, Collections.emptyList(), longs, foobars)).isEmpty());
@@ -200,6 +202,17 @@ public class ComprehensionTest {
         assertTrue(it2list(zip(strings, Collections.emptyList(), Collections.emptyList(), Collections.emptyList())).isEmpty());
         assertTrue(it2list(zip(Collections.emptyList(), ints, Collections.emptyList(), Collections.emptyList())).isEmpty());
         assertTrue(it2list(zip(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList())).isEmpty());
+    }
+
+    @Test
+    public void zipMapTest() throws Exception {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        List<Pair<String, Integer>> expected = Arrays.asList(Pair.of("one", 1), Pair.of("two", 2), Pair.of("three", 3));
+
+        assertEquals(expected, it2list(zip(map)));
     }
 
     @Test
@@ -252,6 +265,18 @@ public class ComprehensionTest {
         assertTrue(it2list(zipWith(Collections.emptyList(), ints, Collections.emptyList(), Collections.emptyList(), fn)).isEmpty());
         assertTrue(it2list(zipWith(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), fn)).isEmpty());
     }
+
+    @Test
+    public void zipWithMapTest() throws Exception {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        map.put("one", 1);
+        map.put("two", 2);
+        map.put("three", 3);
+        List<String> expected = Arrays.asList("one=1", "two=2", "three=3");
+
+        assertEquals(expected, it2list(zipWith(map, (k, v) -> k + "=" + v)));
+    }
+
 
     @Test
     public void flattenTest() throws Exception {
