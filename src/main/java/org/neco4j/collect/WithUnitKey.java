@@ -27,6 +27,14 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
         return getOpt();
     }
 
+    default V getOrFail() throws NoSuchElementException {
+        return getOpt().getOrFail();
+    }
+
+    default V getOrElse(V defaultValue) {
+        return getOpt().getOrElse(defaultValue);
+    }
+
     Opt<C> removeOpt();
 
     default Opt<C> removeOpt(Unit u) {
@@ -35,18 +43,18 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
 
     default Iterator<V> iterator() {
        return new Iterator<V>() {
-           C coll = WithUnitKey.this.self();
+           private C _coll = WithUnitKey.this.self();
 
            @Override
            public boolean hasNext() {
-               return ! coll.isEmpty();
+               return ! _coll.isEmpty();
            }
 
            @Override
            public V next() {
                if (hasNext()) {
-                  V result = coll.getOpt().getOrFail();
-                  coll = coll.removeOpt().getOrFail();
+                  V result = _coll.getOrFail();
+                  _coll = _coll.removeOpt().getOrFail();
                   return result;
                }
                throw new NoSuchElementException();

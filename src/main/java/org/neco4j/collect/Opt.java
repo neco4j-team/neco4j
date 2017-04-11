@@ -1,6 +1,8 @@
 package org.neco4j.collect;
 
+import java.io.Serializable;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -8,35 +10,18 @@ import java.util.Optional;
  *
  * @param <V> the element type
  */
-public abstract class Opt<V> implements WithUnitKey<V, Opt<V>> {
+public class Opt<V> implements WithUnitKey<V, Opt<V>> {
 
-    private Opt() {
+    private final V _value;
+
+    private Opt(V value) {
+        _value = value;
     }
 
-    private static Opt<?> NONE = new Opt<Object>() {
-
+    private final static Opt<?> NONE = new Opt<Object>(null) {
         @Override
         public boolean isEmpty() {
             return true;
-        }
-
-        @Override
-        public long size() {
-            return 0;
-        }
-
-        @Override
-        public Opt<Opt<Object>> addOpt(Object o) {
-            return Opt.some(some(o));
-        }
-
-        @Override
-        public Opt<Opt<Object>> removeOpt() {
-            return Opt.none();
-        }
-
-        public Object getOrFail() {
-            throw new NoSuchElementException();
         }
 
         @Override
@@ -45,41 +30,44 @@ public abstract class Opt<V> implements WithUnitKey<V, Opt<V>> {
         }
     };
 
+    @SuppressWarnings("unchecked")
     public static <V> Opt<V> none() {
         return (Opt<V>) NONE;
     }
 
     public static <V> Opt<V> some(V v) {
-        return new Opt<V>() {
-            @Override
-            public Opt<Opt<V>> addOpt(V v) {
-                return Opt.none();
-            }
+        return new Opt<>(Objects.requireNonNull(v));
+    }
 
-            @Override
-            public Opt<Opt<V>> removeOpt() {
-                return Opt.some(none());
-            }
+    public Opt<Opt<V>> addOpt(V v) {
+        return isEmpty() ? Opt.some(some(v)) : Opt.none();
+    }
 
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
+    @Override
+    public Opt<Opt<V>> removeOpt() {
+        return isEmpty() ? Opt.none() : Opt.some(none());
+    }
 
-            @Override
-            public long size() {
-                return 1;
-            }
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-            public V getOrFail() {
-                return v;
-            }
+    @Override
+    public long size() {
+        return isEmpty() ? 0L : 1L;
+    }
 
-            @Override
-            public String toString() {
-                return "Some(" + v + ")";
-            }
-        };
+    public V getOrFail() {
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return _value;
+    }
+
+    @Override
+    public String toString() {
+        return "Some(" + _value + ")";
     }
 
     @Override
@@ -91,8 +79,7 @@ public abstract class Opt<V> implements WithUnitKey<V, Opt<V>> {
         return v == null ? none() : some(v);
     }
 
-    public abstract V getOrFail();
-
+    @Override
     public V getOrElse(V v) {
         return isEmpty() ? v : getOrFail();
     }

@@ -1,6 +1,6 @@
 package org.neco4j.collect;
 
-public class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
+public final class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
 
     private final Stack<V> _front;
     private final Stack<V> _rear;
@@ -26,7 +26,7 @@ public class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
             return Opt.none();
         }
         return Opt.some(_rear.isEmpty()
-                ? new Queue<>(Stack.empty(), _front.reverse())
+                ? new Queue<>(Stack.empty(), _front.reverse().removeOpt().getOrFail())
                 : new Queue<>(_front, _rear.removeOpt().getOrFail()));
     }
 
@@ -41,7 +41,7 @@ public class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
     }
 
     public Queue<V> reverse() {
-        return new Queue<>(_rear.reverse(), _front.reverse());
+        return new Queue<>(_rear, _front);
     }
 
     public static <V> Queue<V> empty() {
@@ -50,5 +50,18 @@ public class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
 
     public static <V> Queue<V> singleton(V v) {
         return new Queue<>(Stack.empty(), Stack.singleton(v));
+    }
+
+    @SafeVarargs
+    public static <V> Queue<V> of(V ... vs) {
+       return Queue.<V>empty().addAll(vs);
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(V v : this) {
+            sb.append(sb.length() == 0 ? "": ", ").append(v);
+        }
+        return String.format("Queue[%s]", sb);
     }
 }

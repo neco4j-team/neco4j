@@ -83,6 +83,12 @@ public class OptTest {
     }
 
     @Test
+    public void toString_() {
+        assertThat(Opt.none().toString()).isEqualTo("None");
+        assertThat(Opt.some("foo").toString()).isEqualTo("Some(foo)");
+    }
+
+    @Test
     public void fromOptional() {
         assertThat(Opt.fromOptional(Optional.empty()).isEmpty()).isTrue();
         assertThat(Opt.fromOptional(Optional.of("foo")).getOrFail()).isEqualTo("foo");
