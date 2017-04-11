@@ -40,9 +40,9 @@ public interface Sequence<A> extends Foldable<A> {
 
     Sequence<A> dropWhile(Predicate<? super A> predicate);
 
-    List<A> takeWhile(Predicate<A> predicate);
+    Sequence<A> takeWhile(Predicate<A> predicate);
 
-    List<A> take(int n);
+    Sequence<A> take(int n);
 
     Sequence<A> filter(Predicate<? super A> predicate);
 
