@@ -57,11 +57,8 @@ public final class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
        return Queue.<V>empty().addAll(vs);
     }
 
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for(V v : this) {
-            sb.append(sb.length() == 0 ? "": ", ").append(v);
-        }
-        return String.format("Queue[%s]", sb);
+        return show();
     }
 }

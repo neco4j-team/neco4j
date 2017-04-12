@@ -28,6 +28,18 @@ public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>, AlwaysAddab
         return _next.get();
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for(V v : this) {
+            sb.append(sb.length() == 0 ? "": ", ").append(v);
+            if(i++ == 9) {
+                break;
+            }
+        }
+        return String.format("Stream[%s...]", sb);
+    }
+
     public static <V> Stream<V> constant(V v) {
         return new Stream<>(v, () -> constant(v));
     }

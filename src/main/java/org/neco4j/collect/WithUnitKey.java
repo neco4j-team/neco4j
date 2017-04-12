@@ -61,4 +61,16 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
            }
        };
     }
+
+    default String show(String collectionName) {
+        StringBuilder sb = new StringBuilder();
+        for(V v : this) {
+            sb.append(sb.length() == 0 ? "": ", ").append(v);
+        }
+        return String.format("%s[%s]", collectionName, sb);
+    }
+
+    default String show() {
+        return show(getClass().getSimpleName());
+    }
 }

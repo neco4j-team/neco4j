@@ -72,4 +72,8 @@ public class Stack<V> implements AlwaysAddableWithUnitKey<V,Stack<V>> {
         return Opt.from(_below);
     }
 
+    @Override
+    public String toString() {
+        return show("Stack");
+    }
 }
