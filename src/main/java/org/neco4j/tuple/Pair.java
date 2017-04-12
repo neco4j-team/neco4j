@@ -7,12 +7,12 @@ import static java.util.Objects.requireNonNull;
 
 public final class Pair<A, B> {
 
-    private final A a;
-    private final B b;
+    private final A _aValue;
+    private final B _bValue;
 
     private Pair(A a, B b) {
-        this.a = requireNonNull(a);
-        this.b = requireNonNull(b);
+        this._aValue = requireNonNull(a);
+        this._bValue = requireNonNull(b);
     }
 
     public static <A, B> Pair<A, B> of(A a, B b) {
@@ -20,11 +20,11 @@ public final class Pair<A, B> {
     }
 
     public A get1() {
-        return a;
+        return _aValue;
     }
 
     public B get2() {
-        return b;
+        return _bValue;
     }
 
     public <A1> Pair<A1, B> with1(A1 a1) {

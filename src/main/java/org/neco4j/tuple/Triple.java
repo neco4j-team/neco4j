@@ -1,21 +1,21 @@
 package org.neco4j.tuple;
 
-import static java.util.Objects.requireNonNull;
+import org.neco4j.function.TriFunction;
 
 import java.util.function.Function;
 
-import org.neco4j.function.TriFunction;
+import static java.util.Objects.requireNonNull;
 
 public final class Triple<A, B, C> {
 
-    private final A a;
-    private final B b;
-    private final C c;
+    private final A _aValue;
+    private final B _bValue;
+    private final C _cValue;
 
     private Triple(A a, B b, C c) {
-        this.a = requireNonNull(a);
-        this.b = requireNonNull(b);
-        this.c = requireNonNull(c);
+        this._aValue = requireNonNull(a);
+        this._bValue = requireNonNull(b);
+        this._cValue = requireNonNull(c);
     }
 
     public static <A, B, C> Triple<A, B, C> of(A a, B b, C c) {
@@ -23,15 +23,15 @@ public final class Triple<A, B, C> {
     }
 
     public A get1() {
-        return a;
+        return _aValue;
     }
 
     public B get2() {
-        return b;
+        return _bValue;
     }
 
     public C get3() {
-        return c;
+        return _cValue;
     }
 
     public <A1> Triple<A1, B, C> with1(A1 a1) {

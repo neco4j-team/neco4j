@@ -1,7 +1,8 @@
 package org.neco4j.either;
 
+import org.neco4j.collect.Opt;
+
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -34,9 +35,9 @@ public abstract class Either<A, B> {
 
     public abstract B rightOrElseGet(Supplier<B> defaultSupplier);
 
-    public abstract Optional<A> leftOpt();
+    public abstract Opt<A> leftOpt();
 
-    public abstract Optional<B> rightOpt();
+    public abstract Opt<B> rightOpt();
 
     public abstract <A1> Either<A1, B> mapLeft(Function<? super A, ? extends A1> fn);
 

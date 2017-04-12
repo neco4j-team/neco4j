@@ -1,6 +1,5 @@
 package org.neco4j.collect;
 
-import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;

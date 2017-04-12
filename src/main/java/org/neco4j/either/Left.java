@@ -1,7 +1,8 @@
 package org.neco4j.either;
 
+import org.neco4j.collect.Opt;
+
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -9,10 +10,10 @@ import static java.util.Objects.requireNonNull;
 
 public final class Left<A, B> extends Either<A, B> {
 
-    private final A a;
+    private final A _aValue;
 
     Left(A a) {
-        this.a = requireNonNull(a);
+        this._aValue = requireNonNull(a);
     }
 
     @Override
@@ -27,7 +28,7 @@ public final class Left<A, B> extends Either<A, B> {
 
     @Override
     public A left() {
-        return a;
+        return _aValue;
     }
 
     @Override
@@ -56,13 +57,13 @@ public final class Left<A, B> extends Either<A, B> {
     }
 
     @Override
-    public Optional<A> leftOpt() {
-        return Optional.of(left());
+    public Opt<A> leftOpt() {
+        return Opt.some(left());
     }
 
     @Override
-    public Optional<B> rightOpt() {
-        return Optional.empty();
+    public Opt<B> rightOpt() {
+        return Opt.none();
     }
 
     @Override

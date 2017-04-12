@@ -114,22 +114,22 @@ public class EitherTest {
     public void testLeftOpt() throws Exception {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOpt().get());
+        assertEquals(Integer.valueOf(42), left.leftOpt().getOrFail());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertFalse(right.leftOpt().isPresent());
+        assertTrue(right.leftOpt().isEmpty());
     }
 
     @Test
     public void testRightOpt() throws Exception {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertFalse(left.rightOpt().isPresent());
+        assertTrue(left.rightOpt().isEmpty());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOpt().get());
+        assertEquals("foo", right.rightOpt().getOrFail());
     }
 
     @Test
