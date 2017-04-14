@@ -17,6 +17,17 @@ public class ArrayTest {
         assertThat(Array.of("bar", "baz").addOpt(2, "foo").getOrFail()).containsExactly("bar", "baz", "foo");
         assertThat(Array.of("bar", "baz").addOpt(3, "foo").isEmpty()).isTrue();
     }
+    @Test
+    public void putOpt() {
+        assertThat(Array.<String>of().putOpt(0, "foo").isEmpty()).isTrue();
+        assertThat(Array.<String>of().putOpt(-1, "foo").isEmpty()).isTrue();
+        assertThat(Array.<String>of().putOpt(1, "foo").isEmpty()).isTrue();
+
+        assertThat(Array.of("bar", "baz").putOpt(-1, "foo").isEmpty()).isTrue();
+        assertThat(Array.of("bar", "baz").putOpt(0, "foo").getOrFail()).containsExactly("foo", "baz");
+        assertThat(Array.of("bar", "baz").putOpt(1, "foo").getOrFail()).containsExactly("bar", "foo");
+        assertThat(Array.of("bar", "baz").putOpt(2, "foo").isEmpty()).isTrue();
+    }
 
     @Test
     public void getOpt() {
@@ -75,6 +86,18 @@ public class ArrayTest {
         assertThat(Array.ints(47, 11).addOpt(1, 42).getOrFail()).containsExactly(47, 42, 11);
         assertThat(Array.ints(47, 11).addOpt(2, 42).getOrFail()).containsExactly(47, 11, 42);
         assertThat(Array.ints(47, 11).addOpt(3, 42).isEmpty()).isTrue();
+    }
+
+    @Test
+    public void putOptInts() {
+        assertThat(Array.ints().putOpt(0, 42).isEmpty()).isTrue();
+        assertThat(Array.ints().putOpt(-1, 42).isEmpty()).isTrue();
+        assertThat(Array.ints().putOpt(1, 42).isEmpty()).isTrue();
+
+        assertThat(Array.ints(47, 11).putOpt(-1, 42).isEmpty()).isTrue();
+        assertThat(Array.ints(47, 11).putOpt(0, 42).getOrFail()).containsExactly(42, 11);
+        assertThat(Array.ints(47, 11).putOpt(1, 42).getOrFail()).containsExactly(47, 42);
+        assertThat(Array.ints(47, 11).putOpt(2, 42).isEmpty()).isTrue();
     }
 
     @Test

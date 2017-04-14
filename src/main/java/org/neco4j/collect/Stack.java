@@ -47,6 +47,11 @@ public class Stack<V> implements AlwaysAddableWithUnitKey<V,Stack<V>> {
     }
 
     @Override
+    public Opt<Stack<V>> putOpt(V v) {
+        return isEmpty() ? Opt.none() : Opt.some(new Stack<>(Objects.requireNonNull(v), this._below));
+    }
+
+    @Override
     public Opt<V> getOpt() {
         return Opt.from(_value);
     }

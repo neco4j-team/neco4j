@@ -16,6 +16,17 @@ public final class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
     }
 
     @Override
+    public Opt<Queue<V>> putOpt(V v) {
+      if (isEmpty()) {
+          return Opt.none();
+      } else if (_front.isEmpty()) {
+          return new Queue<>(_rear.reverse(), Stack.empty()).putOpt(v);
+      } else {
+          return Opt.some(new Queue<>(_front.putOpt(v).getOrFail(), _rear));
+      }
+    }
+
+    @Override
     public Opt<V> getOpt() {
         return _rear.getOpt().or(_front.lastOpt());
     }

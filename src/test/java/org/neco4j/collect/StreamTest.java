@@ -11,6 +11,11 @@ public class StreamTest {
     }
 
     @Test
+    public void put() {
+        assertThat(Stream.constant("foo").add("bar").put("baz")).startsWith("baz", "foo", "foo");
+    }
+
+    @Test
     public void constant() {
         assertThat(Stream.constant("foo")).startsWith("foo", "foo", "foo");
     }

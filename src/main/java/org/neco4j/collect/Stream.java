@@ -3,7 +3,9 @@ package org.neco4j.collect;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>, AlwaysAddableWithUnitKey<V, Stream<V>> {
+public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>,
+       AlwaysAddableWithUnitKey<V, Stream<V>>,
+        AlwaysPuttableWithUnitKey<V, Stream<V>> {
 
     private final V _value;
     private final Supplier<Stream<V>> _next;
@@ -13,9 +15,15 @@ public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>, AlwaysAddab
         _next = next;
     }
 
+
     @Override
     public Stream<V> add(V v) {
         return new Stream<>(v, () -> this);
+    }
+
+    @Override
+    public Stream<V> put(V v) {
+        return new Stream<>(v, _next::get);
     }
 
     @Override

@@ -10,6 +10,18 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
             @Override
             @SuppressWarnings("unchecked")
+            public Opt<Array<V>> putOpt(Integer index, V v) {
+                if (0 <= index && index < size()) {
+                    V[] newArray = (V[]) java.lang.reflect.Array.newInstance(vs.getClass().getComponentType(), (int) size());
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(of(newArray));
+                }
+                return Opt.none();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
             public Opt<Array<V>> addOpt(Integer index, V v) {
                 if (0 <= index && index <= size()) {
                     V[] newArray = (V[]) java.lang.reflect.Array.newInstance(vs.getClass().getComponentType(), (int) size() + 1);
@@ -52,6 +64,18 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
     public static Array<Byte> bytes(byte ... vs) {
         return new Array<Byte>() {
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public Opt<Array<Byte>> putOpt(Integer index, Byte v) {
+                if (0 <= index && index < size()) {
+                    byte[] newArray = new byte[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(bytes(newArray));
+                }
+                return Opt.none();
+            }
 
             @Override
             @SuppressWarnings("unchecked")
@@ -100,6 +124,19 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
             @Override
             @SuppressWarnings("unchecked")
+            public Opt<Array<Integer>> putOpt(Integer index, Integer v) {
+                if (0 <= index && index < size()) {
+                    int[] newArray = new int[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(ints(newArray));
+                }
+                return Opt.none();
+            }
+
+
+            @Override
+            @SuppressWarnings("unchecked")
             public Opt<Array<Integer>> addOpt(Integer index, Integer v) {
                 if (0 <= index && index <= size()) {
                     int[] newArray = new int[(int) size() + 1];
@@ -142,6 +179,19 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
     public static Array<Long> longs(long ... vs) {
         return new Array<Long>() {
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public Opt<Array<Long>> putOpt(Integer index, Long v) {
+                if (0 <= index && index < size()) {
+                    long[] newArray = new long[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(longs(newArray));
+                }
+                return Opt.none();
+            }
+
 
             @Override
             @SuppressWarnings("unchecked")
@@ -190,6 +240,18 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
             @Override
             @SuppressWarnings("unchecked")
+            public Opt<Array<Double>> putOpt(Integer index, Double v) {
+                if (0 <= index && index < size()) {
+                    double[] newArray = new double[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(doubles(newArray));
+                }
+                return Opt.none();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
             public Opt<Array<Double>> addOpt(Integer index, Double v) {
                 if (0 <= index && index <= size()) {
                     double[] newArray = new double[(int) size() + 1];
@@ -235,6 +297,18 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
             @Override
             @SuppressWarnings("unchecked")
+            public Opt<Array<Character>> putOpt(Integer index, Character v) {
+                if (0 <= index && index < size()) {
+                    char[] newArray = new char[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(chars(newArray));
+                }
+                return Opt.none();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
             public Opt<Array<Character>> addOpt(Integer index, Character v) {
                 if (0 <= index && index <= size()) {
                     char[] newArray = new char[(int) size() + 1];
@@ -277,6 +351,18 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
     public static Array<Boolean> booleans(boolean ... vs) {
         return new Array<Boolean>() {
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public Opt<Array<Boolean>> putOpt(Integer index, Boolean v) {
+                if (0 <= index && index < size()) {
+                    boolean[] newArray = new boolean[(int) size()];
+                    System.arraycopy(vs, 0, newArray, 0, (int) size());
+                    newArray[index] = v;
+                    return Opt.some(booleans(newArray));
+                }
+                return Opt.none();
+            }
 
             @Override
             @SuppressWarnings("unchecked")

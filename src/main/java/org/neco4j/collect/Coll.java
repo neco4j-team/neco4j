@@ -11,7 +11,10 @@ import java.util.NoSuchElementException;
 public interface Coll<K, V, C extends Coll<K, V, C>> {
 
     /**
-     * Adds an entry to the collection, if possible
+     * Adds an entry to the collection, if possible. Keeps other elements stored under that key.
+     *
+     * Usually, after a successful call, the size of the collection has increased by one (with exceptions
+     * where "adding" is done different, e.g. MultiSet).
      * @param k the key or index
      * @param v the value
      * @return if successful, an enlarged collection wrapped in an Opt, else Opt.none
@@ -19,7 +22,20 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     Opt<C> addOpt(K k, V v);
 
     /**
+     * Adds an entry to the collection, if possible. Removes the element stored under this key.
+     *
+     * Usually, the size of the collection should not change by this operation if there exists already an element under
+     * that key.
+     * @param k the key or index
+     * @param v the value
+     * @return if successful, an enlarged collection wrapped in an Opt, else Opt.none
+     */
+    Opt<C> putOpt(K k, V v);
+
+    /**
      * Retrieves an element of the collection, if possible
+     *
+     * Usually, this operation should be able to retrieve elements which were stored by putAll or addAll.
      * @param k the key or index
      * @return if successful, the element wrapped in an Opt, else Opt.none
      */

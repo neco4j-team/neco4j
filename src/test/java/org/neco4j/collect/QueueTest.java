@@ -12,6 +12,12 @@ public class QueueTest {
     }
 
     @Test
+    public void putOpt() {
+        assertThat(Queue.<String>empty().putOpt("foo").isEmpty()).isTrue();
+        assertThat(Queue.of("bar", "baz").putOpt("foo").getOrFail()).containsExactly("bar", "foo");
+    }
+
+    @Test
     public void getOpt() {
         assertThat(Queue.empty().getOpt().isEmpty()).isTrue();
         assertThat(Queue.of("foo", "bar", "baz").getOpt().getOrFail()).isEqualTo("foo");

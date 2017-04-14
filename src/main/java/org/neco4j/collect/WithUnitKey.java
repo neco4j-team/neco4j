@@ -18,7 +18,13 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
     Opt<C> addOpt(V v);
 
     default Opt<C> addOpt(Unit u, V v) {
-       return addOpt(v);
+        return putOpt(v);
+    }
+
+    Opt<C> putOpt(V v);
+
+    default Opt<C> putOpt(Unit u, V v) {
+       return putOpt(v);
     }
 
     Opt<V> getOpt();

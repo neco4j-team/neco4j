@@ -41,6 +41,12 @@ public class StackTest {
     }
 
     @Test
+    public void putOpt() {
+        assertThat(Stack.empty().putOpt("foo").isEmpty()).isTrue();
+        assertThat(Stack.of("bar","baz").putOpt("foo").getOrFail()).containsExactly("foo", "bar");
+    }
+
+    @Test
     public void getOpt() {
         assertThat(Stack.empty().getOpt().isEmpty()).isTrue();
         assertThat(Stack.singleton("foo").getOpt().getOrFail()).isEqualTo("foo");

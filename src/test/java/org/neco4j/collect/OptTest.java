@@ -100,4 +100,16 @@ public class OptTest {
         assertThat(Opt.some("foo").toOptional().get()).isEqualTo("foo");
     }
 
+    @Test
+    public void addOpt() {
+        assertThat(Opt.<String>none().addOpt("foo").getOrFail().getOrFail()).isEqualTo("foo");
+        assertThat(Opt.some("bar").addOpt("foo").isEmpty()).isTrue();
+    }
+
+    @Test
+    public void putOpt() {
+        assertThat(Opt.<String>none().putOpt("foo").isEmpty()).isTrue();
+        assertThat(Opt.some("bar").putOpt("foo").getOrFail().getOrFail()).isEqualTo("foo");
+    }
+
 }

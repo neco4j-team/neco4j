@@ -42,6 +42,10 @@ public class Opt<V> implements WithUnitKey<V, Opt<V>> {
         return isEmpty() ? Opt.some(some(v)) : Opt.none();
     }
 
+    public Opt<Opt<V>> putOpt(V v) {
+        return isEmpty() ? Opt.none() : Opt.some(some(v));
+    }
+
     @Override
     public Opt<Opt<V>> removeOpt() {
         return isEmpty() ? Opt.none() : Opt.some(none());
