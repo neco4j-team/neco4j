@@ -31,4 +31,12 @@ public interface AlwaysAddableWithUnitKey<V, C extends AlwaysAddableWithUnitKey<
         return result;
     }
 
+    default C addAll(Iterable<V> vs) {
+        C result = this.self();
+        for(V v : vs) {
+            result = result.add(v);
+        }
+        return result;
+    }
+
 }
