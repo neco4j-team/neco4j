@@ -10,14 +10,14 @@ public class EitherTest {
 
     @Test
     public void testLeftOf() throws Exception {
-        Left<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.left());
+        Either<Integer, String> left = Either.leftOf(42);
+        assertEquals(Integer.valueOf(42), left.leftOrFail());
     }
 
     @Test
     public void testRightOf() throws Exception {
-        Right<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.right());
+        Either<Integer, String> right = Either.rightOf("foo");
+        assertEquals("foo", right.rightOrFail());
     }
 
     @Test
@@ -45,25 +45,25 @@ public class EitherTest {
     @Test
     public void testLeftOnLeft() throws Exception {
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.left());
+        assertEquals(Integer.valueOf(42), left.leftOrFail());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testLeftOnRight() throws Exception {
         Either<Integer, String> right = Either.rightOf("foo");
-        right.left();
+        right.leftOrFail();
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testRightOnLeft() throws Exception {
         Either<Integer, String> left = Either.leftOf(42);
-        left.right();
+        left.rightOrFail();
     }
 
     @Test
     public void testRightOnRight() throws Exception {
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.right());
+        assertEquals("foo", right.rightOrFail());
     }
 
     @Test
@@ -137,12 +137,12 @@ public class EitherTest {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, String> mappedLeft = left.mapLeft(x -> "answer" + x);
-        assertEquals("answer42", mappedLeft.left());
+        assertEquals("answer42", mappedLeft.leftOrFail());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, String> mappedRight = right.mapLeft(x -> "answer" + x);
-        assertEquals("foo", mappedRight.right());
+        assertEquals("foo", mappedRight.rightOrFail());
     }
 
     @Test
@@ -150,12 +150,12 @@ public class EitherTest {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<Integer, Integer> mappedLeft = left.mapRight(String::length);
-        assertEquals(Integer.valueOf(42), mappedLeft.left());
+        assertEquals(Integer.valueOf(42), mappedLeft.leftOrFail());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<Integer, Integer> mappedRight = right.mapRight(String::length);
-        assertEquals(Integer.valueOf(3), mappedRight.right());
+        assertEquals(Integer.valueOf(3), mappedRight.rightOrFail());
     }
 
     @Test
@@ -163,12 +163,12 @@ public class EitherTest {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, Integer> mappedLeft = left.bimap(x -> "answer" + x, String::length);
-        assertEquals("answer42", mappedLeft.left());
+        assertEquals("answer42", mappedLeft.leftOrFail());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, Integer> mappedRight = right.bimap(x -> "answer" + x, String::length);
-        assertEquals(Integer.valueOf(3), mappedRight.right());
+        assertEquals(Integer.valueOf(3), mappedRight.rightOrFail());
     }
 
     @Test
@@ -189,12 +189,12 @@ public class EitherTest {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, Integer> swappedLeft = left.swap();
-        assertEquals(Integer.valueOf(42), swappedLeft.right());
+        assertEquals(Integer.valueOf(42), swappedLeft.rightOrFail());
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, Integer> swappedRight = right.swap();
-        assertEquals("foo", swappedRight.left());
+        assertEquals("foo", swappedRight.leftOrFail());
     }
 
     @Test
