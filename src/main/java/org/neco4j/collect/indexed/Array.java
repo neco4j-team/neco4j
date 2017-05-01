@@ -1,4 +1,6 @@
-package org.neco4j.collect;
+package org.neco4j.collect.indexed;
+
+import org.neco4j.collect.unitkey.Opt;
 
 import java.util.Arrays;
 

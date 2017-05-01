@@ -1,6 +1,6 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
-public final class Queue<V> implements AlwaysAddableWithUnitKey<V, Queue<V>> {
+public final class Queue<V> implements UnitKeyAddable<V, Queue<V>> {
 
     private final Stack<V> _front;
     private final Stack<V> _rear;

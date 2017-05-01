@@ -1,5 +1,7 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
+import org.neco4j.collect.Coll;
+import org.neco4j.tuple.Pair;
 import org.neco4j.tuple.Unit;
 
 import java.util.Iterator;
@@ -9,11 +11,11 @@ import java.util.NoSuchElementException;
  * A collection where values are stored independent from a key or index.
  *
  * Hence this interface provides versions of the collection methods which don't need key arguments.
- * Further, as the order of elements is fixed, the collection can implement the Iterator interface
+ * Further, as the order of elements is fixed, the collection can implement the {@link Iterator} interface
  * @param <V> the element type
  * @param <C> the collection self-type
  */
-public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, V, C>, Iterable<V> {
+public interface UnitKey<V, C extends UnitKey<V, C>> extends Coll<Unit, V, C>, Iterable<V> {
 
     Opt<C> addOpt(V v);
 
@@ -49,7 +51,7 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
 
     default Iterator<V> iterator() {
        return new Iterator<V>() {
-           private C _coll = WithUnitKey.this.self();
+           private C _coll = UnitKey.this.self();
 
            @Override
            public boolean hasNext() {
@@ -66,6 +68,23 @@ public interface WithUnitKey<V, C extends WithUnitKey<V, C>> extends Coll<Unit, 
                throw new NoSuchElementException();
            }
        };
+    }
+
+    @Override
+    default Iterable<Pair<Unit, V>> asKeyValuePairs() {
+        return () -> new Iterator<Pair<Unit, V>>() {
+            private final Iterator<V> underlying = UnitKey.this.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return underlying.hasNext();
+            }
+
+            @Override
+            public Pair<Unit, V> next() {
+                return Pair.of(Unit.unit, underlying.next());
+            }
+        };
     }
 
     default String show(String collectionName) {

@@ -1,11 +1,11 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>,
-       AlwaysAddableWithUnitKey<V, Stream<V>>,
-        AlwaysPuttableWithUnitKey<V, Stream<V>> {
+public class Stream<V> implements UnitKeyInfinite<V, Stream<V>>,
+        UnitKeyAddable<V, Stream<V>>,
+        UnitKeyPuttable<V, Stream<V>> {
 
     private final V _value;
     private final Supplier<Stream<V>> _next;
@@ -39,9 +39,9 @@ public class Stream<V> implements InfiniteWithUnitKey<V, Stream<V>>,
     public String toString() {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for(V v : this) {
-            sb.append(sb.length() == 0 ? "": ", ").append(v);
-            if(i++ == 9) {
+        for (V v : this) {
+            sb.append(sb.length() == 0 ? "" : ", ").append(v);
+            if (i++ == 9) {
                 break;
             }
         }

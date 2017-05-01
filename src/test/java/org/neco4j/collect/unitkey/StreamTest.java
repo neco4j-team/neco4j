@@ -1,8 +1,9 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Test;
+import org.neco4j.collect.unitkey.Stream;
 
 public class StreamTest {
     @Test

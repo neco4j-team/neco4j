@@ -1,5 +1,6 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
+import org.neco4j.collect.Addable;
 import org.neco4j.tuple.Unit;
 
 /**
@@ -7,7 +8,7 @@ import org.neco4j.tuple.Unit;
  * @param <V> the element type
  * @param <C> the collection self-type
  */
-public interface AlwaysAddableWithUnitKey<V, C extends AlwaysAddableWithUnitKey<V, C>> extends AlwaysAddable<Unit, V, C>, WithUnitKey<V,C> {
+public interface UnitKeyAddable<V, C extends UnitKeyAddable<V, C>> extends Addable<Unit, V, C>, UnitKey<V,C> {
 
     C add(V v);
 

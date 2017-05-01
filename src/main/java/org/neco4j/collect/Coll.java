@@ -1,5 +1,8 @@
 package org.neco4j.collect;
 
+import org.neco4j.collect.unitkey.Opt;
+import org.neco4j.tuple.Pair;
+
 import java.util.NoSuchElementException;
 
 /**
@@ -28,7 +31,7 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
      * that key.
      * @param k the key or index
      * @param v the value
-     * @return if successful, an enlarged collection wrapped in an Opt, else Opt.none
+     * @return if successful, a modified collection wrapped in an Opt, else Opt.none
      */
     Opt<C> putOpt(K k, V v);
 
@@ -40,6 +43,13 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
      * @return if successful, the element wrapped in an Opt, else Opt.none
      */
     Opt<V> getOpt(K k);
+
+    /**
+     * Returns this collection as {@link Iterable} of key-value pairs. Note that {@link Coll} doesn't
+     * implement {@link Iterable} directly, as there might be more useful element types than key-value pairs.
+     * @return an {@link Iterable}
+     */
+    Iterable<Pair<K,V>> asKeyValuePairs();
 
     /**
      * Retrieves an element of the collection, or throws an exception if the collection is empty.

@@ -1,8 +1,8 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
 import java.util.Objects;
 
-public class Stack<V> implements AlwaysAddableWithUnitKey<V,Stack<V>> {
+public class Stack<V> implements UnitKeyAddable<V,Stack<V>> {
 
     private final V _value;
     private final Stack<V> _below;

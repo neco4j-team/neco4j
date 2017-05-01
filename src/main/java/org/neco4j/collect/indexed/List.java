@@ -1,4 +1,7 @@
-package org.neco4j.collect;
+package org.neco4j.collect.indexed;
+
+import org.neco4j.collect.unitkey.Opt;
+import org.neco4j.collect.unitkey.Stack;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

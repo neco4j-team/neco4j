@@ -1,4 +1,4 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -9,7 +9,7 @@ import java.util.Optional;
  *
  * @param <V> the element type
  */
-public class Opt<V> implements WithUnitKey<V, Opt<V>> {
+public class Opt<V> implements UnitKey<V, Opt<V>> {
 
     private final V _value;
 

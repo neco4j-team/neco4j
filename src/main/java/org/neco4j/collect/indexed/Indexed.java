@@ -1,4 +1,8 @@
-package org.neco4j.collect;
+package org.neco4j.collect.indexed;
+
+import org.neco4j.collect.Coll;
+import org.neco4j.collect.unitkey.Opt;
+import org.neco4j.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,8 +11,12 @@ import java.util.NoSuchElementException;
 
 /**
  * A random-access collection with successive integers (starting at 0) as keys.
- * @param <V>
- * @param <C>
+ *
+ * Note that the semantic of the add operation is to move all existing elements stored under the
+ * given key or greater to their successor index.
+ *
+ * @param <V> the value type
+ * @param <C> the collection self-type
  */
 public interface Indexed<V, C extends Indexed<V,C>> extends Coll<Integer, V, C>, Iterable<V> {
 
@@ -43,6 +51,26 @@ public interface Indexed<V, C extends Indexed<V,C>> extends Coll<Integer, V, C>,
             public V next() throws NoSuchElementException {
                 if (hasNext()) {
                    return getOrFail(_index++);
+                }
+                throw new NoSuchElementException();
+            }
+        };
+    }
+
+    @Override
+    default Iterable<Pair<Integer, V>> asKeyValuePairs() {
+        return () -> new Iterator<Pair<Integer, V>>() {
+            private int _index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return _index < size();
+            }
+
+            @Override
+            public Pair<Integer, V> next() throws NoSuchElementException {
+                if (hasNext()) {
+                    return Pair.of(_index, getOrFail(_index++));
                 }
                 throw new NoSuchElementException();
             }

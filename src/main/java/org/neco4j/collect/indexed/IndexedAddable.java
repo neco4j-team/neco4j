@@ -1,4 +1,4 @@
-package org.neco4j.collect;
+package org.neco4j.collect.indexed;
 
 /**
  * An indexed collection that can always grow

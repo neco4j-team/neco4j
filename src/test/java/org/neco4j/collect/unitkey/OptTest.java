@@ -1,6 +1,7 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
 
 import org.junit.Test;
+import org.neco4j.collect.unitkey.Opt;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

@@ -1,4 +1,7 @@
-package org.neco4j.collect;
+package org.neco4j.collect.unitkey;
+
+import org.neco4j.collect.Infinite;
+import org.neco4j.tuple.Unit;
 
 import java.util.Iterator;
 
@@ -7,26 +10,36 @@ import java.util.Iterator;
  * @param <V> the element type
  * @param <C> the collection self-type
  */
-public interface InfiniteWithUnitKey<V, C extends InfiniteWithUnitKey<V,C>> extends WithUnitKey<V, C> {
+public interface UnitKeyInfinite<V, C extends UnitKeyInfinite<V,C>> extends UnitKey<V, C>, Infinite<Unit, V, C> {
 
     @Override
     default boolean isEmpty() {
         return false;
     }
 
-    @Override
-    default long size() {
-        return Long.MAX_VALUE;
-    }
-
     V get();
+
+    @Override
+    default V get(Unit unit) {
+        return get();
+    }
 
     @Override
     default Opt<V> getOpt() {
         return Opt.some(get());
     }
 
+    @Override
+    default Opt<V> getOpt(Unit unit) {
+        return Opt.some(get());
+    }
+
     C remove();
+
+    @Override
+    default C remove(Unit unit) {
+        return remove();
+    }
 
     @Override
     default Opt<C> removeOpt() {
@@ -34,9 +47,14 @@ public interface InfiniteWithUnitKey<V, C extends InfiniteWithUnitKey<V,C>> exte
     }
 
     @Override
+    default Opt<C> removeOpt(Unit unit) {
+        return Opt.some(remove());
+    }
+
+    @Override
     default Iterator<V> iterator() {
         return new Iterator<V>() {
-            C coll = InfiniteWithUnitKey.this.self();
+            C coll = UnitKeyInfinite.this.self();
 
             @Override
             public boolean hasNext() {

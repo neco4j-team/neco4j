@@ -1,6 +1,6 @@
 package org.neco4j.either;
 
-import org.neco4j.collect.Opt;
+import org.neco4j.collect.unitkey.Opt;
 
 import java.util.NoSuchElementException;
 import java.util.function.Function;

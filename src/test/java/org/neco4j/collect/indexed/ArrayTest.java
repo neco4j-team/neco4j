@@ -1,6 +1,7 @@
-package org.neco4j.collect;
+package org.neco4j.collect.indexed;
 
 import org.junit.Test;
+import org.neco4j.collect.indexed.Array;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
