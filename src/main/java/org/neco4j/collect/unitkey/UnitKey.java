@@ -6,6 +6,7 @@ import org.neco4j.tuple.Unit;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
 
 /**
  * A collection where values are stored independent from a key or index.
@@ -88,11 +89,9 @@ public interface UnitKey<V, C extends UnitKey<V, C>> extends Coll<Unit, V, C>, I
     }
 
     default String show(String collectionName) {
-        StringBuilder sb = new StringBuilder();
-        for(V v : this) {
-            sb.append(sb.length() == 0 ? "": ", ").append(v);
-        }
-        return String.format("%s[%s]", collectionName, sb);
+        StringJoiner joiner = new StringJoiner(", ");
+        this.forEach(v -> joiner.add(v.toString()));
+        return String.format("%s[%s]", collectionName, joiner.toString());
     }
 
     default String show() {

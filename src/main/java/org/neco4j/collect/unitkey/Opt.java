@@ -3,6 +3,7 @@ package org.neco4j.collect.unitkey;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * A collection which may contain zero or one elements.
@@ -89,6 +90,14 @@ public class Opt<V> implements UnitKey<V, Opt<V>> {
 
     public Opt<V> or(Opt<V> that) {
         return this.isEmpty() ? that : this;
+    }
+
+    public <W> Opt<W> map(Function<? super V, ? extends W> fn) {
+        return isEmpty() ? none() : some(fn.apply(_value));
+    }
+
+    public <W> Opt<W> flatMap(Function<? super V, Opt<W>> fn) {
+        return isEmpty() ? none() : fn.apply(_value);
     }
 
     @Override
