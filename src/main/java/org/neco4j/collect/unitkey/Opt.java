@@ -4,13 +4,14 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A collection which may contain zero or one elements.
  *
  * @param <V> the element type
  */
-public class Opt<V> implements UnitKey<V, Opt<V>> {
+public class Opt<V> implements UnitKeyPuttable<V, Opt<V>> {
 
     private final V _value;
 
@@ -40,16 +41,17 @@ public class Opt<V> implements UnitKey<V, Opt<V>> {
     }
 
     public Opt<Opt<V>> addOpt(V v) {
-        return isEmpty() ? Opt.some(some(v)) : Opt.none();
+        return isEmpty() ? some(some(v)) : none();
     }
 
-    public Opt<Opt<V>> putOpt(V v) {
-        return isEmpty() ? Opt.none() : Opt.some(some(v));
+    @Override
+    public Opt<V> put(V v) {
+        return some(v);
     }
 
     @Override
     public Opt<Opt<V>> removeOpt() {
-        return isEmpty() ? Opt.none() : Opt.some(none());
+        return isEmpty() ? none() : some(none());
     }
 
     @Override
@@ -88,6 +90,10 @@ public class Opt<V> implements UnitKey<V, Opt<V>> {
         return isEmpty() ? v : getOrFail();
     }
 
+    public V orElse(Supplier<V> supplier) {
+        return isEmpty() ? supplier.get() : getOrFail();
+    }
+
     public Opt<V> or(Opt<V> that) {
         return this.isEmpty() ? that : this;
     }
@@ -114,7 +120,7 @@ public class Opt<V> implements UnitKey<V, Opt<V>> {
             Opt<?> thatOpt = (Opt<?>) that;
             return this.isEmpty()
                     ? thatOpt.isEmpty()
-                    : this.getOrFail().equals(thatOpt.getOrElse(null));
+                    : this.getOrFail().equals(thatOpt.getOrElse( null));
         }
         return false;
     }

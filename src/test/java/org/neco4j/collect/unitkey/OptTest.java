@@ -109,9 +109,9 @@ public class OptTest {
     }
 
     @Test
-    public void putOpt() {
-        assertThat(Opt.<String>none().putOpt("foo").isEmpty()).isTrue();
-        assertThat(Opt.some("bar").putOpt("foo").getOrFail().getOrFail()).isEqualTo("foo");
+    public void put() {
+        assertThat(Opt.<String>none().put("foo")).contains("foo");
+        assertThat(Opt.some("bar").put("foo")).contains("foo");
     }
 
     @Test

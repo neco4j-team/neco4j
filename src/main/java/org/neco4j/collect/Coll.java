@@ -4,6 +4,7 @@ import org.neco4j.collect.unitkey.Opt;
 import org.neco4j.tuple.Pair;
 
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 /**
  * A general-purpose immutable collection.
@@ -24,6 +25,10 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
      */
     Opt<C> addOpt(K k, V v);
 
+    default C addIfPossible(K k, V v) {
+        return addOpt(k, v).orElse(() -> self());
+    }
+
     /**
      * Adds an entry to the collection, if possible. Removes the element stored under this key.
      *
@@ -34,6 +39,10 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
      * @return if successful, a modified collection wrapped in an Opt, else Opt.none
      */
     Opt<C> putOpt(K k, V v);
+
+    default C putIfPossible(K k, V v) {
+        return putOpt(k, v).orElse(() -> self());
+    }
 
     /**
      * Retrieves an element of the collection, if possible
@@ -72,11 +81,26 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     }
 
     /**
+     * Retrieves an element of the collection, or returns a given default value
+     * @param k the key or index
+     * @param supplier the Supplier for the defaultValue
+     * @return the element, or the default value if empty
+     */
+    default V getOrElse(K k, Supplier<V> supplier) {
+        return getOpt(k).orElse(supplier);
+    }
+
+
+    /**
      * Removes an element from the collection, if possible
      * @param k the key or index
      * @return if successful, an narrowed collection wrapped in an Opt, else Opt.none
      */
     Opt<C> removeOpt(K k);
+
+    default C removeIfPossible(K k) {
+        return removeOpt(k).orElse(() -> self());
+    }
 
     /**
      * Checks whether a collection is empty.
