@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class HashSet<K> implements SetLike<K, HashSet<K>>, SetLikePuttable<K, HashSet<K>> {
+public class HashSet<K> implements SetLikePuttable<K, HashSet<K>> {
 
     private final static Node<?> EMPTY = new Node<>();
 
