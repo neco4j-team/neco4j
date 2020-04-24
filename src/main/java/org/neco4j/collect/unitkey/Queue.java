@@ -17,13 +17,9 @@ public final class Queue<V> implements UnitKeyAddable<V, Queue<V>> {
 
     @Override
     public Opt<Queue<V>> putOpt(V v) {
-      if (isEmpty()) {
-          return Opt.none();
-      } else if (_front.isEmpty()) {
-          return new Queue<>(_rear.reverse(), Stack.empty()).putOpt(v);
-      } else {
-          return Opt.some(new Queue<>(_front.putOpt(v).getOrFail(), _rear));
-      }
+        Queue<V> frontFilled = fillFront();
+        return frontFilled._front.putOpt(v)
+            .map(newFront -> new Queue<>(newFront, frontFilled._rear));
     }
 
     @Override
@@ -33,12 +29,9 @@ public final class Queue<V> implements UnitKeyAddable<V, Queue<V>> {
 
     @Override
     public Opt<Queue<V>> removeOpt() {
-        if (isEmpty()) {
-            return Opt.none();
-        }
-        return Opt.some(_rear.isEmpty()
-                ? new Queue<>(Stack.empty(), _front.reverse().removeOpt().getOrFail())
-                : new Queue<>(_front, _rear.removeOpt().getOrFail()));
+        Queue<V> rearFilled = fillRear();
+        return rearFilled._rear.removeOpt()
+                    .map(newRear -> new Queue<>(rearFilled._front, newRear));
     }
 
     @Override
@@ -64,12 +57,24 @@ public final class Queue<V> implements UnitKeyAddable<V, Queue<V>> {
     }
 
     @SafeVarargs
-    public static <V> Queue<V> of(V ... vs) {
-       return Queue.<V>empty().addAll(vs);
+    public static <V> Queue<V> of(V... vs) {
+        return Queue.<V>empty().addAll(vs);
     }
 
     @Override
     public String toString() {
         return show();
+    }
+
+    private Queue<V> fillFront() {
+        return _front.isEmpty()
+                   ? new Queue<>(_rear.reverse(), Stack.empty())
+                   : this;
+    }
+
+    private Queue<V> fillRear() {
+        return _rear.isEmpty()
+                   ? new Queue<>(Stack.empty(), _front.reverse())
+                   : this;
     }
 }

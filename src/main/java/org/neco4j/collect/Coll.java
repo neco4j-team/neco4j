@@ -26,7 +26,7 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     Opt<C> addOpt(K k, V v);
 
     default C addIfPossible(K k, V v) {
-        return addOpt(k, v).orElse(() -> self());
+        return addOpt(k, v).orElse(this::self);
     }
 
     /**
@@ -41,7 +41,7 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     Opt<C> putOpt(K k, V v);
 
     default C putIfPossible(K k, V v) {
-        return putOpt(k, v).orElse(() -> self());
+        return putOpt(k, v).orElse(this::self);
     }
 
     /**

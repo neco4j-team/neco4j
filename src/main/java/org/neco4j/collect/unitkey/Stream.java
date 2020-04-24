@@ -1,11 +1,12 @@
 package org.neco4j.collect.unitkey;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class Stream<V> implements UnitKeyInfinite<V, Stream<V>>,
-        UnitKeyAddable<V, Stream<V>>,
-        UnitKeyPuttable<V, Stream<V>> {
+                                      UnitKeyAddable<V, Stream<V>>,
+                                      UnitKeyPuttable<V, Stream<V>> {
 
     private final V _value;
     private final Supplier<Stream<V>> _next;
@@ -14,7 +15,6 @@ public class Stream<V> implements UnitKeyInfinite<V, Stream<V>>,
         _value = value;
         _next = next;
     }
-
 
     @Override
     public Stream<V> add(V v) {
@@ -54,5 +54,20 @@ public class Stream<V> implements UnitKeyInfinite<V, Stream<V>>,
 
     public static <V> Stream<V> iterate(V v, UnaryOperator<V> operator) {
         return new Stream<>(v, () -> iterate(operator.apply(v), operator));
+    }
+
+    public <W> Stream<W> map(Function<? super V, ? extends W> fn) {
+        return new Stream<>(fn.apply(_value), () -> _next.get().map(fn));
+    }
+
+    // ATTENTION: This method assumes that the suppliers used for the Stream are idempotent
+    public Stack<V> take(int n) {
+        Stream<V> current = this;
+        Stack<V>  result = Stack.empty();
+        while(n-- > 0) {
+           result = result.add(current._value);
+           current = current._next.get();
+        }
+        return result.reverse();
     }
 }

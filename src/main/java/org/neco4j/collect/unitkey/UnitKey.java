@@ -10,9 +10,10 @@ import java.util.StringJoiner;
 
 /**
  * A collection where values are stored independent from a key or index.
- *
+ * <p>
  * Hence this interface provides versions of the collection methods which don't need key arguments.
  * Further, as the order of elements is fixed, the collection can implement the {@link Iterator} interface
+ *
  * @param <V> the element type
  * @param <C> the collection self-type
  */
@@ -21,13 +22,21 @@ public interface UnitKey<V, C extends UnitKey<V, C>> extends Coll<Unit, V, C>, I
     Opt<C> addOpt(V v);
 
     default Opt<C> addOpt(Unit u, V v) {
-        return putOpt(v);
+        return addOpt(v);
+    }
+
+    default C addIfPossible(V v) {
+        return addOpt(v).orElse(this::self);
     }
 
     Opt<C> putOpt(V v);
 
     default Opt<C> putOpt(Unit u, V v) {
-       return putOpt(v);
+        return putOpt(v);
+    }
+
+    default C putIfPossible(V v) {
+        return putOpt(v).orElse(this::self);
     }
 
     Opt<V> getOpt();
@@ -50,25 +59,29 @@ public interface UnitKey<V, C extends UnitKey<V, C>> extends Coll<Unit, V, C>, I
         return removeOpt();
     }
 
+    default C removeIfPossible() {
+        return removeOpt().orElse(this::self);
+    }
+
     default Iterator<V> iterator() {
-       return new Iterator<V>() {
-           private C _coll = UnitKey.this.self();
+        return new Iterator<V>() {
+            private C _coll = UnitKey.this.self();
 
-           @Override
-           public boolean hasNext() {
-               return ! _coll.isEmpty();
-           }
+            @Override
+            public boolean hasNext() {
+                return !_coll.isEmpty();
+            }
 
-           @Override
-           public V next() {
-               if (hasNext()) {
-                  V result = _coll.getOrFail();
-                  _coll = _coll.removeOpt().getOrFail();
-                  return result;
-               }
-               throw new NoSuchElementException();
-           }
-       };
+            @Override
+            public V next() {
+                if (hasNext()) {
+                    V result = _coll.getOrFail();
+                    _coll = _coll.removeOpt().getOrFail();
+                    return result;
+                }
+                throw new NoSuchElementException();
+            }
+        };
     }
 
     @Override

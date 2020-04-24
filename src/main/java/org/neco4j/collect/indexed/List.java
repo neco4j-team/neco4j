@@ -37,7 +37,7 @@ public class List<V> implements IndexedAddable<V, List<V>> {
 
     @SafeVarargs
     public static <V> List<V> of(V ... vs) {
-        List result = List.<V>empty();
+        List<V> result = List.empty();
         for(int i = vs.length - 1; i >= 0; i--) {
             result = result.prepend(vs[i]);
         }
