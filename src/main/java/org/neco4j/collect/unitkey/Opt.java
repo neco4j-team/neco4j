@@ -10,7 +10,7 @@ import java.util.function.Function;
  *
  * @param <V> the element type
  */
-public class Opt<V> implements UnitKey<V, Opt<V>> {
+public class Opt<V> implements UnitKeyPuttable<V, Opt<V>> {
 
     private final V _value;
 
@@ -43,8 +43,9 @@ public class Opt<V> implements UnitKey<V, Opt<V>> {
         return isEmpty() ? Opt.some(some(v)) : Opt.none();
     }
 
-    public Opt<Opt<V>> putOpt(V v) {
-        return isEmpty() ? Opt.none() : Opt.some(some(v));
+    @Override
+    public Opt<V> put(V v) {
+        return Opt.some(v);
     }
 
     @Override

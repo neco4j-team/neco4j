@@ -4,243 +4,252 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 
 public class EitherTest {
 
     @Test
-    public void testLeftOf() throws Exception {
+    public void testLeftOf() {
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOrFail());
+        assertThat(left.leftOrFail()).isEqualTo(42);
     }
 
     @Test
-    public void testRightOf() throws Exception {
+    public void testRightOf() {
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOrFail());
+        assertThat(right.rightOrFail()).isEqualTo("foo");
     }
 
     @Test
-    public void testIsLeft() throws Exception {
+    public void testIsLeft() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertTrue(left.isLeft());
+        assertThat(left.isLeft()).isTrue();
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertFalse(right.isLeft());
+        assertThat(right.isLeft()).isFalse();
     }
 
     @Test
-    public void testIsRight() throws Exception {
+    public void testIsRight() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertFalse(left.isRight());
+        assertThat(left.isRight()).isFalse();
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertTrue(right.isRight());
+        assertThat(right.isRight()).isTrue();
     }
 
     @Test
-    public void testLeftOnLeft() throws Exception {
+    public void testLeftOnLeft() {
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOrFail());
+        assertThat(left.leftOrFail()).isEqualTo(42);
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testLeftOnRight() throws Exception {
+    @Test
+    public void testLeftOnRight() {
         Either<Integer, String> right = Either.rightOf("foo");
-        right.leftOrFail();
+        assertThatThrownBy(right::leftOrFail).isInstanceOf(NoSuchElementException.class);
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testRightOnLeft() throws Exception {
+    @Test
+    public void testRightOnLeft() {
         Either<Integer, String> left = Either.leftOf(42);
-        left.rightOrFail();
+        assertThatThrownBy(left::rightOrFail).isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    public void testRightOnRight() throws Exception {
+    public void testRightOnRight() {
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOrFail());
+        assertThat(right.rightOrFail()).isEqualTo("foo");
     }
 
     @Test
-    public void testLeftOrElse() throws Exception {
+    public void testLeftOrElse() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOrElse(4711));
+        assertThat(left.leftOrElse(4711)).isEqualTo(42);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals(Integer.valueOf(4711), right.leftOrElse(4711));
+        assertThat(right.leftOrElse(4711)).isEqualTo(4711);
     }
 
     @Test
-    public void testRightOrElse() throws Exception {
+    public void testRightOrElse() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals("bar", left.rightOrElse("bar"));
+        assertThat(left.rightOrElse("bar")).isEqualTo("bar");
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOrElse("bar"));
+        assertThat(right.rightOrElse("bar")).isEqualTo("foo");
     }
 
     @Test
-    public void testLeftOrElseGet() throws Exception {
+    public void testLeftOrElseGet() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOrElseGet(() -> 4711));
+        assertThat(left.leftOrElseGet(() -> 4711)).isEqualTo(42);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals(Integer.valueOf(4711), right.leftOrElseGet(() -> 4711));
+        assertThat(right.leftOrElseGet(() -> 4711)).isEqualTo(4711);
     }
 
     @Test
-    public void testRightOrElseGet() throws Exception {
+    public void testRightOrElseGet() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals("bar", left.rightOrElseGet(() -> "bar"));
+        assertThat(left.rightOrElseGet(() -> "bar")).isEqualTo("bar");
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOrElseGet(() -> "bar"));
+        assertThat(right.rightOrElseGet(() -> "bar")).isEqualTo("foo");
     }
 
     @Test
-    public void testLeftOpt() throws Exception {
+    public void testLeftOpt() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals(Integer.valueOf(42), left.leftOpt().getOrFail());
+        assertThat(left.leftOpt().getOrFail()).isEqualTo(42);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertTrue(right.leftOpt().isEmpty());
+        assertThat(right.leftOpt().isEmpty()).isTrue();
     }
 
     @Test
-    public void testRightOpt() throws Exception {
+    public void testRightOpt() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
-        assertTrue(left.rightOpt().isEmpty());
+        assertThat(left.rightOpt().isEmpty()).isTrue();
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("foo", right.rightOpt().getOrFail());
+        assertThat(right.rightOpt().getOrFail()).isEqualTo("foo");
     }
 
     @Test
-    public void testMapLeft() throws Exception {
+    public void testMapLeft() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, String> mappedLeft = left.mapLeft(x -> "answer" + x);
-        assertEquals("answer42", mappedLeft.leftOrFail());
+        assertThat(mappedLeft.leftOrFail()).isEqualTo("answer42");
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, String> mappedRight = right.mapLeft(x -> "answer" + x);
-        assertEquals("foo", mappedRight.rightOrFail());
+        assertThat(mappedRight.rightOrFail()).isEqualTo("foo");
     }
 
     @Test
-    public void testMapRight() throws Exception {
+    public void testMapRight() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<Integer, Integer> mappedLeft = left.mapRight(String::length);
-        assertEquals(Integer.valueOf(42), mappedLeft.leftOrFail());
+        assertThat(mappedLeft.leftOrFail()).isEqualTo(42);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<Integer, Integer> mappedRight = right.mapRight(String::length);
-        assertEquals(Integer.valueOf(3), mappedRight.rightOrFail());
+        assertThat(mappedRight.rightOrFail()).isEqualTo(3);
     }
 
     @Test
-    public void testBimap() throws Exception {
+    public void testBimap() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, Integer> mappedLeft = left.bimap(x -> "answer" + x, String::length);
-        assertEquals("answer42", mappedLeft.leftOrFail());
+        assertThat(mappedLeft.leftOrFail()).isEqualTo("answer42");
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, Integer> mappedRight = right.bimap(x -> "answer" + x, String::length);
-        assertEquals(Integer.valueOf(3), mappedRight.rightOrFail());
+        assertThat(mappedRight.rightOrFail()).isEqualTo(3);
     }
 
     @Test
-    public void testEither() throws Exception {
+    public void testEither() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         int valueLeft = left.either(x -> x / 2, String::length);
-        assertEquals(21, valueLeft);
+        assertThat(valueLeft).isEqualTo(21);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         int valueRight = right.either(x -> x / 2, String::length);
-        assertEquals(3, valueRight);
+        assertThat(valueRight).isEqualTo(3);
     }
 
     @Test
-    public void testSwap() throws Exception {
+    public void testSwap() {
         //Left
         Either<Integer, String> left = Either.leftOf(42);
         Either<String, Integer> swappedLeft = left.swap();
-        assertEquals(Integer.valueOf(42), swappedLeft.rightOrFail());
+        assertThat(swappedLeft.rightOrFail()).isEqualTo(42);
 
         //Right
         Either<Integer, String> right = Either.rightOf("foo");
         Either<String, Integer> swappedRight = right.swap();
-        assertEquals("foo", swappedRight.leftOrFail());
+        assertThat(swappedRight.leftOrFail()).isEqualTo("foo");
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         //between two Lefts
         Either<Integer, String> left42a = Either.leftOf(42);
         Either<Integer, String> left42b = Either.leftOf(42);
         Either<Integer, String> left43 = Either.leftOf(43);
-        assertTrue(left42a.equals(left42a));
-        assertTrue(left42a.equals(left42b));
-        assertFalse(left42a.equals(left43));
+        assertThat(left42a.equals(left42a)).isTrue();
+        assertThat(left42a.equals(left42b)).isTrue();
+        assertThat(left42a.equals(left43)).isFalse();
 
         //between two Rights
         Either<Integer, String> rightFoo1 = Either.rightOf("foo");
         Either<Integer, String> rightFoo2 = Either.rightOf("foo");
         Either<Integer, String> rightBar = Either.rightOf("bar");
-        assertTrue(rightFoo1.equals(rightFoo1));
-        assertTrue(rightFoo1.equals(rightFoo2));
-        assertFalse(rightFoo1.equals(rightBar));
+        assertThat(rightFoo1.equals(rightFoo1)).isTrue();
+        assertThat(rightFoo1.equals(rightFoo2)).isTrue();
+        assertThat(rightFoo1.equals(rightBar)).isFalse();
 
         //between a Left and a Right
-        assertFalse(left43.equals(rightBar));
+        assertThat(left43.equals(rightBar)).isFalse();
         Either<String, String> leftBar = Either.leftOf("bar");
-        assertFalse(leftBar.equals(rightBar));
+        assertThat(leftBar.equals(rightBar)).isFalse();
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         //between two Lefts
         Either<Integer, String> left42a = Either.leftOf(42);
         Either<Integer, String> left42b = Either.leftOf(42);
-        assertTrue(left42a.hashCode() == left42a.hashCode());
-        assertTrue(left42a.hashCode() == left42b.hashCode());
+        Either<Integer, String> left43 = Either.leftOf(43);
+        assertThat(left42a.hashCode() == left42a.hashCode()).isTrue();
+        assertThat(left42a.hashCode() == left42b.hashCode()).isTrue();
+        assertThat(left42a.hashCode() == left43.hashCode()).isFalse();
 
         //between two Rights
         Either<Integer, String> rightFoo1 = Either.rightOf("foo");
         Either<Integer, String> rightFoo2 = Either.rightOf("foo");
-        assertTrue(rightFoo1.hashCode() == rightFoo1.hashCode());
-        assertTrue(rightFoo1.hashCode() == rightFoo2.hashCode());
+        Either<Integer, String> rightBar = Either.rightOf("bar");
+        assertThat(rightFoo1.hashCode() == rightFoo1.hashCode()).isTrue();
+        assertThat(rightFoo1.hashCode() == rightFoo2.hashCode()).isTrue();
+        assertThat(rightFoo1.hashCode() == rightBar.hashCode()).isFalse();
+
+        //between Left and Right
+        assertThat(left42a.hashCode() == rightFoo1.hashCode()).isFalse();
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         Either<Integer, String> left = Either.leftOf(42);
-        assertEquals("Left(42)", left.toString());
+        assertThat(left.toString()).isEqualTo("Left(42)");
         Either<Integer, String> right = Either.rightOf("foo");
-        assertEquals("Right(foo)", right.toString());
+        assertThat(right.toString()).isEqualTo("Right(foo)");
     }
 }

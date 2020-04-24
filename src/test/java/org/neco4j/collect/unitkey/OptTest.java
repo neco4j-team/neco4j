@@ -1,7 +1,6 @@
 package org.neco4j.collect.unitkey;
 
 import org.junit.Test;
-import org.neco4j.collect.unitkey.Opt;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -109,9 +108,9 @@ public class OptTest {
     }
 
     @Test
-    public void putOpt() {
-        assertThat(Opt.<String>none().putOpt("foo").isEmpty()).isTrue();
-        assertThat(Opt.some("bar").putOpt("foo").getOrFail().getOrFail()).isEqualTo("foo");
+    public void put() {
+        assertThat(Opt.<String>none().put("foo").getOrFail()).isEqualTo("foo");
+        assertThat(Opt.some("bar").put("foo").getOrFail()).isEqualTo("foo");
     }
 
     @Test
@@ -122,7 +121,7 @@ public class OptTest {
 
     @Test
     public void flatMap() {
-        Function<Integer, Opt<Integer>> halfIfEven = n -> n % 2 == 0 ? Opt.some(n/2) : Opt.none();
+        Function<Integer, Opt<Integer>> halfIfEven = n -> n % 2 == 0 ? Opt.some(n / 2) : Opt.none();
         assertThat(Opt.<Integer>none().flatMap(halfIfEven).isEmpty()).isTrue();
         assertThat(Opt.some(4).flatMap(halfIfEven).getOrFail()).isEqualTo(2);
         assertThat(Opt.some(3).flatMap(halfIfEven).isEmpty()).isTrue();

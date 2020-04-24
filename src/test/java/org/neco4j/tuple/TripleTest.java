@@ -2,126 +2,120 @@ package org.neco4j.tuple;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static java.lang.Math.PI;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class TripleTest {
 
     @Test
-    public void testGet1() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
-        assertEquals("foo", triple.get1());
+    public void testGet1() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
+        assertThat(triple.get1()).isEqualTo("foo");
     }
 
     @Test
-    public void testGet2() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
-        assertEquals(Integer.valueOf(42), triple.get2());
+    public void testGet2() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
+        assertThat(triple.get2()).isEqualTo(42);
     }
 
     @Test
-    public void testGet3() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
-        assertEquals(Double.valueOf(Math.PI), triple.get3());
-    }    
+    public void testGet3() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
+        assertThat(triple.get3()).isEqualTo(PI);
+    }
 
     @Test
-    public void testWith1() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testWith1() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<Character, Integer, Double> tripleWith = triple.with1('c');
-        assertEquals(Character.valueOf('c'), tripleWith.get1());
-        assertEquals(Integer.valueOf(42), tripleWith.get2());
-        assertEquals(Double.valueOf(Math.PI), triple.get3());
+        assertTripleEquals(tripleWith, 'c', 42, PI);
     }
 
     @Test
-    public void testWith2() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testWith2() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<String, Character, Double> tripleWith = triple.with2('c');
-        assertEquals("foo", tripleWith.get1());
-        assertEquals(Character.valueOf('c'), tripleWith.get2());
-        assertEquals(Double.valueOf(Math.PI), triple.get3());
+        assertTripleEquals(tripleWith, "foo", 'c', PI);
     }
 
     @Test
-    public void testWith3() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testWith3() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<String, Integer, Character> tripleWith = triple.with3('c');
-        assertEquals("foo", tripleWith.get1());
-        assertEquals(Integer.valueOf(42), tripleWith.get2());
-        assertEquals(Character.valueOf('c'), tripleWith.get3());
+        assertTripleEquals(tripleWith, "foo", 42, 'c');
     }
 
     @Test
-    public void testMap1() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testMap1() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<Integer, Integer, Double> tripleMap = triple.map1(String::length);
-        assertEquals(Integer.valueOf(3), tripleMap.get1());
-        assertEquals(Integer.valueOf(42), tripleMap.get2());
-        assertEquals(Double.valueOf(Math.PI), tripleMap.get3());
+        assertTripleEquals(tripleMap, 3, 42, PI);
     }
 
     @Test
-    public void testMap2() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testMap2() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<String, String, Double> tripleMap = triple.map2(n -> "number " + n);
-        assertEquals("foo", tripleMap.get1());
-        assertEquals("number 42", tripleMap.get2());
-        assertEquals(Double.valueOf(Math.PI), tripleMap.get3());
+        assertTripleEquals(tripleMap, "foo", "number 42", PI);
     }
 
     @Test
-    public void testMap3() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testMap3() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<String, Integer, Double> tripleMap = triple.map3(d -> -d);
-        assertEquals("foo", tripleMap.get1());
-        assertEquals(Integer.valueOf(42), tripleMap.get2());
-        assertEquals(Double.valueOf(-Math.PI), tripleMap.get3());
+        assertTripleEquals(tripleMap, "foo", 42, -PI);
     }
 
     @Test
-    public void testTrimap() throws Exception {
-        Triple<String, Integer, Double> triple = Triple.of("foo", 42, Math.PI);
+    public void testTrimap() {
+        Triple<String, Integer, Double> triple = Triple.of("foo", 42, PI);
         Triple<Integer, String, Double> tripleMap = triple.trimap(
-                s -> s.length(), n -> "number " + n, d -> -d);
-        assertEquals(Integer.valueOf(3), tripleMap.get1());
-        assertEquals("number 42", tripleMap.get2());
-        assertEquals(Double.valueOf(-Math.PI), tripleMap.get3());
+            s -> s.length(), n -> "number " + n, d -> -d);
+        assertTripleEquals(tripleMap, 3, "number 42", -PI);
     }
 
     @Test
-    public void testCollapse() throws Exception {
+    public void testCollapse() {
         Triple<String, Integer, Double> triple = Triple.of("foobar", 3, 0.5);
-        String collapsed = triple.collapse((s,n,d) -> s.substring(n) + d);
-        assertEquals("bar0.5", collapsed);
+        String collapsed = triple.collapse((s, n, d) -> s.substring(n) + d);
+        assertThat(collapsed).isEqualTo("bar0.5");
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         Triple<String, Integer, Double> triple = Triple.of("foo", 42, 0.5);
-        assertEquals("(foo,42,0.5)", triple.toString());
+        assertThat(triple.toString()).isEqualTo("(foo,42,0.5)");
     }
 
     @Test
-    public void testHashCode() throws Exception {
-        Triple<String, Integer, Double> triple1 = Triple.of("foo", 4711, Math.PI);
-        Triple<String, Integer, Double> triple2 = Triple.of("foo", 4711, Math.PI);
-        assertTrue(triple1.hashCode() == triple2.hashCode());
+    public void testHashCode() {
+        Triple<String, Integer, Double> triple1 = Triple.of("foo", 4711, PI);
+        Triple<String, Integer, Double> triple2 = Triple.of("foo", 4711, PI);
+        assertThat(triple1.hashCode() == triple2.hashCode()).isTrue();
     }
 
     @Test
-    public void testEquals() throws Exception {
-        Triple<String, Integer, Double> triple1 = Triple.of("foo", 4711, Math.PI);
-        Triple<String, Integer, Double> triple2 = Triple.of("foo", 4711, Math.PI);
-        Triple<String, Integer, Double> triple3 = Triple.of("bar", 4711, Math.PI);
-        Triple<String, Integer, Double> triple4 = Triple.of("foo", 42, Math.PI);
+    public void testEquals() {
+        Triple<String, Integer, Double> triple1 = Triple.of("foo", 4711, PI);
+        Triple<String, Integer, Double> triple2 = Triple.of("foo", 4711, PI);
+        Triple<String, Integer, Double> triple3 = Triple.of("bar", 4711, PI);
+        Triple<String, Integer, Double> triple4 = Triple.of("foo", 42, PI);
         Triple<String, Integer, Double> triple5 = Triple.of("foo", 4711, Math.E);
-        assertTrue(triple1.equals(triple2));
-        assertFalse(triple1.equals(triple3));
-        assertFalse(triple1.equals(triple4));
-        assertFalse(triple3.equals(triple4));
-        assertFalse(triple1.equals(triple5));
-        assertFalse(triple2.equals(triple5));
-        assertFalse(triple3.equals(triple5));
-        assertFalse(triple4.equals(triple5));
+        assertThat(triple1.equals(triple2)).isTrue();
+        assertThat(triple1.equals(triple3)).isFalse();
+        assertThat(triple1.equals(triple4)).isFalse();
+        assertThat(triple3.equals(triple4)).isFalse();
+        assertThat(triple1.equals(triple5)).isFalse();
+        assertThat(triple2.equals(triple5)).isFalse();
+        assertThat(triple3.equals(triple5)).isFalse();
+        assertThat(triple4.equals(triple5)).isFalse();
+    }
+
+    private static <A, B, C> void assertTripleEquals(Triple<A, B, C> triple, A a, B b, C c) {
+        assertThat(triple.get1()).isEqualTo(a);
+        assertThat(triple.get2()).isEqualTo(b);
+        assertThat(triple.get3()).isEqualTo(c);
     }
 }

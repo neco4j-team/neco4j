@@ -2,99 +2,99 @@ package org.neco4j.tuple;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class PairTest {
 
     @Test
-    public void testGet1() throws Exception {
+    public void testGet1() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
-        assertEquals("foo", pair.get1());
+        assertThat(pair.get1()).isEqualTo("foo");
     }
 
     @Test
-    public void testGet2() throws Exception {
+    public void testGet2() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
-        assertEquals(Integer.valueOf(42), pair.get2());
+        assertThat(pair.get2()).isEqualTo(42);
     }
 
     @Test
-    public void testWith1() throws Exception {
+    public void testWith1() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
         Pair<Character, Integer> pairWith = pair.with1('c');
-        assertEquals(Character.valueOf('c'), pairWith.get1());
-        assertEquals(Integer.valueOf(42), pairWith.get2());
+        assertPairEquals(pairWith, 'c', 42);
     }
 
     @Test
-    public void testWith2() throws Exception {
+    public void testWith2() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
         Pair<String, Character> pairWith = pair.with2('c');
-        assertEquals("foo", pairWith.get1());
-        assertEquals(Character.valueOf('c'), pairWith.get2());
+        assertPairEquals(pairWith, "foo", 'c');
     }
 
     @Test
-    public void testMap1() throws Exception {
+    public void testMap1() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
         Pair<Integer, Integer> pairMap = pair.map1(String::length);
-        assertEquals(Integer.valueOf(3), pairMap.get1());
-        assertEquals(Integer.valueOf(42), pairMap.get2());
+        assertPairEquals(pairMap, 3, 42);
     }
 
     @Test
-    public void testMap2() throws Exception {
+    public void testMap2() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
         Pair<String, String> pairMap = pair.map2(n -> "number " + n);
-        assertEquals("foo", pairMap.get1());
-        assertEquals("number 42", pairMap.get2());
+        assertPairEquals(pairMap, "foo", "number 42");
     }
 
     @Test
-    public void testBimap() throws Exception {
+    public void testBimap() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
-        Pair<Integer, String> pairMap = pair.bimap(s -> s.length(), n -> "number " + n);
-        assertEquals(Integer.valueOf(3), pairMap.get1());
-        assertEquals("number 42", pairMap.get2());
+        Pair<Integer, String> pairMap = pair.bimap(String::length, n -> "number " + n);
+        assertPairEquals(pairMap, 3, "number 42");
     }
 
     @Test
-    public void testCollapse() throws Exception {
+    public void testCollapse() {
         Pair<String, Integer> pair = Pair.of("foobar", 3);
         String collapsed = pair.collapse(String::substring);
-        assertEquals("bar", collapsed);
+        assertThat(collapsed).isEqualTo("bar");
     }
 
     @Test
-    public void testSwap() throws Exception {
+    public void testSwap() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
         Pair<Integer, String> pairSwap = pair.swap();
-        assertEquals(Integer.valueOf(42), pairSwap.get1());
-        assertEquals("foo", pairSwap.get2());
+        assertPairEquals(pairSwap, 42, "foo");
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         Pair<String, Integer> pair = Pair.of("foo", 42);
-        assertEquals("(foo,42)", pair.toString());
+        assertThat(pair.toString()).isEqualTo("(foo,42)");
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         Pair<String, Integer> pair1 = Pair.of("foo", 4711);
         Pair<String, Integer> pair2 = Pair.of("foo", 4711);
-        assertTrue(pair1.hashCode() == pair2.hashCode());
+        assertThat(pair1.hashCode() == pair2.hashCode()).isTrue();
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         Pair<String, Integer> pair1 = Pair.of("foo", 4711);
         Pair<String, Integer> pair2 = Pair.of("foo", 4711);
         Pair<String, Integer> pair3 = Pair.of("bar", 4711);
         Pair<String, Integer> pair4 = Pair.of("foo", 42);
-        assertTrue(pair1.equals(pair2));
-        assertFalse(pair1.equals(pair3));
-        assertFalse(pair1.equals(pair4));
-        assertFalse(pair3.equals(pair4));
+        assertThat(pair1.equals(pair2)).isTrue();
+        assertThat(pair1.equals(pair3)).isFalse();
+        assertThat(pair1.equals(pair4)).isFalse();
+        assertThat(pair3.equals(pair4)).isFalse();
+    }
+
+    private static <A, B> void assertPairEquals(Pair<A, B> pair, A a, B b) {
+        assertThat(pair.get1()).isEqualTo(a);
+        assertThat(pair.get2()).isEqualTo(b);
     }
 }

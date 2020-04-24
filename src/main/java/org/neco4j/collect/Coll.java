@@ -87,7 +87,7 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     }
 
     /**
-     * Returns the size of the collection, or Long.MX_VALUE for infinite collections
+     * Returns the size of the collection, or Long.MAX_VALUE for infinite collections
      * @return the size
      */
     long size();

@@ -2,14 +2,14 @@ package org.neco4j.function;
 
 import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class QuadFunctionTest extends TestCase {
+public class QuadFunctionTest {
     @Test
-    public void testAndThen() throws Exception {
+    public void testAndThen() {
         QuadFunction<String, String, String, String, String> fn = (t, u, v, w) -> t + u + v + w;
-        assertEquals("abcd", fn.apply("a", "b", "c", "d"));
+        assertThat(fn.apply("a", "b", "c", "d")).isEqualTo("abcd");
         QuadFunction<String, String, String, String, String> fnAndThen = fn.andThen(s -> s + "x");
-        assertEquals("abcdx", fnAndThen.apply("a", "b", "c", "d"));
+        assertThat(fnAndThen.apply("a", "b", "c", "d")).isEqualTo("abcdx");
     }
 }
