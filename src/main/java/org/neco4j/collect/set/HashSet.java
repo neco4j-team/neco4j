@@ -20,11 +20,7 @@ public class HashSet<K> implements SetLike<K, HashSet<K>>, SetLikePuttable<K, Ha
     }
 
     public static <K> HashSet<K> empty() {
-        return new HashSet<K>((Node) EMPTY, 0L);
-    }
-
-    public static <K> HashSet<K> singleton(K key) {
-        return new HashSet<>(new Node<>(key, null, null), 1L);
+        return new HashSet<>(emptyNode(), 0L);
     }
 
     @SafeVarargs
@@ -97,6 +93,11 @@ public class HashSet<K> implements SetLike<K, HashSet<K>>, SetLikePuttable<K, Ha
         return _size;
     }
 
+    @SuppressWarnings("unchecked")
+    private static <K> Node<K> emptyNode() {
+        return (Node) EMPTY;
+    }
+
     private static class Node<K> {
         final K _key;
         final Node<K> _left;
@@ -119,11 +120,11 @@ public class HashSet<K> implements SetLike<K, HashSet<K>>, SetLikePuttable<K, Ha
         }
 
         private Node<K> left() {
-            return _left == null ? (Node) EMPTY : _left;
+            return _left == null ? emptyNode() : _left;
         }
 
         private Node<K> right() {
-            return _right == null ? (Node) EMPTY : _right;
+            return _right == null ? emptyNode() : _right;
         }
 
         private boolean contains(K key) {
