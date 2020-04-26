@@ -129,7 +129,7 @@ public class Opt<V> implements UnitKeyPuttable<V, Opt<V>> {
         return isEmpty() ? Optional.empty() : Optional.of(getOrFail());
     }
 
-    public static <V> Opt fromOptional(Optional<V> optional) {
+    public static <V> Opt<V> fromOptional(Optional<V> optional) {
         return optional.map(Opt::some).orElse(Opt.none());
     }
 

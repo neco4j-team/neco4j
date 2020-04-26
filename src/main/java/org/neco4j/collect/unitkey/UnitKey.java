@@ -7,6 +7,7 @@ import org.neco4j.tuple.Unit;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
+import java.util.stream.StreamSupport;
 
 /**
  * A collection where values are stored independent from a key or index.
@@ -82,6 +83,10 @@ public interface UnitKey<V, C extends UnitKey<V, C>> extends Coll<Unit, V, C>, I
                 throw new NoSuchElementException();
             }
         };
+    }
+
+    default java.util.stream.Stream<V> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
     }
 
     @Override

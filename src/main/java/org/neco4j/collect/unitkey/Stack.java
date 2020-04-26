@@ -41,6 +41,10 @@ public class Stack<V> implements UnitKeyAddable<V,Stack<V>> {
         return Stack.<V>empty().addAll(vs);
     }
 
+    public static <V> Stack<V> ofAll(Iterable<V> vs) {
+        return Stack.<V>empty().addAll(vs);
+    }
+
     @Override
     public Stack<V> add(V v) {
         return new Stack<>(Objects.requireNonNull(v), this);

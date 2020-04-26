@@ -9,6 +9,7 @@ import org.neco4j.tuple.Unit;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
+import java.util.stream.StreamSupport;
 
 /**
  * A collection focused on the mere existence of keys, without associated values.
@@ -70,6 +71,10 @@ public interface SetLike<K, C extends SetLike<K, C>> extends Coll<K, Unit, C>, I
     }
 
     boolean contains(K key);
+
+    default java.util.stream.Stream<K> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
+    }
 
     default String show(String collectionName) {
         StringJoiner joiner = new StringJoiner(", ");

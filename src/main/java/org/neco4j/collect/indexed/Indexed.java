@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.StreamSupport;
 
 /**
  * A random-access collection with successive integers (starting at 0) as keys.
@@ -55,6 +56,10 @@ public interface Indexed<V, C extends Indexed<V,C>> extends Coll<Integer, V, C>,
                 throw new NoSuchElementException();
             }
         };
+    }
+
+    default java.util.stream.Stream<V> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
     }
 
     @Override

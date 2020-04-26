@@ -177,4 +177,42 @@ public class HashSet<K> implements SetLikePuttable<K, HashSet<K>> {
 
     }
 
+    @Override
+    public int hashCode() {
+        int hc = 0;
+        for(K k : this) {
+            hc += k.hashCode();
+        }
+        return hc;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object o) {
+        if (o == null || !o.getClass().equals(this.getClass())) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        HashSet<?> that = (HashSet<?>) o;
+        if (this._size != that.size() || this.hashCode() != that.hashCode()) {
+           return false;
+        }
+        for(Object k : that) {
+            try {
+                if (! contains((K) k)) {
+                    return false;
+                }
+            } catch (ClassCastException ex) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return show();
+    }
 }
