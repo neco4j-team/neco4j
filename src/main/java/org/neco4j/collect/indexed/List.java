@@ -1,6 +1,6 @@
 package org.neco4j.collect.indexed;
 
-import org.neco4j.collect.Reversable;
+import org.neco4j.collect.Reversible;
 import org.neco4j.collect.unitkey.Opt;
 import org.neco4j.collect.unitkey.Stack;
 
@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
-public class List<V> implements IndexedAddable<V, List<V>>, Reversable<List<V>> {
+public class List<V> implements IndexedAddable<V, List<V>>, Reversible<List<V>> {
 
     private final int _heapSize;
     private final Heap<V> _heap;

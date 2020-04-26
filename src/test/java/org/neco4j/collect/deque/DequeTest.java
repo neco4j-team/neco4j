@@ -52,7 +52,7 @@ public class DequeTest {
     @Test
     public void removeLastOpt() {
         assertThat(Deque.<String>empty().removeLastOpt()).isEmpty();
-        assertThat(Deque.of("foo", "bar", "baz").removeLastOpt().getOrFail()).containsExactly("foo", "bar", "baz");
+        assertThat(Deque.of("foo", "bar", "baz").removeLastOpt().getOrFail()).containsExactly("foo", "bar");
     }
 
     @Test

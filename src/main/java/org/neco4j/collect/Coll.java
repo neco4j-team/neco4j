@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * @param <V> the element type
  * @param <C> the collection self-type
  */
-public interface Coll<K, V, C extends Coll<K, V, C>> {
+public interface Coll<K, V, C extends Coll<K, V, C>> extends SelfTyped<C> {
 
     /**
      * Adds an entry to the collection, if possible. Keeps other elements stored under that key.
@@ -99,7 +99,7 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
     Opt<C> removeOpt(K k);
 
     default C removeIfPossible(K k) {
-        return removeOpt(k).orElse(() -> self());
+        return removeOpt(k).orElse(this::self);
     }
 
     /**
@@ -116,12 +116,4 @@ public interface Coll<K, V, C extends Coll<K, V, C>> {
      */
     long size();
 
-    /**
-     * Returns the collection casted to its self-type
-     * @return the collection
-     */
-    @SuppressWarnings("unchecked")
-    default C self() {
-        return (C) this;
-    }
 }

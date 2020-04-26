@@ -1,10 +1,10 @@
 package org.neco4j.collect.deque;
 
-import org.neco4j.collect.Reversable;
+import org.neco4j.collect.Reversible;
 import org.neco4j.collect.unitkey.Opt;
 import org.neco4j.collect.unitkey.Stack;
 
-public class Deque<V> implements DequeLikeAddable<V, Deque<V>>, Reversable<Deque<V>> {
+public class Deque<V> implements DequeLikeAddable<V, Deque<V>>, Reversible<Deque<V>> {
 
     private final Stack<V> _front;
     private final Stack<V> _rear;

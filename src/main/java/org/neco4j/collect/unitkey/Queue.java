@@ -1,8 +1,8 @@
 package org.neco4j.collect.unitkey;
 
-import org.neco4j.collect.Reversable;
+import org.neco4j.collect.Reversible;
 
-public final class Queue<V> implements UnitKeyAddable<V, Queue<V>>, Reversable<Queue<V>> {
+public final class Queue<V> implements UnitKeyAddable<V, Queue<V>>, Reversible<Queue<V>> {
 
     private final Stack<V> _front;
     private final Stack<V> _rear;
