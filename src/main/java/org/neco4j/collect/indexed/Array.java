@@ -68,7 +68,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Byte>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Byte>> putOpt(Integer index, Byte v) {
                 if (0 <= index && index < size()) {
                     byte[] newArray = new byte[(int) size()];
@@ -80,7 +79,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Byte>> addOpt(Integer index, Byte v) {
                 if (0 <= index && index <= size()) {
                     byte[] newArray = new byte[(int) size() + 1];
@@ -98,7 +96,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Byte>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     byte[] newArray = new byte[(int) size() - 1];
@@ -125,7 +122,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Integer>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Integer>> putOpt(Integer index, Integer v) {
                 if (0 <= index && index < size()) {
                     int[] newArray = new int[(int) size()];
@@ -138,7 +134,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Integer>> addOpt(Integer index, Integer v) {
                 if (0 <= index && index <= size()) {
                     int[] newArray = new int[(int) size() + 1];
@@ -156,7 +151,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Integer>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     int[] newArray = new int[(int) size() - 1];
@@ -183,7 +177,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Long>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Long>> putOpt(Integer index, Long v) {
                 if (0 <= index && index < size()) {
                     long[] newArray = new long[(int) size()];
@@ -196,7 +189,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
 
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Long>> addOpt(Integer index, Long v) {
                 if (0 <= index && index <= size()) {
                     long[] newArray = new long[(int) size() + 1];
@@ -214,7 +206,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Long>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     long[] newArray = new long[(int) size() - 1];
@@ -241,7 +232,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Double>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Double>> putOpt(Integer index, Double v) {
                 if (0 <= index && index < size()) {
                     double[] newArray = new double[(int) size()];
@@ -253,7 +243,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Double>> addOpt(Integer index, Double v) {
                 if (0 <= index && index <= size()) {
                     double[] newArray = new double[(int) size() + 1];
@@ -271,7 +260,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Double>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     double[] newArray = new double[(int) size() - 1];
@@ -298,7 +286,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Character>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Character>> putOpt(Integer index, Character v) {
                 if (0 <= index && index < size()) {
                     char[] newArray = new char[(int) size()];
@@ -310,7 +297,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Character>> addOpt(Integer index, Character v) {
                 if (0 <= index && index <= size()) {
                     char[] newArray = new char[(int) size() + 1];
@@ -328,7 +314,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Character>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     char[] newArray = new char[(int) size() - 1];
@@ -355,7 +340,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
         return new Array<Boolean>() {
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Boolean>> putOpt(Integer index, Boolean v) {
                 if (0 <= index && index < size()) {
                     boolean[] newArray = new boolean[(int) size()];
@@ -367,7 +351,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Boolean>> addOpt(Integer index, Boolean v) {
                 if (0 <= index && index <= size()) {
                     boolean[] newArray = new boolean[(int) size() + 1];
@@ -385,7 +368,6 @@ public abstract class Array<V> implements IndexedAddable<V, Array<V>> {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Opt<Array<Boolean>> removeOpt(Integer index) {
                 if (0 <= index && index < size()) {
                     boolean[] newArray = new boolean[(int) size() - 1];

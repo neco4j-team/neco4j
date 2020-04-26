@@ -133,6 +133,18 @@ public class HashMapTest {
     }
 
     @Test
+    public void keys() {
+        assertThat(HashMap.empty().keys()).isEmpty();
+        assertThat(HashMap.of("foo", 1, "bar", 2).keys()).containsExactlyInAnyOrder("foo", "bar");
+    }
+
+    @Test
+    public void values() {
+        assertThat(HashMap.empty().values()).isEmpty();
+        assertThat(HashMap.of("foo", 1, "bar", 2).values()).containsExactlyInAnyOrder(1, 2);
+    }
+
+    @Test
     public void testHashCode() {
         int h0 = HashMap.empty().hashCode();
         int h1 = HashMap.of("foo", 1).hashCode();

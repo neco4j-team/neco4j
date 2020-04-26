@@ -3,6 +3,9 @@ package org.neco4j.collect.indexed;
 import org.junit.Test;
 import org.neco4j.collect.indexed.List;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ListTest {
@@ -29,6 +32,13 @@ public class ListTest {
         assertThat(List.of()).isEmpty();
         assertThat(List.of("foo")).containsExactly("foo");
         assertThat(List.of("foo", "bar", "baz")).containsExactly("foo", "bar", "baz");
+    }
+
+    @Test
+    public void ofAll() {
+        assertThat(List.ofAll(Collections.emptyList())).isEmpty();
+        assertThat(List.ofAll(Arrays.asList("foo"))).containsExactly("foo");
+        assertThat(List.ofAll(Arrays.asList("foo", "bar", "baz"))).containsExactly("foo", "bar", "baz");
     }
 
     @Test

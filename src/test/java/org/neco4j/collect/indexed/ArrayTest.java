@@ -77,7 +77,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void addOptInts() {
+    public void addOpt_Ints() {
         assertThat(Array.ints().addOpt(0, 42).getOrFail()).containsExactly(42);
         assertThat(Array.ints().addOpt(-1, 42).isEmpty()).isTrue();
         assertThat(Array.ints().addOpt(1, 42).isEmpty()).isTrue();
@@ -90,7 +90,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void putOptInts() {
+    public void putOpt_Ints() {
         assertThat(Array.ints().putOpt(0, 42).isEmpty()).isTrue();
         assertThat(Array.ints().putOpt(-1, 42).isEmpty()).isTrue();
         assertThat(Array.ints().putOpt(1, 42).isEmpty()).isTrue();
@@ -102,7 +102,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void getOptInts() {
+    public void getOpt_Ints() {
         assertThat(Array.ints().getOpt(-1).isEmpty()).isTrue();
         assertThat(Array.ints().getOpt(0).isEmpty()).isTrue();
         assertThat(Array.ints().getOpt(1).isEmpty()).isTrue();
@@ -114,7 +114,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void removeOptInts() {
+    public void removeOpt_Ints() {
         assertThat(Array.ints().removeOpt(-1).isEmpty()).isTrue();
         assertThat(Array.ints().removeOpt(0).isEmpty()).isTrue();
         assertThat(Array.ints().removeOpt(1).isEmpty()).isTrue();
@@ -130,7 +130,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void sizeInts() {
+    public void size_Ints() {
         assertThat(Array.ints().size()).isEqualTo(0L);
         assertThat(Array.ints(42, 47, 11).size()).isEqualTo(3L);
     }
@@ -142,9 +142,66 @@ public class ArrayTest {
     }
 
     @Test
-    public void toListInts() {
+    public void toList_Ints() {
         assertThat(Array.ints().toList()).isEmpty();
         assertThat(Array.ints(42, 47, 11).toList()).containsExactly(42, 47, 11);
+    }
+    @Test
+    public void putOpt_Longs() {
+        assertThat(Array.longs().putOpt(0, 42L).isEmpty()).isTrue();
+        assertThat(Array.longs().putOpt(-1, 42L).isEmpty()).isTrue();
+        assertThat(Array.longs().putOpt(1, 42L).isEmpty()).isTrue();
+
+        assertThat(Array.longs(47L, 11L).putOpt(-1, 42L).isEmpty()).isTrue();
+        assertThat(Array.longs(47L, 11L).putOpt(0, 42L).getOrFail()).containsExactly(42L, 11L);
+        assertThat(Array.longs(47L, 11L).putOpt(1, 42L).getOrFail()).containsExactly(47L, 42L);
+        assertThat(Array.longs(47L, 11L).putOpt(2, 42L).isEmpty()).isTrue();
+    }
+
+    @Test
+    public void getOpt_Longs() {
+        assertThat(Array.longs().getOpt(-1).isEmpty()).isTrue();
+        assertThat(Array.longs().getOpt(0).isEmpty()).isTrue();
+        assertThat(Array.longs().getOpt(1).isEmpty()).isTrue();
+
+        assertThat(Array.longs(47L, 11L).getOpt(-1).isEmpty()).isTrue();
+        assertThat(Array.longs(47L, 11L).getOpt(0).getOrFail()).isEqualTo(47L);
+        assertThat(Array.longs(47L, 11L).getOpt(1).getOrFail()).isEqualTo(11L);
+        assertThat(Array.longs(47L, 11L).getOpt(2).isEmpty()).isTrue();
+    }
+
+    @Test
+    public void removeOpt_Longs() {
+        assertThat(Array.longs().removeOpt(-1).isEmpty()).isTrue();
+        assertThat(Array.longs().removeOpt(0).isEmpty()).isTrue();
+        assertThat(Array.longs().removeOpt(1).isEmpty()).isTrue();
+
+        assertThat(Array.longs(42L).removeOpt(-1).isEmpty()).isTrue();
+        assertThat(Array.longs(42L).removeOpt(0).getOrFail()).isEmpty();
+        assertThat(Array.longs(42L).removeOpt(1).isEmpty()).isTrue();
+
+        assertThat(Array.longs(47L, 11L).removeOpt(-1).isEmpty()).isTrue();
+        assertThat(Array.longs(47L, 11L).removeOpt(0).getOrFail()).containsExactly(11L);
+        assertThat(Array.longs(47L, 11L).removeOpt(1).getOrFail()).containsExactly(47L);
+        assertThat(Array.longs(47L, 11L).removeOpt(2).isEmpty()).isTrue();
+    }
+
+    @Test
+    public void size_Longs() {
+        assertThat(Array.longs().size()).isEqualTo(0L);
+        assertThat(Array.longs(42L, 47L, 11L).size()).isEqualTo(3L);
+    }
+
+    @Test
+    public void toString_Longs() {
+        assertThat(Array.longs().toString()).isEqualTo("Array[]");
+        assertThat(Array.longs(42L, 47L, 11L).toString()).isEqualTo("Array[42, 47, 11]");
+    }
+
+    @Test
+    public void toList_Longs() {
+        assertThat(Array.longs().toList()).isEmpty();
+        assertThat(Array.longs(42L, 47L, 11L).toList()).containsExactly(42L, 47L, 11L);
     }
 
 }

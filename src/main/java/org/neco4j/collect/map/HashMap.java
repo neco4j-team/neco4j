@@ -1,6 +1,8 @@
 package org.neco4j.collect.map;
 
 import org.neco4j.collect.Puttable;
+import org.neco4j.collect.indexed.List;
+import org.neco4j.collect.set.HashSet;
 import org.neco4j.collect.unitkey.Opt;
 import org.neco4j.collect.unitkey.Stack;
 import org.neco4j.collect.unitkey.UnitKeyAddable;
@@ -84,6 +86,14 @@ public class HashMap<K, V> implements Puttable<K, V, HashMap<K, V>> {
     @Override
     public HashMap<K, V> put(K k, V v) {
         return new HashMap<>(_root.put(k, v), _size + 1);
+    }
+
+    public HashSet<K> keys() {
+        return HashSet.from(_root.asKeyValuePairs().map(Pair::get1).collect(Collectors.toList()));
+    }
+
+    public List<V> values() {
+        return List.ofAll(_root.asKeyValuePairs().map(Pair::get2).collect(Collectors.toList()));
     }
 
     @SuppressWarnings("unchecked")

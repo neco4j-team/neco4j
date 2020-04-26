@@ -45,6 +45,14 @@ public class List<V> implements IndexedAddable<V, List<V>>, Reversable<List<V>> 
         return result;
     }
 
+    public static <V> List<V> ofAll(Iterable<V> vs) {
+        List<V> result = List.empty();
+        for(V v : vs) {
+            result = result.append(v);
+        }
+        return result;
+    }
+
     @Override
     public List<V> prepend(V v) {
         if (isEmpty() || _heapSize != _next._heapSize) {
