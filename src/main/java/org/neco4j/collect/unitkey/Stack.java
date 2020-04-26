@@ -1,8 +1,10 @@
 package org.neco4j.collect.unitkey;
 
+import org.neco4j.collect.Reversable;
+
 import java.util.Objects;
 
-public class Stack<V> implements UnitKeyAddable<V,Stack<V>> {
+public class Stack<V> implements UnitKeyAddable<V,Stack<V>>, Reversable<Stack<V>> {
 
     private final V _value;
     private final Stack<V> _below;

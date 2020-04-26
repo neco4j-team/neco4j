@@ -38,6 +38,12 @@ public class ListTest {
     }
 
     @Test
+    public void append() {
+        assertThat(List.empty().append("foo")).containsExactly("foo");
+        assertThat(List.of("foo", "bar").append("baz")).containsExactly("foo", "bar", "baz");
+    }
+
+    @Test
     public void putOpt() {
         assertThat(List.empty().putOpt(-1, "foo").isEmpty()).isTrue();
         assertThat(List.empty().putOpt(0, "foo").isEmpty()).isTrue();
@@ -99,4 +105,9 @@ public class ListTest {
         assertThat(List.of("foo", "bar", "baz").size()).isEqualTo(3L);
     }
 
+    @Test
+    public void reverse() {
+        assertThat(List.empty().reverse()).isEmpty();
+        assertThat(List.of("foo","bar","baz").reverse()).containsExactly("baz","bar","foo");
+    }
 }

@@ -62,6 +62,7 @@ public class StackTest {
 
     @Test
     public void reverse() {
+        assertThat(Stack.empty().reverse()).isEmpty();
         assertThat(Stack.of("foo", "bar", "baz").reverse()).containsExactly("foo", "bar", "baz");
     }
 
