@@ -145,6 +145,14 @@ public class HashMapTest {
     }
 
     @Test
+    public void containsKey() {
+        HashMap<String, Integer> hm = HashMap.of("foo", 1, "bar", 2, "baz", 3, "quux", 4, "biff", 5, "baff", 6);
+
+        assertThat(hm.containsKey("baz")).isTrue();
+        assertThat(hm.containsKey("bäng")).isFalse();
+    }
+
+    @Test
     public void testHashCode() {
         int h0 = HashMap.empty().hashCode();
         int h1 = HashMap.of("foo", 1).hashCode();

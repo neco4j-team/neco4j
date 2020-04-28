@@ -64,6 +64,10 @@ public class HashMap<K, V> implements Puttable<K, V, HashMap<K, V>> {
         return _root.getOpt(k);
     }
 
+    public boolean containsKey(K key) {
+        return _root.contains(key);
+    }
+
     @Override
     public Iterable<Pair<K, V>> asKeyValuePairs() {
         return _root.asKeyValuePairs().collect(Collectors.toList());
@@ -145,7 +149,10 @@ public class HashMap<K, V> implements Puttable<K, V, HashMap<K, V>> {
         }
 
         private boolean contains(K key) {
-            if (key.hashCode() == hashCode()) {
+            if (isEmpty()) {
+                return false;
+            }
+            if (key.hashCode() == _hashCode) {
                 return _kv.stream().anyMatch(pair -> pair.get1().equals(key));
             }
             return key.hashCode() < _hashCode
